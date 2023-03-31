@@ -1,0 +1,11 @@
+<!-- <!DOCTYPE RCC><RCC version="1.0">
+    <qresource>
+        <file>map.png</file>
+    </qresource>
+</RCC> -->
+
+<RCC>
+    <qresource>
+        <file>./images/map.png</file>
+    </qresource>
+</RCC>
