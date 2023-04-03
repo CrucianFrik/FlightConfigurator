@@ -71,7 +71,6 @@ set(SOURCES
 
 
 set(HEADERS
-    gismainwindow.h
     mainwindow.h
     mapwidget.h
     )
