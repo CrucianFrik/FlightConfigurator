@@ -51,7 +51,7 @@ int main(int argc, char *argv[])
 
     Binder binder("/dev/serial/by-id/usb-3D_Robotics_PX4_FMU_v2.x_0-if00", 115200);
 
-    test(binder, main_window);
+//    test(binder, main_window);
     return a.exec();
 }
 
