@@ -1,9 +1,11 @@
 #include "mapwidget.h"
 
 
-MapWidget::MapWidget(const QList<QgsMapLayer*>& layers)
-    : QgsMapCanvas(),
-      search_bar{new SearchBar(this)}
+MapWidget::MapWidget(const QList<QgsMapLayer*>& layers, QWidget* parent)
+    : QgsMapCanvas(parent),
+      tool_pan{new QgsMapToolPan(this)},
+      search_bar{new SearchBar(this)},
+      center_button{new QPushButton(this)}
 {
     for (auto layer: layers){
         setExtent(layer->extent());
@@ -14,13 +16,18 @@ MapWidget::MapWidget(const QList<QgsMapLayer*>& layers)
     auto action_pan = new QAction(QString("Pan"), this);
     action_pan->setCheckable(true);
     connect(action_pan, SIGNAL(triggered()), SLOT(pan()));
-
-    connect(search_bar->get_button(), SIGNAL(clicked()), SLOT(move_to_search_query()));
-
-    tool_pan = new QgsMapToolPan(this);
     tool_pan->setAction(action_pan);
-
     pan();
+
+    connect(search_bar, SIGNAL(returnPressed()), SLOT(move_to_search_query()));
+
+    center_button->resize(center_button_size);
+    center_button->move(size().width()-center_button_size.width()-center_button_pos.x(),
+                        size().height()-center_button_size.height()-center_button_pos.y());
+    center_button->setText(center_button_label);
+    connect(center_button, SIGNAL(clicked()), SLOT(centralize()));
+
+    start_extent = extent();
 }
 
 
@@ -28,6 +35,9 @@ void MapWidget::set_settings(){
     setPreviewJobsEnabled(preview_jobs);
     enableAntiAliasing(antialiasing);
     setWheelFactor(zoom_factor_wheel);
+//    setDestinationCrs(QgsCoordinateReferenceSystem("WGS84"));
+//    setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+
 //    setRenderFlag(true);
 }
 
@@ -50,12 +60,16 @@ void MapWidget::move_to_search_query(){
     move_to(pos);
 }
 
+void MapWidget::centralize(){
+    setCenter({0,0});
+    setExtent(start_extent);
+    refresh();
+}
 
 QgsPointXY MapWidget::str_to_point(QString str){
     QTextStream stream(&str);
     double posx=center().x(), posy=center().y();
     stream >> posx >> posy;
-    qDebug() << posx << posy;
     return {posx, posy};
 }
 
@@ -74,6 +88,8 @@ SearchBar::SearchBar(QWidget* parent)
     search_button->resize( bar_size.width()*search_button_size.width(), bar_size.height()*search_button_size.height() );
     search_button->move( width()*search_button_pos.x(), height()*search_button_pos.y() );
     search_button->setText( search_button_label );
+
+    connect(search_button, SIGNAL(pressed()), this, SIGNAL(returnPressed()));
 }
 
 

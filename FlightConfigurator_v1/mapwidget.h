@@ -8,7 +8,6 @@
 #include <QPushButton>
 #include <QDebug>
 #include <QTextStream>
-#include <QAbstractButton>
 
 #include <qgsmapcanvas.h>
 #include <qgsmaptoolpan.h>
@@ -23,7 +22,6 @@ public:
     SearchBar(QWidget* parent=nullptr);
 
     QString get_query() const;
-    auto get_button() {return search_button;}
 
     ~SearchBar();
 
@@ -46,7 +44,7 @@ class MapWidget : public QgsMapCanvas{
 Q_OBJECT
 
 public:
-    MapWidget(const QList<QgsMapLayer*>& layers);
+    MapWidget(const QList<QgsMapLayer*>& layers, QWidget* parent=nullptr);
 
     void move_to(QgsPointXY pos);
 
@@ -55,6 +53,7 @@ public:
 private slots:
     void pan(){ setMapTool(tool_pan); }
     void move_to_search_query();
+    void centralize();
 
 private:
     void set_settings();
@@ -63,11 +62,17 @@ private:
     QgsMapToolPan* tool_pan;
 
     SearchBar* search_bar;
+    QPushButton* center_button;
+    QgsRectangle start_extent;
 
     const double zoom_factor_wheel = 1.3;
     const double zoom_factor_move = 1e6;
     const bool antialiasing = true;
     const bool preview_jobs = true;
+
+    const QSize center_button_size = {30, 30};
+    const QPoint center_button_pos = {10, 10};
+    const QString center_button_label = "◼️";
 };
 
 

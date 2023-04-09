@@ -25,9 +25,8 @@ MainWindow::MainWindow(const QList< QPair<QString, QString> >& layers_paths, QWi
     mapw_data = new MapWidget(layers);
     mapw_plan = new MapWidget(layers);
 
-    ui->data_map_layout->addWidget(mapw_data);
-    ui->plan_map_layout->addWidget(mapw_plan);
-
+    ui->data_map_layout->addWidget(mapw_data, 0, Qt::AlignCenter);
+    ui->plan_map_layout->addWidget(mapw_plan, 0, Qt::AlignCenter);
 
 //    QTimer *timer = new QTimer(this);
 //    connect(timer, SIGNAL(timeout()), SLOT(updateLabel()));

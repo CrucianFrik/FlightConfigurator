@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="sizePolicy">
-   <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
+   <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
     <horstretch>0</horstretch>
     <verstretch>0</verstretch>
    </sizepolicy>
@@ -36,7 +36,7 @@
        <enum>Qt::TabFocus</enum>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="data_tab">
        <attribute name="title">
@@ -153,7 +153,11 @@
          </layout>
         </item>
         <item>
-         <layout class="QHBoxLayout" name="data_map_layout"/>
+         <layout class="QHBoxLayout" name="data_map_layout">
+          <property name="sizeConstraint">
+           <enum>QLayout::SetMaximumSize</enum>
+          </property>
+         </layout>
         </item>
        </layout>
       </widget>
@@ -171,8 +175,11 @@
          </rect>
         </property>
         <layout class="QHBoxLayout" name="plan_map_layout">
+         <property name="spacing">
+          <number>0</number>
+         </property>
          <property name="sizeConstraint">
-          <enum>QLayout::SetMaximumSize</enum>
+          <enum>QLayout::SetNoConstraint</enum>
          </property>
         </layout>
        </widget>
