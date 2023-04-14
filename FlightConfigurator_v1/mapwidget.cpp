@@ -7,9 +7,9 @@ MapWidget::MapWidget(const QList<QgsMapLayer*>& layers, QWidget* parent)
       search_bar{new SearchBar(this)},
       center_button{new QPushButton(this)}
 {
-    for (auto layer: layers){
-        setExtent(layer->extent());
-    }
+    full_zoom = layers[0]->extent();
+
+    setExtent(full_zoom);
     setLayers(layers);
     set_settings();
 
@@ -22,12 +22,19 @@ MapWidget::MapWidget(const QList<QgsMapLayer*>& layers, QWidget* parent)
     connect(search_bar, SIGNAL(returnPressed()), SLOT(move_to_search_query()));
 
     center_button->resize(center_button_size);
-    center_button->move(size().width()-center_button_size.width()-center_button_pos.x(),
-                        size().height()-center_button_size.height()-center_button_pos.y());
     center_button->setText(center_button_label);
     connect(center_button, SIGNAL(clicked()), SLOT(centralize()));
 
-    start_extent = extent();
+//    auto wgs84 = QgsCoordinateReferenceSystem("EPSG:4326");
+//    qDebug() << wgs84.authid();
+//    qDebug() << wgs84.description();
+//    auto cur_crs = mapSettings().destinationCrs();
+//    qDebug() << cur_crs.authid();
+//    qDebug() << cur_crs.description();
+//    auto transform_context = mapSettings().transformContext();
+//    wgs84_to_cur = new QgsCoordinateTransform(wgs84, cur_crs, transform_context);
+//    QgsPointXY test(55,37);
+//    qDebug() << wgs84_to_cur->transform(test).x() << wgs84_to_cur->transform(test).y();
 }
 
 
@@ -35,6 +42,7 @@ void MapWidget::set_settings(){
     setPreviewJobsEnabled(preview_jobs);
     enableAntiAliasing(antialiasing);
     setWheelFactor(zoom_factor_wheel);
+//    setMinimumSize(1400, 800);
 //    setDestinationCrs(QgsCoordinateReferenceSystem("WGS84"));
 //    setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
@@ -45,6 +53,7 @@ void MapWidget::set_settings(){
 MapWidget::~MapWidget(){
     delete tool_pan;
     delete search_bar;
+    delete center_button;
 }
 
 
@@ -60,17 +69,30 @@ void MapWidget::move_to_search_query(){
     move_to(pos);
 }
 
+
 void MapWidget::centralize(){
     setCenter({0,0});
-    setExtent(start_extent);
+    setExtent(full_zoom);
     refresh();
 }
+
+
+void MapWidget::pan(){
+    setMapTool(tool_pan);
+}
+
 
 QgsPointXY MapWidget::str_to_point(QString str){
     QTextStream stream(&str);
     double posx=center().x(), posy=center().y();
     stream >> posx >> posy;
     return {posx, posy};
+}
+
+
+void MapWidget::update_buttons_pos(){
+    center_button->move(size().width()-center_button_size.width()-center_button_pos.x(),
+                        size().height()-center_button_size.height()-center_button_pos.y());
 }
 
 

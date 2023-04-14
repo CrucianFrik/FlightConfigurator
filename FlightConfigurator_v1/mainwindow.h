@@ -27,12 +27,19 @@ public:
 
     void show();
 
+    void resizeEvent(QResizeEvent* event);
+
     ~MainWindow();
 
 public slots:
     void updateLabel(int lcd_num, double number);
 
+private slots:
+    void update_widgets_geometry();
+
 private:
+
+
     Ui::MainWindow *ui;
 
     MapWidget* mapw_data;

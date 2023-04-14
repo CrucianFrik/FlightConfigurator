@@ -47,11 +47,12 @@ public:
     MapWidget(const QList<QgsMapLayer*>& layers, QWidget* parent=nullptr);
 
     void move_to(QgsPointXY pos);
+    void update_buttons_pos();
 
     ~MapWidget();
 
 private slots:
-    void pan(){ setMapTool(tool_pan); }
+    void pan();
     void move_to_search_query();
     void centralize();
 
@@ -63,16 +64,18 @@ private:
 
     SearchBar* search_bar;
     QPushButton* center_button;
-    QgsRectangle start_extent;
+    QgsRectangle full_zoom;
 
     const double zoom_factor_wheel = 1.3;
     const double zoom_factor_move = 1e6;
     const bool antialiasing = true;
     const bool preview_jobs = true;
 
-    const QSize center_button_size = {30, 30};
+    const QSize center_button_size = {25, 25};
     const QPoint center_button_pos = {10, 10};
     const QString center_button_label = "◼️";
+
+    QgsCoordinateTransform* wgs84_to_cur;
 };
 
 
