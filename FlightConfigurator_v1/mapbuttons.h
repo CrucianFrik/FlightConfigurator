@@ -8,9 +8,16 @@
 #include <QWidget>
 #include <QDir>
 #include <QDebug>
+#include <QCheckBox>
 
 #include <qgsmapcanvas.h>
 #include <qgsvertexmarker.h>
+
+
+
+const QSize button_size = {35, 35};
+const QPoint button_indent = {10, 10};
+const QPoint button_icon_indent = {4, 4};
 
 
 
@@ -40,6 +47,7 @@ private:
 
 class CentralizeButton : public QPushButton{
 Q_OBJECT
+
 public:
     CentralizeButton(QWidget* parent=nullptr);
 
@@ -48,10 +56,37 @@ public:
     ~CentralizeButton() = default;
 
 private:
-    const QSize button_size = {25, 25};
-    const QPoint indent = {10, 10};
-    const QString icon_path = "../../icons/centralize_icon.png";
+    const QSize m_size = button_size;
+    const QPoint m_indent = {2*button_indent.x()+button_size.width(), button_indent.y()};
+    const QString m_icon_path = "../../icons/centralize_icon.png";
+    const QSize m_icon_size = {m_size.width()-2*button_icon_indent.x(), m_size.height()-2*button_icon_indent.y()};
 
+};
+
+
+
+class FocusSwitch: public QPushButton {
+Q_OBJECT
+
+public:
+    FocusSwitch(QWidget* parent=nullptr);
+
+    void update_pos(QSize win_size);
+    void chande_icon();
+
+    ~FocusSwitch();
+
+private:
+    const QSize m_size = button_size;
+    const QPoint m_indent = button_indent;
+    const QString m_enable_icon_path = "../../icons/focus_icon.png";
+    const QString m_disable_icon_path = "../../icons/unfocus_icon.png";
+    const QSize m_icon_size = {m_size.width()-button_icon_indent.x(), m_size.height()-button_icon_indent.y()};
+
+    bool is_enable=false;
+
+    QIcon* enable_icon;
+    QIcon* disable_icon;
 };
 
 

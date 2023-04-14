@@ -6,6 +6,7 @@ MapWidget::MapWidget(const QList<QgsMapLayer*>& layers, QWidget* parent)
       tool_pan{new QgsMapToolPan(this)},
       search_bar{new SearchBar(this)},
       center_button{new CentralizeButton(this)},
+      focus_switch{new FocusSwitch(this)},
       drone_marker{new DroneMarker(this)}
 {
     full_zoom = layers[0]->extent();
@@ -14,15 +15,13 @@ MapWidget::MapWidget(const QList<QgsMapLayer*>& layers, QWidget* parent)
     setLayers(layers);
     set_settings();
 
-    auto action_pan = new QAction(QString("Pan"), this);
-    action_pan->setCheckable(true);
-    connect(action_pan, SIGNAL(triggered()), SLOT(pan()));
-    tool_pan->setAction(action_pan);
-    pan();
+    enable_pan(true);
 
     connect(search_bar, SIGNAL(returnPressed()), SLOT(move_to_search_query()));
 
     connect(center_button, SIGNAL(clicked()), SLOT(centralize()));
+
+    connect(focus_switch, SIGNAL(clicked()), SLOT(change_focus()));
 
 //    qDebug() << layers[0]->crs().description();
 //    setDestinationCrs(layers[0]->crs());
@@ -55,6 +54,7 @@ MapWidget::~MapWidget(){
     delete tool_pan;
     delete search_bar;
     delete center_button;
+    delete focus_switch;
     delete drone_marker;
 }
 
@@ -67,20 +67,25 @@ void MapWidget::move_to(QgsPointXY pos){
 
 
 void MapWidget::move_to_search_query(){
+    if (is_focused){
+        change_focus();
+        waitWhileRendering();
+    }
+
     QgsPointXY pos = str_to_point(search_bar->get_query());
     move_to(pos);
 }
 
 
 void MapWidget::centralize(){
-    setCenter({0,0});
+    if (is_focused){
+        change_focus();
+        waitWhileRendering();
+    }
+
     setExtent(full_zoom);
+    setCenter({0,0});
     refresh();
-}
-
-
-void MapWidget::pan(){
-    setMapTool(tool_pan);
 }
 
 
@@ -94,13 +99,35 @@ QgsPointXY MapWidget::str_to_point(QString str){
 
 void MapWidget::update_buttons_pos(){
     center_button->update_pos(size());
+    focus_switch->update_pos(size());
 }
 
 
 void MapWidget::update_drone_pos(QgsPointXY pos){
     drone_marker->update_pos(pos);
+
+    if (is_focused){
+        waitWhileRendering();
+        setCenter(pos);
+        refresh();
+    }
 }
 
 
+void MapWidget::change_focus(){
+    focus_switch->chande_icon();
+    if (!is_focused){
+        move_to(drone_marker->center());
+    }
+    enable_pan(is_focused);
+    is_focused = !is_focused;
+}
 
 
+void MapWidget::enable_pan(bool is_enabled){
+    if (is_enabled){
+        setMapTool(tool_pan);
+    } else {
+        unsetMapTool(tool_pan);
+    }
+}

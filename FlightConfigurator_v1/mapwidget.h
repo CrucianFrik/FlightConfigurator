@@ -28,23 +28,25 @@ public:
     ~MapWidget();
 
 private slots:
-    void pan();
     void move_to_search_query();
     void centralize();
+    void change_focus();
 
 private:
+    void enable_pan(bool is_enabled);
     void set_settings();
     QgsPointXY str_to_point(QString str);
+
+    QgsRectangle full_zoom;
 
     QgsMapToolPan* tool_pan;
 
     SearchBar* search_bar;
-
     CentralizeButton* center_button;
-    QgsRectangle full_zoom;
-
+    FocusSwitch* focus_switch;
     DroneMarker* drone_marker;
 
+    bool is_focused = false;
 
     const double zoom_factor_wheel = 1.3;
     const double zoom_factor_move = 1e6;
