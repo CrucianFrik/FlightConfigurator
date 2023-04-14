@@ -5,7 +5,7 @@ MapWidget::MapWidget(const QList<QgsMapLayer*>& layers, QWidget* parent)
     : QgsMapCanvas(parent),
       tool_pan{new QgsMapToolPan(this)},
       search_bar{new SearchBar(this)},
-      center_button{new QPushButton(this)},
+      center_button{new CentralizeButton(this)},
       drone_marker{new DroneMarker(this)}
 {
     full_zoom = layers[0]->extent();
@@ -22,8 +22,6 @@ MapWidget::MapWidget(const QList<QgsMapLayer*>& layers, QWidget* parent)
 
     connect(search_bar, SIGNAL(returnPressed()), SLOT(move_to_search_query()));
 
-    center_button->resize(center_button_size);
-    center_button->setText(center_button_label);
     connect(center_button, SIGNAL(clicked()), SLOT(centralize()));
 
 //    qDebug() << layers[0]->crs().description();
@@ -95,8 +93,7 @@ QgsPointXY MapWidget::str_to_point(QString str){
 
 
 void MapWidget::update_buttons_pos(){
-    center_button->move(size().width()-center_button_size.width()-center_button_pos.x(),
-                        size().height()-center_button_size.height()-center_button_pos.y());
+    center_button->update_pos(size());
 }
 
 
@@ -117,7 +114,7 @@ SearchBar::SearchBar(QWidget* parent)
 
     search_button->resize( bar_size.width()*search_button_size.width(), bar_size.height()*search_button_size.height() );
     search_button->move( width()*search_button_pos.x(), height()*search_button_pos.y() );
-    search_button->setText( search_button_label );
+    search_button->setIcon(QIcon( QDir(QDir::currentPath()).filePath(icon_path) ));
 
     connect(search_button, SIGNAL(pressed()), this, SIGNAL(returnPressed()));
 }
@@ -149,3 +146,25 @@ void DroneMarker::update_pos(QgsPointXY pos){
 }
 
 
+void DroneMarker::set_invisible(bool is_invisible){
+    if (is_invisible){
+        setIconSize(0);
+    } else {
+        setIconSize(size);
+    }
+}
+
+
+
+CentralizeButton::CentralizeButton(QWidget *parent)
+    : QPushButton(parent)
+{
+    resize(button_size);
+    setIcon(QIcon( QDir(QDir::currentPath()).filePath(icon_path) ));
+}
+
+
+void CentralizeButton::update_pos(QSize win_size){
+    move(win_size.width()-button_size.width()-indent.x(),
+         win_size.height()-button_size.height()-indent.y());
+}

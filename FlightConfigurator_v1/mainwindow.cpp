@@ -73,8 +73,6 @@ void MainWindow::show(){
 
     resize(window_size);
     setWindowTitle(window_title);
-
-    mapw_data->update_drone_pos({55,37});
 }
 
 

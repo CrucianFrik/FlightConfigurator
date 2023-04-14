@@ -4,7 +4,6 @@
 
 #include <QMainWindow>
 #include <QPair>
-#include <QDir>
 #include <qgsrasterlayer.h>
 
 #include "mavlink.h"
