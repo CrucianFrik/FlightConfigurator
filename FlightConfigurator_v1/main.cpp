@@ -41,7 +41,7 @@ void test(Binder& binder, MainWindow& w){
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
+    QApplication app(argc, argv);
 
     QList< QPair<QString, QString> > map_layers_paths = {{"../../maps/vector/kx-world-land-areas-110-million-SHP/world-land-areas-110-million.shp", "land"},
                                                          {"../../maps/vector/kx-world-bathymetry-110-million-SHP/world-bathymetry-110-million.shp", "bath"}};
@@ -61,7 +61,7 @@ int main(int argc, char *argv[])
 
 //    Binder binder("/dev/serial/by-id/usb-3D_Robotics_PX4_FMU_v2.x_0-if00", 115200);
 //    test(binder, main_window);
-    return a.exec();
+    return app.exec();
 }
 
 

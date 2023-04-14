@@ -12,7 +12,7 @@
 #include <qgsmapcanvas.h>
 #include <qgsmaptoolpan.h>
 #include <qgsvectorlayer.h>
-
+#include <qgsvertexmarker.h>
 
 
 class SearchBar : public QLineEdit{
@@ -39,6 +39,24 @@ private:
 
 
 
+class DroneMarker : public QgsVertexMarker{
+
+public:
+    DroneMarker(QgsMapCanvas* canvas);
+
+    void update_pos(QgsPointXY pos);
+
+    ~DroneMarker() = default;
+
+private:
+    QColor color = QColor(255, 0, 0);
+    int size = 20;
+    int icon_type = QgsVertexMarker::ICON_CIRCLE;
+
+};
+
+
+
 
 class MapWidget : public QgsMapCanvas{
 Q_OBJECT
@@ -47,7 +65,10 @@ public:
     MapWidget(const QList<QgsMapLayer*>& layers, QWidget* parent=nullptr);
 
     void move_to(QgsPointXY pos);
+
     void update_buttons_pos();
+
+    void update_drone_pos(QgsPointXY pos);
 
     ~MapWidget();
 
@@ -75,7 +96,8 @@ private:
     const QPoint center_button_pos = {10, 10};
     const QString center_button_label = "◼️";
 
-    QgsCoordinateTransform* wgs84_to_cur;
+    DroneMarker* drone_marker;
+
 };
 
 

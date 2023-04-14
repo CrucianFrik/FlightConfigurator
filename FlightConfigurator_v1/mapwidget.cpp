@@ -5,7 +5,8 @@ MapWidget::MapWidget(const QList<QgsMapLayer*>& layers, QWidget* parent)
     : QgsMapCanvas(parent),
       tool_pan{new QgsMapToolPan(this)},
       search_bar{new SearchBar(this)},
-      center_button{new QPushButton(this)}
+      center_button{new QPushButton(this)},
+      drone_marker{new DroneMarker(this)}
 {
     full_zoom = layers[0]->extent();
 
@@ -25,6 +26,10 @@ MapWidget::MapWidget(const QList<QgsMapLayer*>& layers, QWidget* parent)
     center_button->setText(center_button_label);
     connect(center_button, SIGNAL(clicked()), SLOT(centralize()));
 
+//    qDebug() << layers[0]->crs().description();
+//    setDestinationCrs(layers[0]->crs());
+//    qDebug() << mapSettings().destinationCrs().authid();
+
 //    auto wgs84 = QgsCoordinateReferenceSystem("EPSG:4326");
 //    qDebug() << wgs84.authid();
 //    qDebug() << wgs84.description();
@@ -42,9 +47,7 @@ void MapWidget::set_settings(){
     setPreviewJobsEnabled(preview_jobs);
     enableAntiAliasing(antialiasing);
     setWheelFactor(zoom_factor_wheel);
-//    setMinimumSize(1400, 800);
 //    setDestinationCrs(QgsCoordinateReferenceSystem("WGS84"));
-//    setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
 //    setRenderFlag(true);
 }
@@ -54,6 +57,7 @@ MapWidget::~MapWidget(){
     delete tool_pan;
     delete search_bar;
     delete center_button;
+    delete drone_marker;
 }
 
 
@@ -96,6 +100,10 @@ void MapWidget::update_buttons_pos(){
 }
 
 
+void MapWidget::update_drone_pos(QgsPointXY pos){
+    drone_marker->update_pos(pos);
+}
+
 
 
 
@@ -123,3 +131,21 @@ SearchBar::~SearchBar(){
 QString SearchBar::get_query() const {
     return text();
 }
+
+
+
+DroneMarker::DroneMarker(QgsMapCanvas *canvas)
+    : QgsVertexMarker(canvas)
+{
+    setFillColor(color);
+    setIconSize(size);
+    setIconType(icon_type);
+}
+
+
+void DroneMarker::update_pos(QgsPointXY pos){
+    setCenter(pos);
+    updatePosition();
+}
+
+
