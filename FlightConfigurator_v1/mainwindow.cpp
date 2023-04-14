@@ -15,10 +15,10 @@ MainWindow::MainWindow(const QList< QPair<QString, QString> >& layers_paths, QWi
     ui->label_6->setText("");
 
     QList<QgsMapLayer*> layers;
-//    for (auto& path : layers_paths){
-//        layers.push_back(new QgsVectorLayer( QDir(QDir::currentPath()).filePath(path.first), path.second, "ogr" ));
-//    }
-    layers.push_back(new QgsRasterLayer("/home/k7ps/QtProjects/FlightConfigurator/maps/raster/worldmap.tif","tif"));
+    for (auto& path : layers_paths){
+        layers.push_back(new QgsVectorLayer( QDir(QDir::currentPath()).filePath(path.first), path.second, "ogr" ));
+    }
+//    layers.push_back(new QgsRasterLayer("/home/k7ps/QtProjects/FlightConfigurator/maps/raster/worldmap.tif","tif"));
 
     mapw_data = new MapWidget(layers);
     mapw_plan = new MapWidget(layers);

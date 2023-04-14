@@ -64,15 +64,17 @@ include_directories("3dparty/mavlink_v2")
 include_directories("3dparty/mavlink_v2/ardupilotmega")
 
 set(SOURCES
-    main.cpp
+	main.cpp
     mainwindow.cpp
     mapwidget.cpp
+	mapbuttons.cpp
     )
 
 
 set(HEADERS
     mainwindow.h
-    mapwidget.h
+	mapwidget.h
+	mapbuttons.h
     )
 
 
