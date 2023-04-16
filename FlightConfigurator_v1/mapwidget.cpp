@@ -5,8 +5,6 @@ MapWidget::MapWidget(const QList<QgsMapLayer*>& layers, QWidget* parent)
     : QgsMapCanvas(parent),
       tool_pan{new QgsMapToolPan(this)},
       search_bar{new SearchBar(this)},
-      center_button{new CentralizeButton(this)},
-      focus_switch{new FocusSwitch(this)},
       drone_marker{new DroneMarker(this)}
 {
     full_zoom = layers[0]->extent();
@@ -17,11 +15,16 @@ MapWidget::MapWidget(const QList<QgsMapLayer*>& layers, QWidget* parent)
 
     enable_pan(true);
 
-    connect(search_bar, SIGNAL(returnPressed()), SLOT(move_to_search_query()));
+    center_button   = new CentralizeButton(this, center_button_pos);
+    zoomin_button   = new ZoomInButton(this, zoomin_button_pos);
+    zoomout_button  = new ZoomOutButton(this, zoomout_button_pos);
+    follow_checkbox = new FollowCheckbox(this, follow_checkbox_pos);
 
-    connect(center_button, SIGNAL(clicked()), SLOT(centralize()));
-
-    connect(focus_switch, SIGNAL(clicked()), SLOT(change_focus()));
+    connect(search_bar,      SIGNAL(returnPressed()), SLOT(move_to_search_query()));
+    connect(center_button,   SIGNAL(clicked()),       SLOT(centralize())          );
+    connect(zoomin_button,   SIGNAL(clicked()),       SLOT(zoomIn())              );
+    connect(zoomout_button,  SIGNAL(clicked()),       SLOT(zoomOut())             );
+    connect(follow_checkbox, SIGNAL(clicked()),       SLOT(change_focus())        );
 
 //    qDebug() << layers[0]->crs().description();
 //    setDestinationCrs(layers[0]->crs());
@@ -54,7 +57,9 @@ MapWidget::~MapWidget(){
     delete tool_pan;
     delete search_bar;
     delete center_button;
-    delete focus_switch;
+    delete zoomin_button;
+    delete zoomout_button;
+    delete follow_checkbox;
     delete drone_marker;
 }
 
@@ -99,7 +104,9 @@ QgsPointXY MapWidget::str_to_point(QString str){
 
 void MapWidget::update_buttons_pos(){
     center_button->update_pos(size());
-    focus_switch->update_pos(size());
+    zoomin_button->update_pos(size());
+    zoomout_button->update_pos(size());
+    follow_checkbox->update_pos(size());
 }
 
 
@@ -115,7 +122,7 @@ void MapWidget::update_drone_pos(QgsPointXY pos){
 
 
 void MapWidget::change_focus(){
-    focus_switch->chande_icon();
+    follow_checkbox->switch_icon();
     if (!is_focused){
         move_to(drone_marker->center());
     }

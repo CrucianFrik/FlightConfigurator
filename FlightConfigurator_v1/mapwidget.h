@@ -42,8 +42,17 @@ private:
     QgsMapToolPan* tool_pan;
 
     SearchBar* search_bar;
+
     CentralizeButton* center_button;
-    FocusSwitch* focus_switch;
+    ZoomInButton* zoomin_button;
+    ZoomOutButton* zoomout_button;
+    FollowCheckbox* follow_checkbox;
+
+    const int center_button_pos   = 2;
+    const int zoomin_button_pos   = 4;
+    const int zoomout_button_pos  = 3;
+    const int follow_checkbox_pos = 1;
+
     DroneMarker* drone_marker;
 
     bool is_focused = false;

@@ -8,7 +8,6 @@
 #include <QWidget>
 #include <QDir>
 #include <QDebug>
-#include <QCheckBox>
 
 #include <qgsmapcanvas.h>
 #include <qgsvertexmarker.h>
@@ -17,7 +16,13 @@
 
 const QSize button_size = {35, 35};
 const QPoint button_indent = {10, 10};
-const QPoint button_icon_indent = {4, 4};
+const QPoint button_icon_indent = {8, 8};
+
+const QString zoomin_icon_path = "../../icons/zoomin_icon.png";
+const QString zoomout_icon_path = "../../icons/zoomout_icon.png";
+const QString centralize_icon_path = "../../icons/centralize_icon.png";
+const QString follow_icon_path = "../../icons/follow_icon.png";
+const QString unfollow_icon_path = "../../icons/unfollow_icon.png";
 
 
 
@@ -45,49 +50,83 @@ private:
 
 
 
-class CentralizeButton : public QPushButton{
-Q_OBJECT
+
+class MapButton : public QPushButton {
 
 public:
-    CentralizeButton(QWidget* parent=nullptr);
-
     void update_pos(QSize win_size);
 
-    ~CentralizeButton() = default;
+    ~MapButton() = default;
+
+protected:
+    MapButton(QWidget* parent, int pos_number, const QString& icon_path);
 
 private:
-    const QSize m_size = button_size;
-    const QPoint m_indent = {2*button_indent.x()+button_size.width(), button_indent.y()};
-    const QString m_icon_path = "../../icons/centralize_icon.png";
-    const QSize m_icon_size = {m_size.width()-2*button_icon_indent.x(), m_size.height()-2*button_icon_indent.y()};
+    QSize m_size = button_size;
+    QSize m_icon_size = {m_size.width()-button_icon_indent.x(), m_size.height()-button_icon_indent.y()};
+    QPoint m_pos;
 
 };
 
 
 
-class FocusSwitch: public QPushButton {
+class ZoomInButton : public MapButton {
 Q_OBJECT
+public:
+    ZoomInButton(QWidget* parent, int pos_number)
+        : MapButton(parent, pos_number, zoomin_icon_path) {}
+};
+
+
+
+class ZoomOutButton : public MapButton {
+Q_OBJECT
+public:
+    ZoomOutButton(QWidget* parent, int pos_number)
+        : MapButton(parent, pos_number, zoomout_icon_path) {}
+};
+
+
+
+class CentralizeButton : public MapButton {
+Q_OBJECT
+public:
+    CentralizeButton(QWidget* parent, int pos_number)
+        : MapButton(parent, pos_number, centralize_icon_path) {}
+};
+
+
+
+
+class MapCheckbox : public MapButton{
 
 public:
-    FocusSwitch(QWidget* parent=nullptr);
 
-    void update_pos(QSize win_size);
-    void chande_icon();
+    void switch_icon();
 
-    ~FocusSwitch();
+    ~MapCheckbox();
+
+protected:
+    MapCheckbox(QWidget* parent, int pos_number, const QString& enable_icon_path,
+                const QString& disable_icon_path);
 
 private:
-    const QSize m_size = button_size;
-    const QPoint m_indent = button_indent;
-    const QString m_enable_icon_path = "../../icons/focus_icon.png";
-    const QString m_disable_icon_path = "../../icons/unfocus_icon.png";
-    const QSize m_icon_size = {m_size.width()-button_icon_indent.x(), m_size.height()-button_icon_indent.y()};
+    QIcon* m_enable_icon;
+    QIcon* m_disable_icon;
 
-    bool is_enable=false;
+    bool is_enable = false;
 
-    QIcon* enable_icon;
-    QIcon* disable_icon;
 };
+
+
+
+class FollowCheckbox : public MapCheckbox {
+Q_OBJECT
+public:
+    FollowCheckbox(QWidget* parent, int pos_number)
+        : MapCheckbox(parent, pos_number, follow_icon_path, unfollow_icon_path) {}
+};
+
 
 
 
