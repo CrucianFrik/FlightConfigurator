@@ -1,9 +1,10 @@
 #include "mainwindow.h"
 
 
-MainWindow::MainWindow(const QList< QPair<QString, QString> >& layers_paths, QWidget *parent)
+MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
-      ui(new Ui::MainWindow)
+      ui(new Ui::MainWindow),
+      map_controller{new MapController(this)}
 {
     ui->setupUi(this);
 
@@ -14,15 +15,8 @@ MainWindow::MainWindow(const QList< QPair<QString, QString> >& layers_paths, QWi
     ui->label_5->setText("");
     ui->label_6->setText("");
 
-    QList<QgsMapLayer*> layers;
-    for (auto& path : layers_paths) layers.push_back(new QgsVectorLayer( QDir(QDir::currentPath()).filePath(path.first), path.second, "ogr" ));
-//    layers.push_back(new QgsRasterLayer("/home/k7ps/QtProjects/FlightConfigurator/maps/raster/worldmap.tif","tif"));
-
-    mapw_data = new MapWidget(layers);
-    mapw_plan = new MapWidget(layers);
-
-    ui->data_tab->layout()->addWidget(mapw_data);
-    ui->plan_tab->layout()->addWidget(mapw_plan);
+    ui->data_tab->layout()->addWidget(map_controller->get_data_map());
+    ui->plan_tab->layout()->addWidget(map_controller->get_plan_map());
 
     connect(ui->tabWidget, SIGNAL(currentChanged(int)), SLOT(update_widgets_geometry()));
 
@@ -35,8 +29,7 @@ MainWindow::MainWindow(const QList< QPair<QString, QString> >& layers_paths, QWi
 MainWindow::~MainWindow()
 {
     delete ui;
-    delete mapw_data;
-    delete mapw_plan;
+    delete map_controller;
 }
 
 
@@ -75,8 +68,7 @@ void MainWindow::show(){
 
 
 void MainWindow::update_widgets_geometry(){
-    mapw_data->update_buttons_pos();
-    mapw_plan->update_buttons_pos();
+    map_controller->update_maps_geometry();
 }
 
 

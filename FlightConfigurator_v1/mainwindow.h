@@ -2,17 +2,14 @@
 #define MAINWINDOW_H
 
 
-#include <cmath>
+
 #include <QMainWindow>
-#include <QPair>
 #include <QTime>
 #include <QtMath>
 
-#include <qgsrasterlayer.h>
-
 #include "mavlink.h"
-#include "mapwidget.h"
 #include "./ui_mainwindow.h"
+#include "mapcontroller.h"
 
 //void delay( int millisecondsToWait );
 
@@ -26,7 +23,7 @@ class MainWindow : public QMainWindow{
 Q_OBJECT
 
 public:
-    MainWindow(const QList< QPair<QString, QString> >& layers_paths, QWidget *parent = nullptr);
+    MainWindow(QWidget *parent = nullptr);
 
     void show();
 
@@ -34,11 +31,11 @@ public:
 //        double r=10;
 //        for (double fi=0;; fi+=0.001){
 //            delay(50);
-//            mapw_data->update_drone_pos({55+r*cos(fi), 37+r*sin(fi)});
+//            map_controller->update_drone_pos({55+r*cos(fi), 37+r*sin(fi)});
 //        }
 //    }
 
-    void resizeEvent(QResizeEvent* event);
+    void resizeEvent(QResizeEvent* event) override;
 
     ~MainWindow();
 
@@ -51,8 +48,8 @@ private slots:
 private:
     Ui::MainWindow *ui;
 
-    MapWidget* mapw_data;
-    MapWidget* mapw_plan;
+    MapController* map_controller;
+
 
     const QSize window_size = {1100, 600};
     const QString window_title = "FlightConfigurator";

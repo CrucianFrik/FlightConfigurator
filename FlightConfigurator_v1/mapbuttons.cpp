@@ -64,37 +64,6 @@ MapCheckbox::~MapCheckbox(){
     delete m_disable_icon;
 }
 
-//FocusSwitch::FocusSwitch(QWidget *parent)
-//    : QPushButton(parent),
-//      enable_icon{new QIcon(QDir(QDir::currentPath()).filePath(m_enable_icon_path))},
-//      disable_icon{new QIcon(QDir(QDir::currentPath()).filePath(m_disable_icon_path))}
-//{
-//    resize(m_size);
-//    setIcon(*disable_icon);
-//    setIconSize(m_icon_size);
-//}
-
-//void FocusSwitch::update_pos(QSize win_size){
-//    move(win_size.width()-m_size.width()-m_indent.x(),
-//         win_size.height()-m_size.height()-m_indent.y());
-//}
-
-//void FocusSwitch::chande_icon(){
-//    if (!is_enable) {
-//        setIcon(*enable_icon);
-//    } else {
-//        setIcon(*disable_icon);
-//    }
-//    update();
-//    is_enable = !is_enable;
-//}
-
-//FocusSwitch::~FocusSwitch(){
-//    delete enable_icon;
-//    delete disable_icon;
-//}
-
-
 
 DroneMarker::DroneMarker(QgsMapCanvas *canvas)
     : QgsVertexMarker(canvas)

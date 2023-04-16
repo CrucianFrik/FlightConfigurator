@@ -31,6 +31,7 @@ private slots:
     void move_to_search_query();
     void centralize();
     void change_focus();
+    void move_to_drone_pos();
 
 private:
     void enable_pan(bool is_enabled);

@@ -115,8 +115,7 @@ void MapWidget::update_drone_pos(QgsPointXY pos){
 
     if (is_focused){
         waitWhileRendering();
-        setCenter(pos);
-        refresh();
+        move_to_drone_pos();
     }
 }
 
@@ -137,4 +136,10 @@ void MapWidget::enable_pan(bool is_enabled){
     } else {
         unsetMapTool(tool_pan);
     }
+}
+
+
+void MapWidget::move_to_drone_pos(){
+    setCenter(drone_marker->center());
+    refresh();
 }

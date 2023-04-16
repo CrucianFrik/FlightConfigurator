@@ -40,10 +40,7 @@ int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
 
-    QList< QPair<QString, QString> > map_layers_paths = {{"../../maps/vector/kx-world-land-areas-110-million-SHP/world-land-areas-110-million.shp", "land"},
-                                                         {"../../maps/vector/kx-world-bathymetry-110-million-SHP/world-bathymetry-110-million.shp", "bath"}};
-
-    MainWindow main_window(map_layers_paths);
+    MainWindow main_window;
     main_window.show();
 
 //    main_window.test();

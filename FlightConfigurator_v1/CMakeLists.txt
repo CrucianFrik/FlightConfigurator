@@ -29,15 +29,15 @@ find_package(QGIS REQUIRED)
 
 # Enable Qt modules
 find_package(Qt5 COMPONENTS
-        Core
-        Gui
-        Widgets
-	Network
-	SerialPort
-	Positioning
-        Xml
-        Sql
-	REQUIRED)
+				Core
+				Gui
+				Widgets
+				Network
+				SerialPort
+				Positioning
+				Xml
+				Sql
+				REQUIRED)
 
 # GDAL
 find_library(GDAL_LIBRARY NAMES gdal PATHS /usr/lib)
@@ -68,6 +68,7 @@ set(SOURCES
     mainwindow.cpp
     mapwidget.cpp
 	mapbuttons.cpp
+	mapcontroller.cpp
     )
 
 
@@ -75,6 +76,7 @@ set(HEADERS
     mainwindow.h
 	mapwidget.h
 	mapbuttons.h
+	mapcontroller.h
     )
 
 
@@ -86,8 +88,8 @@ set(UIS
 add_executable(${PROJECT}
                ${SOURCES}
                ${HEADERS}
-	       ${UIS}
-	       ${INTERNAL_SOURCES}
+			   ${UIS}
+			   ${INTERNAL_SOURCES}
                ${RESOURCES})
 
 target_include_directories(${PROJECT} PRIVATE
