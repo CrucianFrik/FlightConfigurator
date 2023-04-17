@@ -27,6 +27,9 @@ public:
 
     ~MapWidget();
 
+protected:
+    void wheelEvent(QWheelEvent* e) override;
+
 private slots:
     void move_to_search_query();
     void centralize();

@@ -143,3 +143,13 @@ void MapWidget::move_to_drone_pos(){
     setCenter(drone_marker->center());
     refresh();
 }
+
+
+void MapWidget::wheelEvent(QWheelEvent *e){
+    QgsMapCanvas::wheelEvent(e);
+
+    if (is_focused){
+        stopRendering();
+        move_to_drone_pos();
+    }
+}
