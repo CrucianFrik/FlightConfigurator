@@ -20,6 +20,7 @@ public:
     MapWidget(const QList<QgsMapLayer*>& layers, QWidget* parent=nullptr);
 
     void move_to(QgsPointXY pos);
+    void move_to_with_zoom(QgsPointXY pos);
 
     void update_buttons_pos();
 
@@ -31,15 +32,20 @@ protected:
     void wheelEvent(QWheelEvent* e) override;
 
 private slots:
-    void move_to_search_query();
-    void centralize();
-    void change_focus();
-    void move_to_drone_pos();
+    void move_to_search_query_slot();
+    void move_to_drone_slot();
+    void move_to_drone_with_zoom_slot();
+
+    void centralize_slot();
+    void change_focus_slot();
 
 private:
     void enable_pan(bool is_enabled);
     void set_settings();
+    void set_unfocused();
+
     QgsPointXY str_to_point(QString str);
+
 
     QgsRectangle full_zoom;
 
@@ -48,9 +54,9 @@ private:
     SearchBar* search_bar;
 
     CentralizeButton* center_button;
-    ZoomInButton* zoomin_button;
-    ZoomOutButton* zoomout_button;
-    FollowCheckbox* follow_checkbox;
+    ZoomInButton*     zoomin_button;
+    ZoomOutButton*    zoomout_button;
+    FollowCheckbox*   follow_checkbox;
 
     const int center_button_pos   = 2;
     const int zoomin_button_pos   = 4;
@@ -61,10 +67,12 @@ private:
 
     bool is_focused = false;
 
-    const double zoom_factor_wheel = 1.3;
-    const double zoom_factor_move = 1e6;
-    const bool antialiasing = true;
-    const bool preview_jobs = true;
+    const double ZOOM_FACTOR_WHEEL = 1.3;
+    const double ZOOM_FACTOR_MOVE = 1e6;
+    const bool ANTIALIASING  = true;
+    const bool PREVIEW_JOBS  = true;
+    const bool IS_PAN_ENABLE = true;
+
 };
 
 

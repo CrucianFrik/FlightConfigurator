@@ -5,13 +5,14 @@ SearchBar::SearchBar(QWidget* parent)
     : QLineEdit(parent),
       search_button{new QPushButton(this)}
 {
-    resize(bar_size);
-    move(bar_pos);
-    setPlaceholderText(bar_prompt);
+    resize(BAR_SIZE);
+    setPlaceholderText(BAR_PROMPT);
 
-    search_button->resize( bar_size.width()*search_button_size.width(), bar_size.height()*search_button_size.height() );
-    search_button->move( width()*search_button_pos.x(), height()*search_button_pos.y() );
-    search_button->setIcon(QIcon( QDir(QDir::currentPath()).filePath(icon_path) ));
+    search_button->resize( BAR_SIZE.width()*SEARCH_BUTTON_SIZE.width(),
+                           BAR_SIZE.height()*SEARCH_BUTTON_SIZE.height() );
+    search_button->move( width() * SEARCH_BUTTON_POS.x(),
+                        height() * SEARCH_BUTTON_POS.y() );
+    search_button->setIcon(QIcon( QDir(QDir::currentPath()).filePath(SEARCH_ICON_PATH) ));
 
     connect(search_button, SIGNAL(pressed()), this, SIGNAL(returnPressed()));
 }
@@ -24,6 +25,11 @@ QString SearchBar::get_query() const {
     return text();
 }
 
+void SearchBar::update_pos(QSize win_size){
+    move(BAR_POS);
+}
+
+
 
 MapButton::MapButton(QWidget* parent, int pos_number, const QString& icon_path)
     : QPushButton(parent)
@@ -32,7 +38,7 @@ MapButton::MapButton(QWidget* parent, int pos_number, const QString& icon_path)
     setIconSize(m_icon_size);
 
     resize(m_size);
-    m_pos = {pos_number * (button_indent.x() + m_size.width()), button_indent.y() + m_size.height()};
+    m_pos = {pos_number * (BUTTON_INDENT.x() + m_size.width()), BUTTON_INDENT.y() + m_size.height()};
 }
 
 void MapButton::update_pos(QSize win_size){

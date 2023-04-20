@@ -6,13 +6,12 @@ MapController::MapController(QWidget *parent){
 
     data_map = new MapWidget(layers, parent);
     plan_map = new MapWidget(layers, parent);
-
 }
 
 
 void MapController::load_layers(){
-    for (auto& path : map_layers_paths) layers.push_back(new QgsVectorLayer( QDir(QDir::currentPath()).filePath(path.first), path.second, "ogr" ));
-//    layers.push_back(new QgsRasterLayer("/home/k7ps/QtProjects/FlightConfigurator/maps/raster/worldmap.tif","tif"));
+//    for (auto& path : MAP_LAYER_PATHS) layers.push_back(new QgsVectorLayer( QDir(QDir::currentPath()).filePath(path.first), path.second, "ogr" ));
+    layers.push_back(new QgsRasterLayer("/home/k7ps/QtProjects/FlightConfigurator/maps/raster/worldmap.tif","tif"));
 }
 
 

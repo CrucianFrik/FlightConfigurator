@@ -11,7 +11,7 @@
 
 
 
-const QList< QPair<QString, QString> > map_layers_paths =
+const QList< QPair<QString, QString> > MAP_LAYER_PATHS =
     {{"../../maps/vector/kx-world-land-areas-110-million-SHP/world-land-areas-110-million.shp", "land"},
      {"../../maps/vector/kx-world-bathymetry-110-million-SHP/world-bathymetry-110-million.shp", "bath"}};
 
@@ -19,6 +19,7 @@ const QList< QPair<QString, QString> > map_layers_paths =
 
 
 class MapController{
+
 public:
     MapController(QWidget* parent=nullptr);
 
