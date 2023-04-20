@@ -22,9 +22,9 @@ void test(Binder& binder, MainWindow& w){
         delay(500);
         attitude = binder.getAttitude();
         heartbeat = binder.getHeartbeat();
-        w.updateLabel(2, qRadiansToDegrees(attitude.pitch));
-        w.updateLabel(3, qRadiansToDegrees(attitude.roll));
-        w.updateLabel(4, qRadiansToDegrees(attitude.yaw));
+        w.update_label(2, qRadiansToDegrees(attitude.pitch));
+        w.update_label(3, qRadiansToDegrees(attitude.roll));
+        w.update_label(4, qRadiansToDegrees(attitude.yaw));
         qDebug() << "pitch" << qRadiansToDegrees(attitude.pitch)
                         << "roll" << qRadiansToDegrees(attitude.roll)
                         << "yaw" << qRadiansToDegrees(attitude.yaw);
@@ -41,7 +41,7 @@ int main(int argc, char *argv[])
     MainWindow w;
     w.show();
     Binder binder("/dev/serial/by-id/usb-3D_Robotics_PX4_FMU_v2.x_0-if00", 115200);
-
+    w.update_table(std::vector<std::pair<QString, int> >{{"first param", 1}, {"second param", 2}});
     test(binder, w);
     return a.exec();
 }

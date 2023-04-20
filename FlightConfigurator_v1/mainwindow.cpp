@@ -1,25 +1,21 @@
 #include "mainwindow.h"
-#include "./ui_mainwindow.h"
-#include "mavlink.h"
-#include <QTimer>
-#include <iostream>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    ui->label->setText("yaw");
-    ui->label_2->setText("pitch");
-    ui->label_3->setText("roll");
-    ui->label_4->setText("yaw");
+    ui->yaw_label->setText("yaw");
+    ui->pitch_label->setText("pitch");
+    ui->roll_label->setText("roll");
+    ui->yaw_label_2->setText("yaw");
     ui->label_5->setText("");
     ui->label_6->setText("");
     ui->label_7->setPixmap(QPixmap(QString::fromUtf8(":images/map.png")));
 
-    QTimer *timer = new QTimer(this);
-        connect(timer, SIGNAL(timeout()), this, SLOT(updateLabel()));
-        timer->start(1000);
+//    QTimer *timer = new QTimer(this);
+//        connect(timer, SIGNAL(timeout()), this, SLOT(update_label()));
+//        timer->start(1000);
 }
 
 MainWindow::~MainWindow()
@@ -27,21 +23,21 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::updateLabel(int lcd_num, double number)
+void MainWindow::update_label(int lcd_num, double number)
 {
     switch (lcd_num)
     {
         case 2:
-            ui->lcdNumber_2->display(number);
+            ui->yaw_number->display(number);
             break;
         case 3:
-            ui->lcdNumber_3->display(number);
+            ui->pitch_number->display(number);
             break;
         case 4:
-            ui->lcdNumber_4->display(number);
+            ui->yaw_number_2->display(number);
             break;
         case 5:
-            ui->lcdNumber_5->display(number);
+            ui->roll_number->display(number);
             break;
         case 6:
             ui->lcdNumber_6->display(number);
@@ -50,4 +46,30 @@ void MainWindow::updateLabel(int lcd_num, double number)
             ui->lcdNumber_7->display(number);
             break;
     }
+}
+
+void MainWindow::update_table(std::vector<std::vector<std::string> > param)
+{
+    ui->table_settings->setRowCount(param.size());
+    ui->table_settings->setColumnCount(param[0].size());
+    for(int i = 0; i < param.size(); ++i)
+    {
+        for(int j = 0; j < param[i].size(); ++j)
+        {
+            ui->table_settings->setItem(i, j, new QTableWidgetItem(QString::fromStdString(param[i][j])));
+        }
+    }
+}
+
+void MainWindow::update_table(std::vector<std::pair<QString, int> > param)
+{
+    ui->table_settings->setRowCount(param.size());
+    ui->table_settings->setColumnCount(1);
+    QStringList headers = {};
+    for(int i = 0; i < param.size(); ++i)
+    {
+        ui->table_settings->setItem(i, 0, new QTableWidgetItem(QString::number(param[i].second)));
+        headers.append(param[i].first);
+    }
+    ui->table_settings->setVerticalHeaderLabels(headers);
 }

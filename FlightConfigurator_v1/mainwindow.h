@@ -2,6 +2,9 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include "./ui_mainwindow.h"
+#include "mavlink.h"
+
 #include "mavlink.h"
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -13,7 +16,9 @@ class MainWindow : public QMainWindow
 
 public:
     MainWindow(QWidget *parent = nullptr);
-    void updateLabel(int lcd_num, double number);
+    void update_label(int lcd_num, double number);
+    void update_table(std::vector<std::vector<std::string> > param);
+    void update_table(std::vector<std::pair<QString, int> > param);
     ~MainWindow();
 private:
     Ui::MainWindow *ui;
