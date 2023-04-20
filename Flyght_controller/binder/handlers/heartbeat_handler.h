@@ -15,21 +15,16 @@ namespace domain
         mavlink_heartbeat_t heartbeat;
 
     public:
-        HeartbeatHandler(uint8_t type, MavLinkCommunicator* communicator);
+        HeartbeatHandler(MavLinkCommunicator* communicator);
         mavlink_heartbeat_t const& getData();
-
-    protected:
-        void timerEvent(QTimerEvent *event) override;
 
     public slots:
         void processMessage(const mavlink_message_t& message) override;
 
     private:
-
         //костыль, пикс отправляет сигнал, видимо, пределжительное время и за него
         //qt успевает вызвать слот дважды (типа как если бы пользователь кнопку зажал)
         int c = 0; //FIXME
-        const uint8_t m_type;
     };
 }
 

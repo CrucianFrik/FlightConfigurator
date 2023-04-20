@@ -7,34 +7,23 @@
 
 using namespace domain;
 
-HeartbeatHandler::HeartbeatHandler(uint8_t type, MavLinkCommunicator* communicator):
-    AbstractHandler(communicator),
-    m_type(type)
-{
-    this->startTimer(1000); // 1 Hz
-}
+HeartbeatHandler::HeartbeatHandler(MavLinkCommunicator* communicator):
+    AbstractHandler(communicator) {}
 
 mavlink_heartbeat_t const& HeartbeatHandler::getData(){ return heartbeat; }
 
-void HeartbeatHandler::timerEvent(QTimerEvent* event)
-{
-    Q_UNUSED(event)
-
-    mavlink_message_t message;
-    mavlink_heartbeat_t heartbeat;
-    heartbeat.type = m_type;
-
-    mavlink_msg_heartbeat_encode(m_communicator->systemId(),
-                                 m_communicator->componentId(),
-                                 &message, &heartbeat);
-
-    m_communicator->sendMessageOnAllLinks(message);
-}
-
 void HeartbeatHandler::processMessage(const mavlink_message_t& message)
 {
-    if (message.msgid != MAVLINK_MSG_ID_HEARTBEAT){
-        return;}
+    if (message.msgid == MAVLINK_MSG_ID_COMMAND_ACK){
+
+    mavlink_command_ack_t command_ack;
+    mavlink_msg_command_ack_decode(&message, &command_ack);
+
+    if (command_ack.result == MAV_RESULT_ACCEPTED)
+        qDebug() << "seting frequency for command" << command_ack.command << "accepted";
+    else
+        qDebug() << "seting frequency for command" << command_ack.command << "failed with MAV_RESULT =" << command_ack.result;
+    }
 
     c++;
     mavlink_msg_heartbeat_decode(&message, &heartbeat);

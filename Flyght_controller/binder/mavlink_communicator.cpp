@@ -6,6 +6,7 @@
 // Internal
 #include "abstract_link.h"
 #include <QDebug>
+#include <iostream>
 
 using namespace domain;
 
@@ -32,6 +33,16 @@ uint8_t MavLinkCommunicator::systemId() const
 uint8_t MavLinkCommunicator::componentId() const
 {
     return m_componentId;
+}
+
+AbstractLink* MavLinkCommunicator::getLastReceivedLink() const
+{
+    return m_lastReceivedLink;
+}
+
+quint8 MavLinkCommunicator::linkChannel(AbstractLink* link) const
+{
+    return m_linkChannels.value(link, 0);
 }
 
 void MavLinkCommunicator::addLink(AbstractLink* link, uint8_t channel)
@@ -64,12 +75,16 @@ void MavLinkCommunicator::setComponentId(uint8_t componentId)
 
 void MavLinkCommunicator::sendMessage(mavlink_message_t& message, AbstractLink* link)
 {
-    if (!link || !link->isUp()) return;
+    if (!link || !link->isUp()) {
+        qDebug() << "the target link is not up!";
+        return;
+    }
 
     uint8_t buffer[MAVLINK_MAX_PACKET_LEN];
     int lenght = mavlink_msg_to_send_buffer(buffer, &message);
 
     if (!lenght) return;
+
     link->sendData(QByteArray((const char*)buffer, lenght));
 }
 
@@ -80,8 +95,9 @@ void MavLinkCommunicator::sendMessageOnLastReceivedLink(mavlink_message_t& messa
 
 void MavLinkCommunicator::sendMessageOnAllLinks(mavlink_message_t& message)
 {
-    for (AbstractLink* link: m_linkChannels.keys())
+    for (AbstractLink* link: m_linkChannels.keys()){
         this->sendMessage(message, link);
+    }
 }
 
 void MavLinkCommunicator::onDataReceived(const QByteArray& data)
@@ -99,6 +115,19 @@ void MavLinkCommunicator::onDataReceived(const QByteArray& data)
                                 &message, &status))
             continue;
 
+        if (message.sysid)
+            receivedMsgId.insert(message.msgid);
         emit messageReceived(message);
     }
+}
+
+void MavLinkCommunicator::logReceivedMsgs(bool print_once){
+    static int flag = 0;
+    if (!print_once || (print_once && flag == 10)){
+        std::cout << "[";
+        for (std::set<uint32_t>::iterator it = receivedMsgId.begin(); it != receivedMsgId.end(); it++)
+                std::cout << *it << ", ";
+        std::cout << "]" << std::endl;
+    }
+    flag++;
 }

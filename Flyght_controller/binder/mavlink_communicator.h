@@ -1,12 +1,16 @@
 #ifndef MAVLINK_COMMUNICATOR_H
 #define MAVLINK_COMMUNICATOR_H
 
+#include <set>
+
 // MAVLink
 #include <mavlink_types.h>
 
 // Qt
 #include <QObject>
 #include <QMap>
+
+#include <set>
 
 namespace domain
 {
@@ -15,15 +19,19 @@ namespace domain
     class MavLinkCommunicator: public QObject
     {
         Q_OBJECT
+        std::set<uint32_t> receivedMsgId;
 
     public:
-        MavLinkCommunicator(uint8_t systemId = 0, uint8_t componentId = 0,
+        MavLinkCommunicator(uint8_t systemId = 255, uint8_t componentId = 0,
                             QObject* parent = nullptr);
 
         QList<AbstractLink*> links() const;
 
         uint8_t systemId() const;
         uint8_t componentId() const;
+        AbstractLink* getLastReceivedLink () const;
+        quint8 linkChannel(AbstractLink*) const;
+        void logReceivedMsgs(bool print_once = 0); //FIXME
 
     public slots:
         void addLink(AbstractLink* link, uint8_t channel);

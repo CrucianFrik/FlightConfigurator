@@ -58,7 +58,7 @@ void SerialLink::down()
 
 void SerialLink::sendData(const QByteArray& data)
 {
-    m_port->write(data.data(), data.size());
+    m_port->write(data, data.size());
 }
 
 void SerialLink::setPortName(QString portName)

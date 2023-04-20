@@ -18,7 +18,7 @@ MavLinkCommunicator* GcsCommunicatorFactory::create()
 {
     MavLinkCommunicator* communicator = new MavLinkCommunicator(255, 0);
 
-    new domain::HeartbeatHandler(MAV_TYPE_GCS, communicator);
+    new domain::HeartbeatHandler(communicator);
     new domain::AttitudeHandler(communicator);
 
     return communicator;
