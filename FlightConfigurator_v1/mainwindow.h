@@ -37,13 +37,12 @@ public:
 
     void resizeEvent(QResizeEvent* event) override;
 
+    void update_label(int lcd_num, double number);
+
     ~MainWindow();
 
-public slots:
-    void updateLabel(int lcd_num, double number);
-
 private slots:
-    void update_widgets_geometry();
+    void update_widgets_geometry_slot();
 
 private:
     Ui::MainWindow *ui;

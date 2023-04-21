@@ -7,7 +7,8 @@
 
 #include <qgsrasterlayer.h>
 
-#include "mapwidget.h"
+#include "datamapwidget.h"
+#include "planmapwidget.h"
 
 
 
@@ -25,8 +26,8 @@ public:
 
     void load_layers();
 
-    MapWidget* get_data_map();
-    MapWidget* get_plan_map();
+    DataMapWidget* get_data_map();
+    PlanMapWidget* get_plan_map();
 
     void update_maps_geometry();
     void update_drone_pos(QgsPointXY pos);
@@ -34,8 +35,8 @@ public:
     ~MapController();
 
 private:
-    MapWidget* data_map;
-    MapWidget* plan_map;
+    DataMapWidget* data_map;
+    PlanMapWidget* plan_map;
 
     QList<QgsMapLayer*> layers;
 

@@ -31,14 +31,13 @@ void SearchBar::update_pos(QSize win_size){
 
 
 
-MapButton::MapButton(QWidget* parent, int pos_number, const QString& icon_path)
+MapButton::MapButton(QWidget* parent, const QString& icon_path)
     : QPushButton(parent)
 {
     setIcon(QIcon( QDir(QDir::currentPath()).filePath(icon_path) ));
     setIconSize(m_icon_size);
 
     resize(m_size);
-    m_pos = {pos_number * (BUTTON_INDENT.x() + m_size.width()), BUTTON_INDENT.y() + m_size.height()};
 }
 
 void MapButton::update_pos(QSize win_size){
@@ -46,11 +45,16 @@ void MapButton::update_pos(QSize win_size){
          win_size.height() - m_pos.y());
 }
 
+void MapButton::set_pos_number(int pos_number){
+    m_pos = {(BUTTON_INDENT.x() + m_size.width()) * pos_number,
+              BUTTON_INDENT.y() + m_size.height()};
+}
 
 
-MapCheckbox::MapCheckbox(QWidget* parent, int pos_number, const QString& enable_icon_path,
+
+MapCheckbox::MapCheckbox(QWidget* parent, const QString& enable_icon_path,
                          const QString& disable_icon_path)
-    : MapButton(parent, pos_number, disable_icon_path),
+    : MapButton(parent, disable_icon_path),
       m_enable_icon{new QIcon(enable_icon_path)},
       m_disable_icon{new QIcon(disable_icon_path)}
 { }

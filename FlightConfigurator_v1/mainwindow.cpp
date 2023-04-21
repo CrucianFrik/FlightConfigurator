@@ -3,7 +3,7 @@
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
-      ui(new Ui::MainWindow),
+      ui{new Ui::MainWindow},
       map_controller{new MapController(this)}
 {
     ui->setupUi(this);
@@ -18,7 +18,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->data_tab->layout()->addWidget(map_controller->get_data_map());
     ui->plan_tab->layout()->addWidget(map_controller->get_plan_map());
 
-    connect(ui->tabWidget, SIGNAL(currentChanged(int)), SLOT(update_widgets_geometry()));
+    connect(ui->tabWidget, SIGNAL(currentChanged(int)), SLOT(update_widgets_geometry_slot()));
 
 //    QTimer *timer = new QTimer(this);
 //    connect(timer, SIGNAL(timeout()), SLOT(updateLabel()));
@@ -33,7 +33,7 @@ MainWindow::~MainWindow()
 }
 
 
-void MainWindow::updateLabel(int lcd_num, double number)
+void MainWindow::update_label(int lcd_num, double number)
 {
     switch (lcd_num)
     {
@@ -67,7 +67,7 @@ void MainWindow::show(){
 }
 
 
-void MainWindow::update_widgets_geometry(){
+void MainWindow::update_widgets_geometry_slot(){
     map_controller->update_maps_geometry();
 }
 
@@ -75,5 +75,5 @@ void MainWindow::update_widgets_geometry(){
 void MainWindow::resizeEvent(QResizeEvent *event){
     QMainWindow::resizeEvent(event);
 
-    update_widgets_geometry();
+    update_widgets_geometry_slot();
 }

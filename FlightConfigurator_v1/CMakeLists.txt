@@ -69,6 +69,8 @@ set(SOURCES
     mapwidget.cpp
 	mapbuttons.cpp
 	mapcontroller.cpp
+	datamapwidget.cpp
+	planmapwidget.cpp
     )
 
 
@@ -77,6 +79,8 @@ set(HEADERS
 	mapwidget.h
 	mapbuttons.h
 	mapcontroller.h
+	datamapwidget.h
+	planmapwidget.h
     )
 
 

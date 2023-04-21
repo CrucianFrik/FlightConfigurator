@@ -23,9 +23,9 @@ void test(Binder& binder, MainWindow& w){
         delay(500);
         attitude = binder.getAttitude();
         heartbeat = binder.getHeartbeat();
-        w.updateLabel(2, qRadiansToDegrees(attitude.pitch));
-        w.updateLabel(3, qRadiansToDegrees(attitude.roll));
-        w.updateLabel(4, qRadiansToDegrees(attitude.yaw));
+        w.update_label(2, qRadiansToDegrees(attitude.pitch));
+        w.update_label(3, qRadiansToDegrees(attitude.roll));
+        w.update_label(4, qRadiansToDegrees(attitude.yaw));
         qDebug() << "pitch" << qRadiansToDegrees(attitude.pitch)
                         << "roll" << qRadiansToDegrees(attitude.roll)
                         << "yaw" << qRadiansToDegrees(attitude.yaw);

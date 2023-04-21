@@ -56,11 +56,12 @@ class MapButton : public QPushButton {
 
 public:
     void update_pos(QSize win_size);
+    void set_pos_number(int pos_number);
 
     ~MapButton() = default;
 
 protected:
-    MapButton(QWidget* parent, int pos_number, const QString& icon_path);
+    MapButton(QWidget* parent, const QString& icon_path);
 
 private:
     QSize m_size = BUTTON_SIZE;
@@ -74,8 +75,8 @@ private:
 class ZoomInButton : public MapButton {
 Q_OBJECT
 public:
-    ZoomInButton(QWidget* parent, int pos_number)
-        : MapButton(parent, pos_number, ZOOMIN_ICON_PATH) {}
+    ZoomInButton(QWidget* parent)
+        : MapButton(parent, ZOOMIN_ICON_PATH) {}
 };
 
 
@@ -83,8 +84,8 @@ public:
 class ZoomOutButton : public MapButton {
 Q_OBJECT
 public:
-    ZoomOutButton(QWidget* parent, int pos_number)
-        : MapButton(parent, pos_number, ZOOMOUT_ICON_PATH) {}
+    ZoomOutButton(QWidget* parent)
+        : MapButton(parent, ZOOMOUT_ICON_PATH) {}
 };
 
 
@@ -92,8 +93,8 @@ public:
 class CentralizeButton : public MapButton {
 Q_OBJECT
 public:
-    CentralizeButton(QWidget* parent, int pos_number)
-        : MapButton(parent, pos_number, CENTRALIZE_ICON_PATH) {}
+    CentralizeButton(QWidget* parent)
+        : MapButton(parent, CENTRALIZE_ICON_PATH) {}
 };
 
 
@@ -107,7 +108,7 @@ public:
     ~MapCheckbox();
 
 protected:
-    MapCheckbox(QWidget* parent, int pos_number, const QString& enable_icon_path,
+    MapCheckbox(QWidget* parent, const QString& enable_icon_path,
                 const QString& disable_icon_path);
 
 private:
@@ -123,8 +124,8 @@ private:
 class FollowCheckbox : public MapCheckbox {
 Q_OBJECT
 public:
-    FollowCheckbox(QWidget* parent, int pos_number)
-        : MapCheckbox(parent, pos_number, FOLLOW_ICON_PATH, UNFOLLOW_ICON_PATH) {}
+    FollowCheckbox(QWidget* parent)
+        : MapCheckbox(parent, FOLLOW_ICON_PATH, UNFOLLOW_ICON_PATH) {}
 };
 
 
