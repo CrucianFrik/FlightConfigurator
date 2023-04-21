@@ -14,7 +14,7 @@
 
 >рис 2  
  ![alt-текст](https://ardupilot.org/plane/_images/mp_mission_planning.jpg "рис 1")
- ![](https://i.postimg.cc/NjPKjHvc/photo-2023-04-21-13-34-35.jpg)
+ ![](https://i.postimg.cc/nhyCm90f/photo-2023-04-21-13-51-46.jpg)
 
 >рис 3  
  ![alt-текст](https://www.parkflyer.ru/static/user_files/2014/4/19/new_pid.1400520892050.jpg "рис 3")
