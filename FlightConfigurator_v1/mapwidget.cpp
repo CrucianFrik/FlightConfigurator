@@ -96,7 +96,7 @@ void MapWidget::centralize_slot(){
 QgsPointXY MapWidget::str_to_point(QString str){
     QTextStream stream(&str);
     double posx=center().x(), posy=center().y();
-    stream >> posx >> posy;
+    stream >> posy >> posx;
     return {posx, posy};
 }
 
