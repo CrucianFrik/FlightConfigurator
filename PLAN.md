@@ -10,7 +10,7 @@
 То есть в нашей программе будет три окна, аналогичных тем, что есть в миссион планере  
 >рис 1  
  ![alt-текст](https://discuss.ardupilot.org/uploads/default/original/3X/8/2/82ee94f59857c14205fe35e45ce170222bca20b3.jpg "рис 2")
- ![](https://i.postimg.cc/NjPKjHvc/photo-2023-04-21-13-34-35.jpg)
+ ![](https://i.postimg.cc/bwqxtb5S/photo-2023-04-21-13-34-23.jpg)
 
 >рис 2  
  ![alt-текст](https://ardupilot.org/plane/_images/mp_mission_planning.jpg "рис 1")
