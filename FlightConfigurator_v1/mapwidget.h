@@ -34,6 +34,8 @@ protected slots:
     virtual void centralize_slot();
 
 protected:
+    virtual void mousePressEvent(QMouseEvent* e) override;
+
     void enable_pan(bool is_enabled);
 
 

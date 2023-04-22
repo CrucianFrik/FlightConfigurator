@@ -108,3 +108,9 @@ void MapWidget::enable_pan(bool is_enabled){
         unsetMapTool(tool_pan);
     }
 }
+
+void MapWidget::mousePressEvent(QMouseEvent *e){
+    if (e->button() != Qt::RightButton){
+        QgsMapCanvas::mousePressEvent(e);
+    }
+}

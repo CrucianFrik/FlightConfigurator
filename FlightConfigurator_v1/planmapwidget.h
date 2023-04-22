@@ -2,7 +2,9 @@
 #define PLANMAPWIDGET_H
 
 
+#include <QMouseEvent>
 
+#include <qgsmapmouseevent.h>
 #include <qgsrubberband.h>
 
 #include "mapwidget.h"
@@ -26,13 +28,22 @@ public:
 
     int points_count();
 
+    void update_possible_line(QgsPointXY pos);
+    void clear_possible_line();
+
 private:
     QList<double> alts;
     const double default_alt = 0.0;
 
-    const int line_width = 3;
+    QList<QgsPointXY> points;
+
+    QgsRubberBand* possible_line;
+
+    const int drawed_width = 3;
+    const int possible_width = 2;
     const QColor color = QColor(255, 0, 0);
-    const Qt::PenStyle line_style = Qt::SolidLine;
+    const Qt::PenStyle drawed_style = Qt::SolidLine;
+    const Qt::PenStyle possible_style = Qt::DashLine;
 
 };
 
@@ -47,7 +58,16 @@ public:
     ~PlanMapWidget();
 
 private:
+    void mousePressEvent(QMouseEvent* e) override;
+    void mouseMoveEvent(QMouseEvent* e) override;
+    void mouseReleaseEvent(QMouseEvent* e) override;
+
+
     FlightPlan* flight_plan;
+
+    bool is_plan_drawing = true;
+
+    bool is_right_button_pressed = false;
 
     const int center_button_pos   = 1;
     const int zoomin_button_pos   = 3;
