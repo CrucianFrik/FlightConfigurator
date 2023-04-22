@@ -13,8 +13,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(ui->tabWidget, SIGNAL(currentChanged(int)), SLOT(update_widgets_geometry_slot()));
 
-//    ui->table->resizeColumnsToContents();
-//    ui->table->resizeRowsToContents();
+    ui->table->resizeColumnsToContents();
+    ui->table->resizeRowsToContents();
 
 //            tableWidget->addWidget(pushButton_5);
 //    QTimer *timer = new QTimer(this);
