@@ -11,7 +11,7 @@
    </rect>
   </property>
   <property name="sizePolicy">
-   <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+   <sizepolicy hsizetype="Ignored" vsizetype="Maximum">
     <horstretch>0</horstretch>
     <verstretch>0</verstretch>
    </sizepolicy>
@@ -26,9 +26,181 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QHBoxLayout" name="horizontalLayout">
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_3">
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <item>
+         <widget class="QLabel" name="label_8">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="frameShape">
+           <enum>QFrame::Box</enum>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+          <property name="pixmap">
+           <pixmap>../../../../Downloads/Telegram Desktop/ed4b42ab-1913-480a-8d4d-2e4b68d569a8 (2).jpg</pixmap>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="label_7">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="text">
+           <string>Flight Configurator</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout_6">
+        <item>
+         <widget class="QLineEdit" name="lineEdit">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="styleSheet">
+           <string notr="true"/>
+          </property>
+          <property name="text">
+           <string/>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QComboBox" name="comboBox">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <item>
+           <property name="text">
+            <string>1200</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>2400</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>4800</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>9600</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>19200</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>38400</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>57600</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>111100</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>115200</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>230400</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>460800</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>500000</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>625000</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>921600</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>1000000</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>1500000</string>
+           </property>
+          </item>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="pushButton">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="text">
+           <string>CONNECT</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </item>
     <item>
      <widget class="QTabWidget" name="tabWidget">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
       <property name="cursor">
        <cursorShape>ArrowCursor</cursorShape>
       </property>
@@ -36,7 +208,7 @@
        <enum>Qt::TabFocus</enum>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="data_tab">
        <attribute name="title">
@@ -69,24 +241,14 @@
             <item row="1" column="1">
              <widget class="QLabel" name="label">
               <property name="text">
-               <string>TextLabel</string>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="0">
-             <widget class="QLCDNumber" name="lcdNumber_3">
-              <property name="minimumSize">
-               <size>
-                <width>205</width>
-                <height>0</height>
-               </size>
+               <string>Vertical Speed (m/s)</string>
               </property>
              </widget>
             </item>
             <item row="4" column="1">
              <widget class="QLabel" name="label_3">
               <property name="text">
-               <string>TextLabel</string>
+               <string>GroundSpeed (m/s)</string>
               </property>
              </widget>
             </item>
@@ -99,14 +261,14 @@
                </sizepolicy>
               </property>
               <property name="text">
-               <string>TextLabel</string>
+               <string>Dist to WP (m)</string>
               </property>
              </widget>
             </item>
             <item row="7" column="0">
              <widget class="QLabel" name="label_5">
               <property name="text">
-               <string>TextLabel</string>
+               <string>Latitude</string>
               </property>
              </widget>
             </item>
@@ -125,7 +287,7 @@
                </sizepolicy>
               </property>
               <property name="text">
-               <string>TextLabel</string>
+               <string>Altitude (m)</string>
               </property>
              </widget>
             </item>
@@ -138,7 +300,7 @@
                </sizepolicy>
               </property>
               <property name="text">
-               <string>TextLabel</string>
+               <string>Longitude</string>
               </property>
              </widget>
             </item>
@@ -147,6 +309,16 @@
             </item>
             <item row="6" column="0">
              <widget class="QgsSymbolButton" name="mSymbolButton"/>
+            </item>
+            <item row="3" column="0">
+             <widget class="QLCDNumber" name="lcdNumber_3">
+              <property name="minimumSize">
+               <size>
+                <width>205</width>
+                <height>0</height>
+               </size>
+              </property>
+             </widget>
             </item>
            </layout>
           </item>
@@ -158,65 +330,233 @@
        <attribute name="title">
         <string>PLAN</string>
        </attribute>
-       <layout class="QGridLayout" name="gridLayout"/>
+       <layout class="QHBoxLayout" name="horizontalLayout">
+        <item>
+         <layout class="QVBoxLayout" name="verticalLayout_8">
+          <property name="sizeConstraint">
+           <enum>QLayout::SetMinimumSize</enum>
+          </property>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout_9">
+            <item>
+             <layout class="QVBoxLayout" name="verticalLayout_9">
+              <item>
+               <widget class="QTableWidget" name="tableWidget">
+                <property name="sizePolicy">
+                 <sizepolicy hsizetype="Minimum" vsizetype="MinimumExpanding">
+                  <horstretch>0</horstretch>
+                  <verstretch>0</verstretch>
+                 </sizepolicy>
+                </property>
+                <property name="minimumSize">
+                 <size>
+                  <width>0</width>
+                  <height>0</height>
+                 </size>
+                </property>
+                <attribute name="horizontalHeaderDefaultSectionSize">
+                 <number>60</number>
+                </attribute>
+                <attribute name="verticalHeaderDefaultSectionSize">
+                 <number>30</number>
+                </attribute>
+                <row>
+                 <property name="text">
+                  <string>1</string>
+                 </property>
+                </row>
+                <row>
+                 <property name="text">
+                  <string>2</string>
+                 </property>
+                </row>
+                <column>
+                 <property name="text">
+                  <string>lat</string>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
+                  <string>lon</string>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
+                  <string>alt</string>
+                 </property>
+                </column>
+                <column>
+                 <property name="text">
+                  <string>del</string>
+                 </property>
+                </column>
+               </widget>
+              </item>
+              <item>
+               <widget class="QLabel" name="label_9">
+                <property name="text">
+                 <string>*для всех точек команда WAYPOINT</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <spacer name="verticalSpacer_2">
+                <property name="orientation">
+                 <enum>Qt::Vertical</enum>
+                </property>
+                <property name="sizeHint" stdset="0">
+                 <size>
+                  <width>20</width>
+                  <height>40</height>
+                 </size>
+                </property>
+               </spacer>
+              </item>
+              <item>
+               <widget class="QPushButton" name="pushButton_3">
+                <property name="text">
+                 <string>upload</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="pushButton_4">
+                <property name="text">
+                 <string>load to file</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="pushButton_2">
+                <property name="text">
+                 <string>load from file</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </item>
+       </layout>
       </widget>
       <widget class="QWidget" name="conf_tab">
        <attribute name="title">
         <string>CONFIG</string>
        </attribute>
-       <widget class="QTableWidget" name="table">
-        <property name="geometry">
-         <rect>
-          <x>60</x>
-          <y>10</y>
-          <width>781</width>
-          <height>391</height>
-         </rect>
-        </property>
-        <property name="sizePolicy">
-         <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-          <horstretch>5</horstretch>
-          <verstretch>5</verstretch>
-         </sizepolicy>
-        </property>
-        <property name="sizeIncrement">
-         <size>
-          <width>5</width>
-          <height>5</height>
-         </size>
-        </property>
-        <property name="baseSize">
-         <size>
-          <width>5</width>
-          <height>5</height>
-         </size>
-        </property>
-        <row>
-         <property name="text">
-          <string>Param 1 </string>
-         </property>
-        </row>
-        <row>
-         <property name="text">
-          <string>Param 2</string>
-         </property>
-        </row>
-        <row>
-         <property name="text">
-          <string>Param 3</string>
-         </property>
-        </row>
-        <column>
-         <property name="text">
-          <string>info</string>
-         </property>
-        </column>
-        <column>
-         <property name="text">
-          <string>value</string>
-         </property>
-        </column>
-       </widget>
+       <layout class="QGridLayout" name="gridLayout_2">
+        <item row="0" column="0">
+         <layout class="QHBoxLayout" name="horizontalLayout_8">
+          <item>
+           <widget class="QTableWidget" name="table">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
+              <horstretch>5</horstretch>
+              <verstretch>5</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="sizeIncrement">
+             <size>
+              <width>5</width>
+              <height>5</height>
+             </size>
+            </property>
+            <property name="baseSize">
+             <size>
+              <width>5</width>
+              <height>5</height>
+             </size>
+            </property>
+            <attribute name="horizontalHeaderHighlightSections">
+             <bool>false</bool>
+            </attribute>
+            <row>
+             <property name="text">
+              <string>Param 1 </string>
+             </property>
+            </row>
+            <row>
+             <property name="text">
+              <string>Param 2</string>
+             </property>
+            </row>
+            <row>
+             <property name="text">
+              <string>Param 3</string>
+             </property>
+            </row>
+            <column>
+             <property name="text">
+              <string>info</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>value</string>
+             </property>
+            </column>
+            <column>
+             <property name="text">
+              <string>description</string>
+             </property>
+            </column>
+            <item row="0" column="2">
+             <property name="text">
+              <string/>
+             </property>
+            </item>
+            <item row="1" column="0">
+             <property name="text">
+              <string/>
+             </property>
+            </item>
+           </widget>
+          </item>
+          <item>
+           <layout class="QVBoxLayout" name="verticalLayout_11">
+            <property name="leftMargin">
+             <number>0</number>
+            </property>
+            <item>
+             <spacer name="verticalSpacer">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>40</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item>
+             <widget class="QPushButton" name="pushButton_7">
+              <property name="text">
+               <string>upload</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="pushButton_8">
+              <property name="text">
+               <string>load to file</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="pushButton_6">
+              <property name="text">
+               <string>load from file</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </item>
+       </layout>
       </widget>
      </widget>
     </item>
