@@ -4,6 +4,7 @@
 
 
 #include "mapwidget.h"
+#include "dronemarker.h"
 
 
 class DataMapWidget : public MapWidget {

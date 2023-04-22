@@ -39,12 +39,12 @@ void DataMapWidget::set_unfocused(){
 
 
 void DataMapWidget::move_to_drone_slot(){
-    move_to(drone_marker->center());
+    move_to(drone_marker->pos());
 }
 
 
 void DataMapWidget::move_to_drone_with_zoom_slot(){
-    move_to_with_zoom(drone_marker->center());
+    move_to_with_zoom(drone_marker->pos());
 }
 
 

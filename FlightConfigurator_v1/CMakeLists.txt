@@ -37,6 +37,7 @@ find_package(Qt5 COMPONENTS
 				Positioning
 				Xml
 				Sql
+				Svg
 				REQUIRED)
 
 # GDAL
@@ -52,6 +53,7 @@ set(LIBRARIES
     Qt5::Positioning
     Qt5::Xml
     Qt5::Sql
+	Qt5::Svg
     ${GDAL_LIBRARY}
     ${QGIS_LIBRARY}
 )
@@ -71,6 +73,7 @@ set(SOURCES
 	mapcontroller.cpp
 	datamapwidget.cpp
 	planmapwidget.cpp
+	dronemarker.cpp
     )
 
 
@@ -81,6 +84,7 @@ set(HEADERS
 	mapcontroller.h
 	datamapwidget.h
 	planmapwidget.h
+	dronemarker.h
     )
 
 

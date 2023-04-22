@@ -130,24 +130,4 @@ public:
 
 
 
-
-class DroneMarker : public QgsVertexMarker{
-
-public:
-    DroneMarker(QgsMapCanvas* canvas);
-
-    void update_pos(QgsPointXY pos);
-    void set_invisible(bool is_invisible);
-
-    ~DroneMarker() = default;
-
-private:
-    QColor color = QColor(255, 0, 0);
-    int size = 20;
-    int icon_type = QgsVertexMarker::ICON_CIRCLE;
-
-};
-
-
-
 #endif // MAPBUTTONS_H

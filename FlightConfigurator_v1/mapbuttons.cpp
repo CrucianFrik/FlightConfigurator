@@ -73,25 +73,3 @@ MapCheckbox::~MapCheckbox(){
     delete m_enable_icon;
     delete m_disable_icon;
 }
-
-
-DroneMarker::DroneMarker(QgsMapCanvas *canvas)
-    : QgsVertexMarker(canvas)
-{
-    setFillColor(color);
-    setIconSize(size);
-    setIconType(icon_type);
-}
-
-void DroneMarker::update_pos(QgsPointXY pos){
-    setCenter(pos);
-    updatePosition();
-}
-
-void DroneMarker::set_invisible(bool is_invisible){
-    if (is_invisible){
-        setIconSize(0);
-    } else {
-        setIconSize(size);
-    }
-}
