@@ -5,6 +5,8 @@
 
 #include <QAction>
 #include <QTextStream>
+#include <QString>
+#include <Qt>
 
 #include <qgsmaptoolpan.h>
 #include <qgsvectorlayer.h>
@@ -33,9 +35,6 @@ protected slots:
 
 protected:
     void enable_pan(bool is_enabled);
-    void set_settings();
-
-    QgsPointXY str_to_point(QString str);
 
 
     QgsRectangle full_zoom;
@@ -46,6 +45,12 @@ protected:
     CentralizeButton* center_button;
     ZoomInButton*     zoomin_button;
     ZoomOutButton*    zoomout_button;
+
+private:
+    void set_settings();
+
+    QgsPointXY get_query(bool& is_correct);
+    const QString query_sep = " ";
 
     const double ZOOM_FACTOR_WHEEL = 1.3;
     const double ZOOM_FACTOR_MOVE  = 1e6;

@@ -56,8 +56,12 @@ void MapWidget::move_to_with_zoom(QgsPointXY pos){
 
 
 void MapWidget::move_to_search_query_slot(){
-    QgsPointXY queried_pos = str_to_point(search_bar->get_query());
-    move_to_with_zoom(queried_pos);
+    bool is_query_correct = false;
+    QgsPointXY queried_pos = get_query( is_query_correct );
+
+    if (is_query_correct){
+        move_to_with_zoom(queried_pos);
+    }
 }
 
 
@@ -67,11 +71,23 @@ void MapWidget::centralize_slot(){
 }
 
 
-QgsPointXY MapWidget::str_to_point(QString str){
-    QTextStream stream(&str);
-    double posx=center().x(), posy=center().y();
-    stream >> posy >> posx;
-    return {posx, posy};
+QgsPointXY MapWidget::get_query(bool &is_correct){
+    QString query_str = search_bar->get_query();
+    QStringList query_str_parts = query_str.split(query_sep, QString::SkipEmptyParts);
+
+    bool is_y_double = false;
+    bool is_x_double = false;
+    double pos_y = query_str_parts[0].toDouble( &is_y_double );
+    double pos_x = query_str_parts[1].toDouble( &is_x_double );
+
+    if (query_str_parts.size() != 2 || !is_y_double || !is_x_double){
+        qDebug() << "Incorrect coordinates";
+        is_correct = false;
+        return {0, 0};
+    }
+
+    is_correct = true;
+    return {pos_x, pos_y};
 }
 
 
