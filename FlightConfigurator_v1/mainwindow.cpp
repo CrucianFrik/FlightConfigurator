@@ -1,25 +1,19 @@
 #include "mainwindow.h"
 
-
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
       ui(new Ui::MainWindow),
       map_controller{new MapController(this)}
 {
     ui->setupUi(this);
-
-    ui->label->setText("yaw");
-    ui->label_2->setText("pitch");
-    ui->label_3->setText("roll");
-    ui->label_4->setText("yaw");
-    ui->label_5->setText("");
-    ui->label_6->setText("");
-
+    ui->lineEdit->setPlaceholderText("enter path to PIXHAWK");
     ui->data_tab->layout()->addWidget(map_controller->get_data_map());
     ui->plan_tab->layout()->addWidget(map_controller->get_plan_map());
-
+    ui->table->resizeColumnsToContents();
+    ui->table->resizeRowsToContents();
     connect(ui->tabWidget, SIGNAL(currentChanged(int)), SLOT(update_widgets_geometry()));
 
+//            tableWidget->addWidget(pushButton_5);
 //    QTimer *timer = new QTimer(this);
 //    connect(timer, SIGNAL(timeout()), SLOT(updateLabel()));
 //    timer->start(1000);
