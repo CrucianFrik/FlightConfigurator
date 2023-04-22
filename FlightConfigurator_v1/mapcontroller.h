@@ -30,7 +30,7 @@ public:
     PlanMapWidget* get_plan_map();
 
     void update_maps_geometry();
-    void update_drone_pos(QgsPointXY pos);
+    void update_drone_pos(QgsPointXY pos, double angle);
 
     ~MapController();
 

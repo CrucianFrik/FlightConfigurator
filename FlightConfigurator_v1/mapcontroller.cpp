@@ -37,8 +37,8 @@ void MapController::update_maps_geometry(){
 }
 
 
-void MapController::update_drone_pos(QgsPointXY pos){
+void MapController::update_drone_pos(QgsPointXY pos, double angle){
     drone_pos = pos;
 
-    data_map->update_drone_pos(pos);
+    data_map->update_drone_pos(pos, angle);
 }

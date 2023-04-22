@@ -20,32 +20,44 @@ void DroneTrack::push_point(QgsPointXY point){
 
 
 DroneMarker::DroneMarker(QgsMapCanvas *canvas)
-    : QgsVertexMarker(canvas),
+    : QgsRubberBand(canvas),
       track{new DroneTrack(canvas)}
 {
+    setColor(color);
     setFillColor(color);
-    setIconSize(size);
-    setIconType(icon_type);
+
+    plane_figure.push_back(plane_figure[0]);
 }
 
-void DroneMarker::update_pos(QgsPointXY pos){
-    setCenter(pos);
+QgsPointXY DroneMarker::get_pos(){
+    return pos;
+}
+
+void DroneMarker::set_location(QgsPointXY new_pos, double new_angle){
+    pos = new_pos;
+    angle = new_angle;
+
+    update_location();
+
     track->push_point(pos);
-    updatePosition();
 }
 
-void DroneMarker::set_invisible(bool is_invisible){
-    if (is_invisible){
-        setIconSize(0);
-    } else {
-        setIconSize(size);
+void DroneMarker::update_location(){
+    reset(QgsWkbTypes::PolygonGeometry);
+    for (auto i : plane_figure){
+        double px = i.x()*cos(angle) - i.y()*sin(angle);
+        double py = i.x()*sin(angle) + i.y()*cos(angle);
+
+        addPoint({ pos.x() + px * size,
+                   pos.y() + py * size });
     }
+}
+
+void DroneMarker::set_size(double new_size){
+    size = new_size;
+    update_location();
 }
 
 DroneMarker::~DroneMarker(){
     delete track;
-}
-
-QgsPointXY DroneMarker::pos(){
-    return center();
 }

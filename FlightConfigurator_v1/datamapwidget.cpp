@@ -39,12 +39,12 @@ void DataMapWidget::set_unfocused(){
 
 
 void DataMapWidget::move_to_drone_slot(){
-    move_to(drone_marker->pos());
+    move_to(drone_marker->get_pos());
 }
 
 
 void DataMapWidget::move_to_drone_with_zoom_slot(){
-    move_to_with_zoom(drone_marker->pos());
+    move_to_with_zoom(drone_marker->get_pos());
 }
 
 
@@ -58,8 +58,8 @@ void DataMapWidget::wheelEvent(QWheelEvent *e){
 }
 
 
-void DataMapWidget::update_drone_pos(QgsPointXY pos){
-    drone_marker->update_pos(pos);
+void DataMapWidget::update_drone_pos(QgsPointXY pos, double angle){
+    drone_marker->set_location(pos, angle);
 
     if (is_focused){
         waitWhileRendering();

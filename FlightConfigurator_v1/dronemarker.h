@@ -3,6 +3,7 @@
 
 
 #include <QDebug>
+#include <QtMath>
 
 #include <qgsvertexmarker.h>
 #include <qgsmapcanvas.h>
@@ -27,25 +28,30 @@ private:
 
 
 
-class DroneMarker : protected QgsVertexMarker{
+class DroneMarker : protected QgsRubberBand {
 
 public:
     DroneMarker(QgsMapCanvas* canvas);
 
-    QgsPointXY pos();
+    QgsPointXY get_pos();
 
-    void update_pos(QgsPointXY pos);
+    void set_location(QgsPointXY new_pos, double new_angle);
 
-    void set_invisible(bool is_invisible);
+    void set_size(double new_size);
 
     ~DroneMarker();
 
 private:
+    void update_location();
+
+    QgsPointXY pos;
+    double size=0.1;
+    double angle;
+
     DroneTrack* track;
 
     QColor color = QColor(255, 0, 0);
-    int size = 20;
-    int icon_type = QgsVertexMarker::ICON_CIRCLE;
+    QList<QgsPointXY> plane_figure = {{0,2}, {1,-1}, {-1,-1}};
 
 };
 

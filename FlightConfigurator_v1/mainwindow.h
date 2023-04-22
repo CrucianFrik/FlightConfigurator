@@ -11,7 +11,7 @@
 #include "./ui_mainwindow.h"
 #include "mapcontroller.h"
 
-//void delay( int millisecondsToWait );
+void delay( int millisecondsToWait );
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -27,13 +27,13 @@ public:
 
     void show();
 
-//    void test(){
+    void test(){
 //        double r=10;
 //        for (double fi=0;; fi+=0.001){
 //            delay(50);
-//            map_controller->update_drone_pos({55+r*cos(fi), 37+r*sin(fi)});
+//            map_controller->update_drone_pos({55+r*cos(fi), 37+r*sin(fi)}, fi);
 //        }
-//    }
+    }
 
     void resizeEvent(QResizeEvent* event) override;
 

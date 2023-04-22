@@ -41,6 +41,10 @@ void FlightPlan::add_point(QgsPointXY pos){
     addPoint(pos);
     points.push_back(pos);
     alts.push_back(default_alt);
+
+    int n=points_count();
+    table->setRowCount(n);
+    table->update();
 }
 
 void FlightPlan::delete_point(int point_index){
@@ -64,6 +68,10 @@ void FlightPlan::clear_possible_line(){
     possible_line->reset();
 }
 
+void FlightPlan::set_table(QTableWidget *t){
+    table = t;
+}
+
 
 
 PlanMapWidget::PlanMapWidget(const QList<QgsMapLayer *> &layers, QWidget *parent)
@@ -77,6 +85,10 @@ PlanMapWidget::PlanMapWidget(const QList<QgsMapLayer *> &layers, QWidget *parent
 
 PlanMapWidget::~PlanMapWidget(){
     delete flight_plan;
+}
+
+void PlanMapWidget::set_table(QTableWidget *t){
+    flight_plan->set_table(t);
 }
 
 void PlanMapWidget::mousePressEvent(QMouseEvent *e){

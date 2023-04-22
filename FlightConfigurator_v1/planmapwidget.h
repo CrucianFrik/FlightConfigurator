@@ -3,6 +3,7 @@
 
 
 #include <QMouseEvent>
+#include <QTableWidget>
 
 #include <qgsmapmouseevent.h>
 #include <qgsrubberband.h>
@@ -31,6 +32,8 @@ public:
     void update_possible_line(QgsPointXY pos);
     void clear_possible_line();
 
+    void set_table(QTableWidget* t);
+
 private:
     QList<double> alts;
     const double default_alt = 0.0;
@@ -38,6 +41,8 @@ private:
     QList<QgsPointXY> points;
 
     QgsRubberBand* possible_line;
+
+    QTableWidget* table;
 
     const int drawed_width = 3;
     const int possible_width = 2;
@@ -54,6 +59,8 @@ Q_OBJECT
 
 public:
     PlanMapWidget(const QList<QgsMapLayer*>& layers, QWidget* parent=nullptr);
+
+    void set_table(QTableWidget* t);
 
     ~PlanMapWidget();
 
