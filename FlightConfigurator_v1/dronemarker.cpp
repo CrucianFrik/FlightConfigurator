@@ -26,6 +26,10 @@ DroneMarker::DroneMarker(QgsMapCanvas *canvas)
     setColor(color);
     setFillColor(color);
 
+    for (int i=plane_figure.size()-2; i>0; i--){
+        plane_figure.push_back( {-plane_figure[i].x(), plane_figure[i].y()} );
+    }
+
     plane_figure.push_back(plane_figure[0]);
 }
 
@@ -60,4 +64,8 @@ void DroneMarker::set_size(double new_size){
 
 DroneMarker::~DroneMarker(){
     delete track;
+}
+
+void DroneMarker::update_size(double extent_height, double extent_width){
+    set_size( extent_height * win_height_to_size_koef );
 }

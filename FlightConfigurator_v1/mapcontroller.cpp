@@ -10,8 +10,8 @@ MapController::MapController(QWidget *parent){
 
 
 void MapController::load_layers(){
-    for (auto& path : MAP_LAYER_PATHS) layers.push_back(new QgsVectorLayer( QDir(QDir::currentPath()).filePath(path.first), path.second, "ogr" ));
-//    layers.push_back(new QgsRasterLayer("/home/k7ps/QtProjects/FlightConfigurator/maps/raster/worldmap.tif","tif"));
+//    for (auto& path : MAP_LAYER_PATHS) layers.push_back(new QgsVectorLayer( QDir(QDir::currentPath()).filePath(path.first), path.second, "ogr" ));
+    layers.push_back(new QgsRasterLayer("/home/k7ps/QtProjects/FlightConfigurator/maps/raster/worldmap.tif","tif"));
 }
 
 

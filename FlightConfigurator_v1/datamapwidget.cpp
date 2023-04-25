@@ -11,6 +11,14 @@ DataMapWidget::DataMapWidget(const QList<QgsMapLayer *> &layers, QWidget *parent
     zoomout_button ->set_pos_number(zoomout_button_pos);
 
     connect(follow_checkbox, SIGNAL(clicked()), SLOT(change_focus_slot()));
+    connect(this, SIGNAL(scaleChanged(double)), SLOT(update_drone_size()));
+
+}
+
+
+void DataMapWidget::update_drone_size(){
+//    qDebug() << extent().height() << extent().width();
+    drone_marker->update_size( extent().height(), extent().width() );
 }
 
 
