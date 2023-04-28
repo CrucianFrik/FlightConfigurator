@@ -14,8 +14,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(ui->tabWidget, SIGNAL(currentChanged(int)), SLOT(update_widgets_geometry_slot()));
 
-    ui->table->resizeColumnsToContents();
-    ui->table->resizeRowsToContents();
+//    ui->table->resizeColumnsToContents();
+//    ui->table->resizeRowsToContents();
 
 //            tableWidget->addWidget(pushButton_5);
 //    QTimer *timer = new QTimer(this);
@@ -28,6 +28,12 @@ MainWindow::~MainWindow()
 {
     delete ui;
     delete map_controller;
+
+    for (int i=0; i<ui->table->rowCount(); i++){
+        for (int j=0; j<ui->table->columnCount(); j++){
+            delete ui->table->item(i, j);
+        }
+    }
 }
 
 

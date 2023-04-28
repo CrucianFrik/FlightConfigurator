@@ -3,6 +3,7 @@
 
 
 
+#include <QDesktopWidget>
 #include <QMainWindow>
 #include <QTime>
 #include <QtMath>
@@ -28,11 +29,11 @@ public:
     void show();
 
     void test(){
-        double r=10;
-        for (double fi=0;; fi+=0.001){
-            delay(50);
-            map_controller->update_drone_pos({55+r*cos(fi), 37+r*sin(fi)}, fi);
-        }
+//        double r=10;
+//        for (double fi=0;; fi+=0.001){
+//            delay(50);
+//            map_controller->update_drone_pos({55+r*cos(fi), 37+r*sin(fi)}, fi);
+//        }
     }
 
     void resizeEvent(QResizeEvent* event) override;
@@ -50,7 +51,7 @@ private:
     MapController* map_controller;
 
 
-    const QSize window_size = {1100, 600};
+    const QSize window_size = QDesktopWidget().size();
     const QString window_title = "FlightConfigurator";
 };
 
