@@ -1,9 +1,11 @@
+
 #include "mainwindow.h"
 #include "pixhawk_manager.h"
 #include <QApplication>
 #include <QCoreApplication>
 #include <QTime>
 #include <QtMath>
+
 
 void delay( int millisecondsToWait )
 {
@@ -13,6 +15,7 @@ void delay( int millisecondsToWait )
         QCoreApplication::processEvents( QEventLoop::AllEvents, 100 );
     }
 }
+
 
 
 void test(PixhawkManager& pixhawkManager, MainWindow& w){
@@ -62,7 +65,6 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
     MainWindow w;
     w.show();
-    //Binder binder("/dev/serial/by-id/usb-3D_Robotics_PX4_FMU_v2.x_0-if00", 115200);
     PixhawkManager pixhawkManager("/dev/serial/by-id/usb-ArduPilot_Pixhawk1_36003A000551393439373637-if00", 115200);
 
     test(pixhawkManager, w);

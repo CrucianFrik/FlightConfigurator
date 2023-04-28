@@ -1,13 +1,13 @@
 cmake_minimum_required(VERSION 3.16)
-set(PROJECT FlyghtConfigurator_v1)
+set(PROJECT FlightConfigurator_v1)
 project(${PROJECT} VERSION 1.0)
 
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
-set(TARGET_SOURCE_DIR ${CMAKE_SOURCE_DIR})
 
+set(TARGET_SOURCE_DIR ${CMAKE_SOURCE_DIR})
 # Find includes in corresponding build directories
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
@@ -21,23 +21,39 @@ include_directories(${INCLUDES} ${INTERNAL_INCLUDES})
 # Add compiler flags
 add_compile_options(-std=c++11 -Wall)
 
+# QGIS
+set(CMAKE_MODULE_PATH "$ENV{QGISPATH}/cmake" ${CMAKE_MODULE_PATH})
+find_package(QGIS REQUIRED)
+
 # Enable Qt modules
 find_package(Qt5 COMPONENTS
-        Core
-        Gui
-        Widgets
-	Network
-	SerialPort
-	Positioning
-	REQUIRED)
+				Core
+				Gui
+				Widgets
+				Network
+				SerialPort
+				Positioning
+				Xml
+				Sql
+				Svg
+				REQUIRED)
+
+# GDAL
+find_library(GDAL_LIBRARY NAMES gdal PATHS /usr/lib)
+message(STATUS "GDALL_LIBRARY: ${GDAL_LIBRARY}")
+
 
 set(LIBRARIES
-# Qt5
     Qt5::Widgets
     Qt5::Core
     Qt5::Network
     Qt5::SerialPort
     Qt5::Positioning
+    Qt5::Xml
+    Qt5::Sql
+	Qt5::Svg
+    ${GDAL_LIBRARY}
+    ${QGIS_LIBRARY}
 )
 
 # Sources
@@ -48,14 +64,27 @@ include_directories("3dparty/mavlink_v2")
 include_directories("3dparty/mavlink_v2/ardupilotmega")
 
 set(SOURCES
-    main.cpp
+	main.cpp
     mainwindow.cpp
+    mapwidget.cpp
+	mapbuttons.cpp
+	mapcontroller.cpp
+	datamapwidget.cpp
+	planmapwidget.cpp
+	dronemarker.cpp
     )
 
+
 set(HEADERS
-    gismainwindow.h
     mainwindow.h
+	mapwidget.h
+	mapbuttons.h
+	mapcontroller.h
+	datamapwidget.h
+	planmapwidget.h
+	dronemarker.h
     )
+
 
 set(UIS
     mainwindow.ui
@@ -67,8 +96,12 @@ set(RESOURCES
 add_executable(${PROJECT}
                ${SOURCES}
                ${HEADERS}
-	       ${UIS}
-	       ${INTERNAL_SOURCES}
-	       ${RESOURCE})
+			   ${UIS}
+			   ${INTERNAL_SOURCES}
+               ${RESOURCES})
+
+target_include_directories(${PROJECT} PRIVATE
+                                      ${QGIS_INCLUDE_DIR}
+                                      /usr/include/gdal)
 
 target_link_libraries (${PROJECT} ${LIBRARIES})

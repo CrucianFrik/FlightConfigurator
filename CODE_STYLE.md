@@ -60,8 +60,8 @@ std::vector<int>  route_target_points {};
 class Point {
 public:
     Point(int x, int y);
-    int getX() const;
-    int getY() const;
+    int get_x() const;
+    int get_y() const;
     void translate(int dx, int dy);
 
 private:
