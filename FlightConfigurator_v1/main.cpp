@@ -1,10 +1,10 @@
-
-#include "mainwindow.h"
-#include "pixhawk_manager.h"
 #include <QApplication>
 #include <QCoreApplication>
 #include <QTime>
 #include <QtMath>
+
+#include "mainwindow.h"
+#include "pixhawk_manager.h"
 
 
 void delay( int millisecondsToWait )
@@ -32,13 +32,13 @@ void test(PixhawkManager& pixhawkManager, MainWindow& w){
         heartbeat = pixhawkManager.get_heartbeat();
         scaled_imu = pixhawkManager.get_scaled_imu();
 
-        w.updateLabel(2, qRadiansToDegrees(attitude.roll));
-        w.updateLabel(3, qRadiansToDegrees(attitude.pitch));
-        w.updateLabel(4, qRadiansToDegrees(attitude.yaw));
+        w.update_label(2, qRadiansToDegrees(attitude.roll));
+        w.update_label(3, qRadiansToDegrees(attitude.pitch));
+        w.update_label(4, qRadiansToDegrees(attitude.yaw));
 
-        w.updateLabel(5, scaled_imu.xacc/1000.);
-        w.updateLabel(6, scaled_imu.yacc/1000.);
-        w.updateLabel(7, scaled_imu.zacc/1000.);
+        w.update_label(5, scaled_imu.xacc/1000.);
+        w.update_label(6, scaled_imu.yacc/1000.);
+        w.update_label(7, scaled_imu.zacc/1000.);
 
         /*qDebug() << "pitch" << qRadiansToDegrees(attitude.pitch)
                         << "roll" << qRadiansToDegrees(attitude.roll)
@@ -63,11 +63,14 @@ void test(PixhawkManager& pixhawkManager, MainWindow& w){
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    MainWindow w;
-    w.show();
+
+    MainWindow window;
     PixhawkManager pixhawkManager("/dev/serial/by-id/usb-ArduPilot_Pixhawk1_36003A000551393439373637-if00", 115200);
 
-    test(pixhawkManager, w);
+    window.show();
+
+    test(pixhawkManager, window);
+
     return a.exec();
 }
 

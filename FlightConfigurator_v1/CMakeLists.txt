@@ -57,7 +57,7 @@ set(LIBRARIES
 )
 
 # Sources
-file(GLOB_RECURSE INTERNAL_SOURCES "binder/*.cpp" "binder/*.h")
+file(GLOB_RECURSE INTERNAL_SOURCES "pixhawk_manager/*.cpp" "pixhawk_manager/*.h")
 
 # Include mavlink headers globaly
 include_directories("3dparty/mavlink_v2")
