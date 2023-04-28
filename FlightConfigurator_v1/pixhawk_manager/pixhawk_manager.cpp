@@ -58,13 +58,15 @@ void PixhawkManager::request_all_params() {
 }
 
 bool PixhawkManager::set_param(uint16_t param_inndex, float new_value){
+    qDebug() << "+";
     if (!all_params_received_flag) { qDebug() << "the full list of parameters has not been received yet, updating is not possible"; return 0;}
     mavlink_message_t message;
     mavlink_param_set_t param_set;
     param_set.target_system = 1;
     param_set.target_component = 1;
+    qDebug() << "PARAMETR COUNT" << param_list.count(param_inndex);
     if (param_list.count(param_inndex)){
-        if (DEBUG) { qDebug() << "WRITED PARAMETR" << param_list[param_inndex].param_id; }
+        if (1) { qDebug() << "WRITED PARAMETR" << param_list[param_inndex].param_id; }
         memcpy(param_set.param_id, param_list[param_inndex].param_id, 16);
         param_set.param_value = new_value;
         param_set.param_type = param_list[param_inndex].param_type;

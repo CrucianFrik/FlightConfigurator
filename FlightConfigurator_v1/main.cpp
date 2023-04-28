@@ -21,8 +21,8 @@ void test(PixhawkManager& pixhawkManager, MainWindow& w){
     mavlink_scaled_imu_t scaled_imu;
     pixhawkManager.set_msg_frequency(26, 100000);
     pixhawkManager.request_all_params();
-    delay(20000);
-    pixhawkManager.set_param(338, 4);
+    delay(18000);
+    pixhawkManager.set_param(338, 3);
     for (;;){
         delay(100);
         attitude = pixhawkManager.get_attitude();
