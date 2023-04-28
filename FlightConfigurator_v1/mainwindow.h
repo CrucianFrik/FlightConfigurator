@@ -1,6 +1,5 @@
 #ifndef MAINWINDOW_H
-#define MAINWINDOW_H
-
+#define MAINWINDOW_
 
 
 #include <QDesktopWidget>
@@ -17,7 +16,6 @@ void delay( int millisecondsToWait );
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
-
 
 
 class MainWindow : public QMainWindow{
@@ -54,7 +52,4 @@ private:
     const QSize window_size = QDesktopWidget().size();
     const QString window_title = "FlightConfigurator";
 };
-
-
-
 #endif // MAINWINDOW_H

@@ -6,6 +6,14 @@ MainWindow::MainWindow(QWidget *parent)
       map_controller{new MapController(this)}
 {
     ui->setupUi(this);
+    ui->setupUi(this);
+    ui->label->setText("roll");
+    ui->label_2->setText("pitch");
+    ui->label_4->setText("yaw");
+
+    ui->label_3->setText("xacc (G)");
+    ui->label_5->setText("yacc (G)");
+    ui->label_6->setText("zacc (G)");
     ui->lineEdit->setPlaceholderText("enter path to PIXHAWK");
 
     ui->data_tab->layout()->addWidget(map_controller->get_data_map());
@@ -13,14 +21,6 @@ MainWindow::MainWindow(QWidget *parent)
     map_controller->get_plan_map()->set_table(ui->tableWidget);
 
     connect(ui->tabWidget, SIGNAL(currentChanged(int)), SLOT(update_widgets_geometry_slot()));
-
-//    ui->table->resizeColumnsToContents();
-//    ui->table->resizeRowsToContents();
-
-//            tableWidget->addWidget(pushButton_5);
-//    QTimer *timer = new QTimer(this);
-//    connect(timer, SIGNAL(timeout()), SLOT(updateLabel()));
-//    timer->start(1000);
 }
 
 

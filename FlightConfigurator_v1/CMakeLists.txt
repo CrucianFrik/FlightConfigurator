@@ -8,8 +8,6 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
 set(TARGET_SOURCE_DIR ${CMAKE_SOURCE_DIR})
-
-
 # Find includes in corresponding build directories
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
@@ -92,6 +90,8 @@ set(UIS
     mainwindow.ui
     )
 
+set(RESOURCES
+    )
 
 add_executable(${PROJECT}
                ${SOURCES}
