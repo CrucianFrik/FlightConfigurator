@@ -21,7 +21,7 @@ namespace domain
         explicit AbstractHandler(MavLinkCommunicator* communicator);
 
     protected slots:
-        virtual void processMessage(const mavlink_message_t& message) = 0;
+        virtual void process_message(const mavlink_message_t& message) = 0;
 
     protected:
         MavLinkCommunicator* const m_communicator;

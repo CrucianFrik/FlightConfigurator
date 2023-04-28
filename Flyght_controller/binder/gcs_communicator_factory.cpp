@@ -6,8 +6,7 @@
 // Internal
 #include "mavlink_communicator.h"
 
-#include "heartbeat_handler.h"
-#include "attitude_handler.h"
+#include "message_handler.h"
 
 using namespace domain;
 
@@ -18,8 +17,7 @@ MavLinkCommunicator* GcsCommunicatorFactory::create()
 {
     MavLinkCommunicator* communicator = new MavLinkCommunicator(255, 0);
 
-    new domain::HeartbeatHandler(communicator);
-    new domain::AttitudeHandler(communicator);
+    new domain::MessageHandler(communicator);
 
     return communicator;
 }

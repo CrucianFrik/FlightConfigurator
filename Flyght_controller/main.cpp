@@ -19,12 +19,15 @@ void test(PixhawkManager& pixhawkManager, MainWindow& w){
     mavlink_attitude_t attitude;
     mavlink_heartbeat_t heartbeat;
     mavlink_scaled_imu_t scaled_imu;
-    pixhawkManager.setMsgFrequency(26, 50000000);
+    pixhawkManager.set_msg_frequency(26, 100000);
+    pixhawkManager.request_all_params();
+    delay(20000);
+    pixhawkManager.set_param(338, 4);
     for (;;){
         delay(100);
-        attitude = pixhawkManager.getAttitude();
-        heartbeat = pixhawkManager.getHeartbeat();
-        scaled_imu = pixhawkManager.getScaledImu();
+        attitude = pixhawkManager.get_attitude();
+        heartbeat = pixhawkManager.get_heartbeat();
+        scaled_imu = pixhawkManager.get_scaled_imu();
 
         w.updateLabel(2, qRadiansToDegrees(attitude.roll));
         w.updateLabel(3, qRadiansToDegrees(attitude.pitch));
@@ -34,7 +37,7 @@ void test(PixhawkManager& pixhawkManager, MainWindow& w){
         w.updateLabel(6, scaled_imu.yacc/1000.);
         w.updateLabel(7, scaled_imu.zacc/1000.);
 
-        qDebug() << "pitch" << qRadiansToDegrees(attitude.pitch)
+        /*qDebug() << "pitch" << qRadiansToDegrees(attitude.pitch)
                         << "roll" << qRadiansToDegrees(attitude.roll)
                         << "yaw" << qRadiansToDegrees(attitude.yaw);
         qDebug() << "Heartbeat received, system type:" << heartbeat.type
@@ -47,8 +50,8 @@ void test(PixhawkManager& pixhawkManager, MainWindow& w){
                  << "zgyro:" << scaled_imu.zgyro;
         qDebug() << "xmag:" << scaled_imu.xmag
                  << "ymag:" << scaled_imu.ymag
-                 << "zmag:" << scaled_imu.zmag;
-        pixhawkManager.logReceivedMsgs(1);
+                 << "zmag:" << scaled_imu.zmag;*/
+        pixhawkManager.log_received_msgs(1);
     }
 }
 

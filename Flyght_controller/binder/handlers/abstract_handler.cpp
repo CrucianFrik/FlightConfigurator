@@ -10,6 +10,6 @@ AbstractHandler::AbstractHandler(MavLinkCommunicator* communicator):
     m_communicator(communicator)
 {
     Q_ASSERT(communicator);
-    connect(communicator, &MavLinkCommunicator::messageReceived,
-            this, &AbstractHandler::processMessage);
+   // connect(communicator, &MavLinkCommunicator::messageReceived,
+     //       this, &AbstractHandler::process_message);
 }
