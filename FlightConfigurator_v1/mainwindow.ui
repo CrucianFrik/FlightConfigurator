@@ -208,7 +208,7 @@
        <enum>Qt::TabFocus</enum>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="data_tab">
        <attribute name="title">
@@ -355,7 +355,7 @@
                  </size>
                 </property>
                 <property name="rowCount">
-                 <number>1</number>
+                 <number>0</number>
                 </property>
                 <attribute name="horizontalHeaderDefaultSectionSize">
                  <number>60</number>
@@ -363,11 +363,6 @@
                 <attribute name="verticalHeaderDefaultSectionSize">
                  <number>30</number>
                 </attribute>
-                <row>
-                 <property name="text">
-                  <string>1</string>
-                 </property>
-                </row>
                 <column>
                  <property name="text">
                   <string>lat</string>

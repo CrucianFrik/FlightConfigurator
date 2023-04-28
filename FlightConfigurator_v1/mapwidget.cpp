@@ -75,13 +75,17 @@ QgsPointXY MapWidget::get_query(bool &is_correct){
     QString query_str = search_bar->get_query();
     QStringList query_str_parts = query_str.split(query_sep, QString::SkipEmptyParts);
 
+    if (query_str_parts.size() != 2){
+        is_correct = false;
+        return {0, 0};
+    }
+
     bool is_y_double = false;
     bool is_x_double = false;
     double pos_y = query_str_parts[0].toDouble( &is_y_double );
     double pos_x = query_str_parts[1].toDouble( &is_x_double );
 
-    if (query_str_parts.size() != 2 || !is_y_double || !is_x_double){
-        qDebug() << "Incorrect coordinates";
+    if (!is_y_double || !is_x_double){
         is_correct = false;
         return {0, 0};
     }
