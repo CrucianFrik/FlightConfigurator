@@ -2,8 +2,8 @@
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
-      ui{new Ui::MainWindow},
-      map_controller{new MapController(this)}
+      ui{new Ui::MainWindow}
+      //map_controller{new MapController(this)}
 {
     ui->setupUi(this);
     ui->setupUi(this);
@@ -16,9 +16,9 @@ MainWindow::MainWindow(QWidget *parent)
     ui->label_6->setText("zacc (G)");
     ui->lineEdit->setPlaceholderText("enter path to PIXHAWK");
 
-    ui->data_tab->layout()->addWidget(map_controller->get_data_map());
-    ui->plan_tab->layout()->addWidget(map_controller->get_plan_map());
-    map_controller->get_plan_map()->set_table(ui->tableWidget);
+    //ui->data_tab->layout()->addWidget(map_controller->get_data_map());
+    //ui->plan_tab->layout()->addWidget(map_controller->get_plan_map());
+    //map_controller->get_plan_map()->set_table(ui->tableWidget);
 
     connect(ui->tabWidget, SIGNAL(currentChanged(int)), SLOT(update_widgets_geometry_slot()));
 }
@@ -27,7 +27,7 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
     delete ui;
-    delete map_controller;
+    //delete map_controller;
 
     for (int i=0; i<ui->table->rowCount(); i++){
         for (int j=0; j<ui->table->columnCount(); j++){
@@ -72,7 +72,7 @@ void MainWindow::show(){
 
 
 void MainWindow::update_widgets_geometry_slot(){
-    map_controller->update_maps_geometry();
+    //map_controller->update_maps_geometry();
 }
 
 
@@ -80,4 +80,9 @@ void MainWindow::resizeEvent(QResizeEvent *event){
     QMainWindow::resizeEvent(event);
 
     update_widgets_geometry_slot();
+}
+
+
+void MainWindow::update_param_table(){
+
 }

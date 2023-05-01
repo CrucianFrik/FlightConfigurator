@@ -7,9 +7,9 @@
 #include <QTime>
 #include <QtMath>
 
-#include "mavlink.h"
+//#include "mavlink.h"
 #include "./ui_mainwindow.h"
-#include "mapcontroller.h"
+//#include "mapcontroller.h"
 
 void delay( int millisecondsToWait );
 
@@ -26,14 +26,6 @@ public:
 
     void show();
 
-    void test(){
-//        double r=10;
-//        for (double fi=0;; fi+=0.01){
-//            delay(100);
-//            map_controller->update_drone_pos({55+r*cos(fi), 37+r*sin(fi)}, fi);
-//        }
-    }
-
     void resizeEvent(QResizeEvent* event) override;
 
     void update_label(int lcd_num, double number);
@@ -42,11 +34,12 @@ public:
 
 private slots:
     void update_widgets_geometry_slot();
+    void update_param_table();
 
 private:
     Ui::MainWindow *ui;
 
-    MapController* map_controller;
+    //MapController* map_controller;
 
 
     const QSize window_size = QDesktopWidget().size();

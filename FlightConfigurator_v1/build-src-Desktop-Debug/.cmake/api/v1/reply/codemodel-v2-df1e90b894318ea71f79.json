@@ -1,0 +1,68 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.8"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						1
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "FlightConfigurator_v1_build",
+					"targetIndexes" : 
+					[
+						0,
+						1
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "FlightConfigurator_v1_build::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-FlightConfigurator_v1_build-Debug-ab631a1b919e3b02c142.json",
+					"name" : "FlightConfigurator_v1_build",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "FlightConfigurator_v1_build_autogen::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-FlightConfigurator_v1_build_autogen-Debug-607bc495371961496164.json",
+					"name" : "FlightConfigurator_v1_build_autogen",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "/home/crucian/Desktop/patterns/FC_/FlightConfigurator/FlightConfigurator_v1/build-src-Desktop-Debug",
+		"source" : "/home/crucian/Desktop/patterns/FC_/FlightConfigurator/FlightConfigurator_v1/src"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 0
+	}
+}
