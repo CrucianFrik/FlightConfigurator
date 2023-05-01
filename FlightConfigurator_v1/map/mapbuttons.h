@@ -18,12 +18,12 @@ const QSize BUTTON_SIZE = {35, 35};
 const QPoint BUTTON_INDENT = {10, 10};
 const QPoint BUTTON_ICON_INDENT = {8, 8};
 
-const QString ZOOMIN_ICON_PATH = "../../icons/zoomin_icon.png";
-const QString ZOOMOUT_ICON_PATH = "../../icons/zoomout_icon.png";
-const QString CENTRALIZE_ICON_PATH = "../../icons/centralize_icon.png";
-const QString FOLLOW_ICON_PATH = "../../icons/follow_icon.png";
-const QString UNFOLLOW_ICON_PATH = "../../icons/unfollow_icon.png";
-const QString SEARCH_ICON_PATH = "../../icons/search_icon.png";
+const QString ZOOMIN_ICON_PATH = "../../../icons/zoomin_icon.png";
+const QString ZOOMOUT_ICON_PATH = "../../../icons/zoomout_icon.png";
+const QString CENTRALIZE_ICON_PATH = "../../../icons/centralize_icon.png";
+const QString FOLLOW_ICON_PATH = "../../../icons/follow_icon.png";
+const QString UNFOLLOW_ICON_PATH = "../../../icons/unfollow_icon.png";
+const QString SEARCH_ICON_PATH = "../../../icons/search_icon.png";
 
 
 

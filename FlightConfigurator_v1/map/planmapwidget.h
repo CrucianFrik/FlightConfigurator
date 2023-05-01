@@ -12,7 +12,7 @@
 
 
 
-const QString DELETE_ICON_PATH = "../../icons/delete_icon.png";
+const QString DELETE_ICON_PATH = "../../../icons/delete_icon.png";
 
 enum {
     COLUMN_LAT,
