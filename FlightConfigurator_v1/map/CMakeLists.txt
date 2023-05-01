@@ -40,7 +40,7 @@ set(MAP_LIBRARIES
     ${QGIS_LIBRARY}
 )
 
-add_library(${LIB_NAME} SHARED ${MAP_HEADERS} ${MAP_SOURCES})
+add_library(${LIB_NAME} STATIC ${MAP_HEADERS} ${MAP_SOURCES})
 target_sources(${LIB_NAME} PUBLIC ${MAP_HEADERS} ${MAP_SOURCES})
 
 target_include_directories(${LIB_NAME} PRIVATE
