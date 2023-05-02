@@ -30,11 +30,23 @@ void PlanPoint::set_alt(double new_alt){
     alt = new_alt;
 }
 
+void PlanPoint::set_visible(bool is_visible){
+    if (is_visible){
+        setFillColor(fill_color);
+        setColor(outline_color);
+    } else {
+        setFillColor(QColor("transparent"));
+        setColor(QColor("transparent"));
+    }
+    m_visible = is_visible;
+}
+
 
 
 FlightPlan::FlightPlan(QgsMapCanvas *canvas)
     : QgsRubberBand(canvas),
-      possible_line{new QgsRubberBand(canvas)}
+      possible_line{new QgsRubberBand(canvas)},
+      possible_point{new PlanPoint(canvas, {0,0})}
 {
     cur_canvas = canvas;
 
@@ -45,6 +57,8 @@ FlightPlan::FlightPlan(QgsMapCanvas *canvas)
     possible_line->setColor(color);
     possible_line->setLineStyle(possible_style);
     possible_line->setWidth(possible_width);
+
+    possible_point->set_visible(false);
 }
 
 int FlightPlan::points_count(){
@@ -115,6 +129,9 @@ void FlightPlan::delete_point(int point_index){
 }
 
 void FlightPlan::update_possible_line(QgsPointXY pos){
+    possible_point->set_visible(true);
+    possible_point->set_pos( pos );
+
     if (!points_count()) return;
 
     if (possible_line->numberOfVertices() == 2){
@@ -127,6 +144,7 @@ void FlightPlan::update_possible_line(QgsPointXY pos){
 
 void FlightPlan::clear_possible_line(){
     possible_line->reset();
+    possible_point->set_visible(false);
 }
 
 void FlightPlan::set_table(QTableWidget *t){
@@ -176,4 +194,7 @@ void FlightPlan::del_button_pressed(){
 FlightPlan::~FlightPlan(){
     for (auto point : plan_points)
         delete point;
+
+    delete possible_point;
+    delete possible_line;
 }

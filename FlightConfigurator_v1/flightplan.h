@@ -33,8 +33,13 @@ public:
     void set_alt(double alt);
     double get_alt();
 
+    void set_visible(bool is_visible);
+
 private:
     double alt;
+
+    bool m_visible = true;
+
     const double default_alt = 0.0;
     const QColor fill_color = QColor(255,0,0);
     const QColor outline_color = QColor(0,0,0);
@@ -84,6 +89,7 @@ private:
     QList<PlanPoint*> plan_points;
 
     QgsRubberBand* possible_line;
+    PlanPoint* possible_point;
 
     QTableWidget* table;
 
