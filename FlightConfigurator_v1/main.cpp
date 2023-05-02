@@ -65,10 +65,10 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
 
     MainWindow window;
-    PixhawkManager pixhawkManager("/dev/serial/by-id/usb-ArduPilot_Pixhawk1_36003A000551393439373637-if00", 115200);
 
     window.show();
 
+    PixhawkManager pixhawkManager("/dev/serial/by-id/usb-ArduPilot_Pixhawk1_36003A000551393439373637-if00", 115200);
     test(pixhawkManager, window);
 
     return a.exec();
