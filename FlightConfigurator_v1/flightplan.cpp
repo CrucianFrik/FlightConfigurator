@@ -10,8 +10,10 @@ PlanPoint::PlanPoint(QgsMapCanvas *canvas, QgsPointXY pos)
     setIconSize(icon_size);
     setPenWidth(outline_width);
     setIconType(icon_type);
-    setFillColor(fill_color);
     setColor(outline_color);
+
+    cur_fill_color = low_color;
+    update_color();
 }
 
 QgsPointXY PlanPoint::get_pos(){
@@ -28,17 +30,30 @@ double PlanPoint::get_alt(){
 
 void PlanPoint::set_alt(double new_alt){
     alt = new_alt;
+
+    update_color();
 }
 
 void PlanPoint::set_visible(bool is_visible){
     if (is_visible){
-        setFillColor(fill_color);
         setColor(outline_color);
+        update_color();
     } else {
         setFillColor(QColor("transparent"));
         setColor(QColor("transparent"));
     }
     m_visible = is_visible;
+}
+
+void PlanPoint::update_color(){
+    double delta_hue = double(high_color.hue() - low_color.hue()) / (max_alt - min_alt);
+    double new_hue = double(low_color.hue()) + delta_hue * (alt - min_alt);
+
+    new_hue = std::min(new_hue, 255.);
+    new_hue = std::max(0., new_hue);
+
+    cur_fill_color.setHsv(std::round(new_hue), low_color.saturation(), low_color.value());
+    setFillColor(cur_fill_color);
 }
 
 
@@ -198,3 +213,33 @@ FlightPlan::~FlightPlan(){
     delete possible_point;
     delete possible_line;
 }
+
+//void FlightPlan::push_point_to_polygon(QgsPointXY pos){
+//    if (points_count()){
+//        if (points_count() > 1){
+//            removePoint(points_count());
+//        }
+//        addPoint(pos);
+//        addPoint( plan_points[points_count()-1]->get_pos() );
+//    } else {
+//        addPoint(pos);
+//    }
+////    qDebug() << "add" << numberOfVertices();
+//}
+
+//void FlightPlan::delete_point_from_polygon(int point_index){
+//    if (points_count() == 1){
+//        removeLastPoint();
+//    } else if (point_index == points_count() - 1){
+//        removeLastPoint();
+//        removeLastPoint();
+//        removeLastPoint();
+//        push_point_to_polygon( plan_points[points_count()-2]->get_pos() );
+//    } else if (point_index == points_count() - 2){
+//        removePoint(point_index);
+//        movePoint(points_count(), plan_points[point_index-1]->get_pos() );
+//    } else {
+//        removePoint(point_index);
+//    }
+////    qDebug() << "del" << numberOfVertices();
+//}

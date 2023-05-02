@@ -4,6 +4,7 @@
 
 
 #include <QTableWidget>
+#include <cmath>
 
 #include <qgsrubberband.h>
 
@@ -35,13 +36,20 @@ public:
 
     void set_visible(bool is_visible);
 
+    void update_color();
+
 private:
     double alt;
+    QColor cur_fill_color;
 
     bool m_visible = true;
 
+    const QColor low_color = QColor::fromHsv(120, 255, 255);
+    const QColor high_color = QColor::fromHsv(0, 255, 255);
+    const double min_alt = 10;
+    const double max_alt = 300;
+
     const double default_alt = 0.0;
-    const QColor fill_color = QColor(255,0,0);
     const QColor outline_color = QColor(0,0,0);
     const int outline_width = 2;
     const int icon_size = 15;
@@ -84,6 +92,9 @@ private slots:
     void del_button_pressed();
 
 private:
+//    void push_point_to_polygon(QgsPointXY pos);
+//    void delete_point_from_polygon(int point_index);
+
     QgsMapCanvas* cur_canvas;
 
     QList<PlanPoint*> plan_points;
