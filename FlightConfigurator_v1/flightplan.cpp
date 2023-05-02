@@ -5,6 +5,7 @@ PlanPoint::PlanPoint(QgsMapCanvas *canvas, QgsPointXY pos)
     : QgsVertexMarker(canvas)
 {
     alt = default_alt;
+    cur_fill_color = low_color;
 
     setCenter(pos);
     setIconSize(icon_size);
@@ -12,7 +13,6 @@ PlanPoint::PlanPoint(QgsMapCanvas *canvas, QgsPointXY pos)
     setIconType(icon_type);
     setColor(outline_color);
 
-    cur_fill_color = low_color;
     update_color();
 }
 
@@ -82,7 +82,7 @@ int FlightPlan::points_count(){
 
 void FlightPlan::set_point_pos(int point_index, QgsPointXY new_pos){
     plan_points[point_index]->set_pos( new_pos );
-    movePoint(point_index, new_pos);
+    move_polygon_point(point_index, new_pos);
     update();
 }
 
@@ -109,7 +109,7 @@ double FlightPlan::get_point_alt(int point_index){
 void FlightPlan::add_point(QgsPointXY pos){
     clear_possible_line();
 
-    addPoint(pos);
+    push_point_to_polygon(pos);
 
     PlanPoint* point = new PlanPoint(cur_canvas, pos);
     plan_points.push_back(point);
@@ -135,7 +135,7 @@ void FlightPlan::add_point(QgsPointXY pos){
 }
 
 void FlightPlan::delete_point(int point_index){
-    removePoint(point_index);
+    delete_point_from_polygon(point_index);
 
     delete plan_points[point_index];
     plan_points.removeAt(point_index);
@@ -214,32 +214,30 @@ FlightPlan::~FlightPlan(){
     delete possible_line;
 }
 
-//void FlightPlan::push_point_to_polygon(QgsPointXY pos){
-//    if (points_count()){
-//        if (points_count() > 1){
-//            removePoint(points_count());
-//        }
-//        addPoint(pos);
-//        addPoint( plan_points[points_count()-1]->get_pos() );
-//    } else {
-//        addPoint(pos);
-//    }
-////    qDebug() << "add" << numberOfVertices();
-//}
+void FlightPlan::push_point_to_polygon(QgsPointXY pos, int last_index){
+    if (points_count()){
+        movePoint(points_count(), pos);
+    } else {
+        addPoint(pos);
+    }
+    addPoint(pos);
+}
 
-//void FlightPlan::delete_point_from_polygon(int point_index){
-//    if (points_count() == 1){
-//        removeLastPoint();
-//    } else if (point_index == points_count() - 1){
-//        removeLastPoint();
-//        removeLastPoint();
-//        removeLastPoint();
-//        push_point_to_polygon( plan_points[points_count()-2]->get_pos() );
-//    } else if (point_index == points_count() - 2){
-//        removePoint(point_index);
-//        movePoint(points_count(), plan_points[point_index-1]->get_pos() );
-//    } else {
-//        removePoint(point_index);
-//    }
-////    qDebug() << "del" << numberOfVertices();
-//}
+void FlightPlan::delete_point_from_polygon(int point_index){
+    if (points_count() == 1){
+        reset();
+    } else if (point_index != points_count()-1) {
+        removePoint(point_index);
+    } else {
+        movePoint(points_count(), plan_points[points_count()-2]->get_pos());
+        removePoint(points_count()-1);
+    }
+}
+
+void FlightPlan::move_polygon_point(int point_index, QgsPointXY new_pos){
+    movePoint(point_index, new_pos);
+
+    if (point_index == points_count()-1){
+        movePoint(point_index+1, new_pos);
+    }
+}
