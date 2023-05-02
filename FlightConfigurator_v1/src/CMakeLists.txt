@@ -51,7 +51,7 @@ set(LIBRARIES
     Qt5::Positioning
     Qt5::Xml
     Qt5::Sql
-	Qt5::Svg
+    Qt5::Svg
     ${QGIS_LIBRARY}
 )
 
@@ -78,12 +78,13 @@ set(UIS
     )
 
 set(RESOURCES
+    resources.qrc
     )
 
 add_executable(${PROJECT}
                ${SOURCES}
                ${HEADERS}
-			   ${UIS}
+               ${UIS}
 			#    ${INTERNAL_SOURCES}
                ${RESOURCES})
 
