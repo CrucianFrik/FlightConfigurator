@@ -10,8 +10,20 @@ PixhawkManager::PixhawkManager(const QString& path, qint32 speed) : message_hend
                      this, &PixhawkManager::param_received);
 
 	communicator.addLink(&link, MAVLINK_COMM_3);
-    link.up();
+    int cs = link.up();
+    if (cs == 0)
+        connection_status = ConnectionStatus::successful;
+    else
+        connection_status = ConnectionStatus::failed;;
+
+
+    int FREQUENCY = 100000;
+    set_msg_frequency(MAVLINK_MSG_ID_GLOBAL_POSITION_INT, FREQUENCY);
+    set_msg_frequency(MAVLINK_MSG_ID_ATTITUDE, FREQUENCY);
+    set_msg_frequency(MAVLINK_MSG_ID_SCALED_IMU, FREQUENCY);
 }
+
+int PixhawkManager::get_connection_status() { return connection_status; }
 
 mavlink_heartbeat_t PixhawkManager::get_heartbeat()
 { return message_hendler.get_heartbeat(); }
@@ -21,6 +33,9 @@ mavlink_attitude_t PixhawkManager::get_attitude()
 
 mavlink_scaled_imu_t PixhawkManager::get_scaled_imu()
 { return message_hendler.get_scaled_imu(); }
+
+mavlink_global_position_int_t PixhawkManager::get_global_position_int()
+{ return message_hendler.get_global_position_int(); }
 
 void PixhawkManager::set_msg_frequency(uint8_t msg_id, int8_t frequency) {
     //msg_id - an int from 1 to 12920 (ex: 30 for ATTITUDE)
@@ -99,9 +114,10 @@ void PixhawkManager::add_param_to_param_list(const mavlink_param_value_t &param)
 }
 
 void PixhawkManager::param_received(const mavlink_param_value_t &param){
-    qDebug() << "pr";
+    // FIXME -- STAT_RUNTIME ( 65535 ) : 0
     add_param_to_param_list(param);
     if (param.param_index == param.param_count-1) {
+        message_hendler.log();
         all_params_received_flag = 1;
         emit all_params_received();
     }
@@ -114,4 +130,11 @@ const std::map<uint16_t, ParamInfo>& PixhawkManager::get_parametr_list(){
 
 bool PixhawkManager::is_all_params_received(){
     return all_params_received_flag;
+}
+
+float PixhawkManager::get_param_val(uint8_t index){
+    if (param_list.find(index) != param_list.end()){
+        return param_list[index].param_value;
+    }
+    return 0; //mb FIXME
 }

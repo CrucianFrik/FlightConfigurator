@@ -11,7 +11,7 @@
 #include "mavlink_communicator.h"
 #include "message_handler.h"
 #include "abstract_link.h"
-#include "param_info.h"
+#include "hendler_structs.h"
 
 // MAVLink
 #include <mavlink.h>
@@ -25,6 +25,7 @@ class PixhawkManager: public QObject{
     std::map<uint16_t, ParamInfo> param_list;
     std::vector<int> updated_param_list_params;
     bool all_params_received_flag = 0;
+    bool connection_status = ConnectionStatus::none;
 
     void add_param_to_param_list(const mavlink_param_value_t &param);
 
@@ -36,7 +37,10 @@ public:
     mavlink_heartbeat_t get_heartbeat();
     mavlink_attitude_t get_attitude();
     mavlink_scaled_imu_t get_scaled_imu();
+    mavlink_global_position_int_t get_global_position_int();
+    int get_connection_status();
     const std::map<uint16_t, ParamInfo>& get_parametr_list();
+    float get_param_val(uint8_t index);
     bool is_all_params_received();
 
     void set_msg_frequency(uint8_t msg_id, int8_t frequency);

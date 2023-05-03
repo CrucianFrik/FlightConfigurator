@@ -208,7 +208,7 @@
        <enum>Qt::TabFocus</enum>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="data_tab">
        <attribute name="title">
@@ -223,10 +223,10 @@
           <item>
            <layout class="QGridLayout" name="gridLayout_3">
             <item row="8" column="0">
-             <widget class="QLCDNumber" name="lcdNumber_6"/>
+             <widget class="QLCDNumber" name="data_lat"/>
             </item>
             <item row="3" column="1">
-             <widget class="QLCDNumber" name="lcdNumber_2">
+             <widget class="QLCDNumber" name="data_z_speed">
               <property name="minimumSize">
                <size>
                 <width>205</width>
@@ -273,10 +273,10 @@
              </widget>
             </item>
             <item row="5" column="1">
-             <widget class="QLCDNumber" name="lcdNumber_5"/>
+             <widget class="QLCDNumber" name="data_speed"/>
             </item>
             <item row="8" column="1">
-             <widget class="QLCDNumber" name="lcdNumber_7"/>
+             <widget class="QLCDNumber" name="data_lon"/>
             </item>
             <item row="1" column="0">
              <widget class="QLabel" name="label_2">
@@ -305,13 +305,13 @@
              </widget>
             </item>
             <item row="5" column="0">
-             <widget class="QLCDNumber" name="lcdNumber_4"/>
+             <widget class="QLCDNumber" name="data_dist_to_wp"/>
             </item>
             <item row="6" column="0">
              <widget class="QgsSymbolButton" name="mSymbolButton"/>
             </item>
             <item row="3" column="0">
-             <widget class="QLCDNumber" name="lcdNumber_3">
+             <widget class="QLCDNumber" name="data_altitude">
               <property name="minimumSize">
                <size>
                 <width>205</width>
@@ -476,7 +476,7 @@
               </column>
               <column>
                <property name="text">
-                <string>param_name</string>
+                <string>name</string>
                </property>
               </column>
               <column>

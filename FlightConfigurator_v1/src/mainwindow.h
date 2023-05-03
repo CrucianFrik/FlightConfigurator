@@ -4,11 +4,12 @@
 #include <QDesktopWidget>
 #include <QMainWindow>
 #include <QTime>
+#include <QTimer>
 #include <QtMath>
 
 //#include "mavlink.h"
 #include "./ui_mainwindow.h"
-#include "param_info.h"
+#include "hendler_structs.h"
 #include "pixhawk_manager.h"
 //#include "mapcontroller.h"
 
@@ -21,15 +22,24 @@ QT_END_NAMESPACE
 enum param_table_conumns{
     ind,
     name,
-    none,
     value,
     description
 };
 
 class MainWindow : public QMainWindow{
+private:
     Q_OBJECT
-    void set_gui_elements();
+    Ui::MainWindow *ui;
 
+    //MapController* map_controller;
+    PixhawkManager* pixhawk_manager; //sheredptr + singltone
+    const QSize window_size = QDesktopWidget().size();
+    const QString window_title = "FlightConfigurator";
+    QTimer* timer;
+
+    void set_gui_elements();
+    void set_data_updation();
+    bool all_parametrs_processed = 0;
 public:
     MainWindow(QWidget *parent = nullptr);
     void show();
@@ -41,13 +51,6 @@ private slots:
     void update_params_table();
     void process_updated_param(int row, int column);
     void connect_to_pixhawk();
-
-private:
-    Ui::MainWindow *ui;
-
-    //MapController* map_controller;
-    PixhawkManager* pixhawk_manager;
-    const QSize window_size = QDesktopWidget().size();
-    const QString window_title = "FlightConfigurator";
+    void data_window_update();
 };
 #endif // MAINWINDOW_H

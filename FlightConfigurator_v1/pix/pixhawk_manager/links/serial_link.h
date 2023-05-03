@@ -24,8 +24,8 @@ namespace domain
         qint32 baudRate() const;
 
     public slots:
-        void up() override;
-        void down() override;
+        int up() override;
+        int down() override;
 
         void sendData(const QByteArray& data) override;
 
