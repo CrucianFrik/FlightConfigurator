@@ -7,7 +7,7 @@ PixhawkManager::PixhawkManager(const QString& path, qint32 speed) : message_hend
     QObject::connect(&communicator, &domain::MavLinkCommunicator::messageReceived,
                      &message_hendler, &domain::MessageHandler::process_message);
     QObject::connect(&message_hendler, &domain::MessageHandler::param_received,
-                     this, &PixhawkManager::request_params_slot);
+                     this, &PixhawkManager::param_received);
 
 	communicator.addLink(&link, MAVLINK_COMM_3);
     link.up();
@@ -79,16 +79,18 @@ bool PixhawkManager::set_param(uint16_t param_inndex, float new_value){
     return 1;
 }
 
-void PixhawkManager::log_received_msgs(bool print_once){
-    communicator.logReceivedMsgs(print_once);
+void PixhawkManager::update_param_in_param_list(uint8_t index, float new_value){
+    //log: "значение параметра не обновлено"
+    if (param_list.find(index) == param_list.end()){
+        //FIXME
+        qDebug() << "error: no such file in param_list";
+        return;
+    }
+    updated_param_list_params.push_back(index);
+    param_list[index].param_value = new_value;
 }
 
-void PixhawkManager::update_param_list(const mavlink_param_value_t &param, float new_value){
-    add_to_param_list(param);
-    param_list[param.param_index].param_value = new_value;
-}
-
-void PixhawkManager::add_to_param_list(const mavlink_param_value_t &param){
+void PixhawkManager::add_param_to_param_list(const mavlink_param_value_t &param){
     ParamInfo pi {"", param.param_type, param.param_value};
     memcpy(pi.param_id, param.param_id, sizeof(param.param_id));
 
@@ -96,8 +98,20 @@ void PixhawkManager::add_to_param_list(const mavlink_param_value_t &param){
     param_list[param.param_index] = pi;
 }
 
-void PixhawkManager::request_params_slot(const mavlink_param_value_t &param){
-    add_to_param_list(param);
-    if (param.param_index == param.param_count-1) { all_params_received_flag = 1; }
+void PixhawkManager::param_received(const mavlink_param_value_t &param){
+    qDebug() << "pr";
+    add_param_to_param_list(param);
+    if (param.param_index == param.param_count-1) {
+        all_params_received_flag = 1;
+        emit all_params_received();
+    }
     qDebug() << param_list[param.param_index].param_id << "(" << param.param_index << ")" << ":" << param.param_value;
+}
+
+const std::map<uint16_t, ParamInfo>& PixhawkManager::get_parametr_list(){
+    return param_list;
+}
+
+bool PixhawkManager::is_all_params_received(){
+    return all_params_received_flag;
 }

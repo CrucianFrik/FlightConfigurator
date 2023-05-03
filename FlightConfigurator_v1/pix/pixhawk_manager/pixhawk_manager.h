@@ -2,6 +2,7 @@
 #define PIXHAWK_MANAGER_H
 
 #include <map>
+#include <vector>
 
 // Internal
 #include "udp_link.h"
@@ -10,16 +11,11 @@
 #include "mavlink_communicator.h"
 #include "message_handler.h"
 #include "abstract_link.h"
+#include "param_info.h"
 
 // MAVLink
 #include <mavlink.h>
 #include <QDebug>
-
-struct ParamInfo{
-        char param_id[16];
-        uint16_t param_type;
-        float param_value;
-};
 
 class PixhawkManager: public QObject{
     Q_OBJECT
@@ -27,23 +23,32 @@ class PixhawkManager: public QObject{
     domain::MessageHandler message_hendler;
     domain::SerialLink link;
     std::map<uint16_t, ParamInfo> param_list;
+    std::vector<int> updated_param_list_params;
     bool all_params_received_flag = 0;
 
-    void update_param_list(const mavlink_param_value_t &param, float new_value);
-    void add_to_param_list(const mavlink_param_value_t &param);
+    void add_param_to_param_list(const mavlink_param_value_t &param);
 
 public:
     PixhawkManager(const QString& path, qint32 speed);
+
+    void update_param_in_param_list(uint8_t index, float new_value);
+
     mavlink_heartbeat_t get_heartbeat();
     mavlink_attitude_t get_attitude();
     mavlink_scaled_imu_t get_scaled_imu();
+    const std::map<uint16_t, ParamInfo>& get_parametr_list();
+    bool is_all_params_received();
+
     void set_msg_frequency(uint8_t msg_id, int8_t frequency);
-    void request_all_params();
     bool set_param(uint16_t param_inndex, float new_value);
-    void log_received_msgs(bool print_once = 0);
+
+    void request_all_params();
 
 public slots:
-    void request_params_slot(const mavlink_param_value_t& param_value);
+    void param_received(const mavlink_param_value_t& param_value);
+
+signals:
+    void all_params_received();
 };
 
 

@@ -71,7 +71,7 @@
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_6">
         <item>
-         <widget class="QLineEdit" name="lineEdit">
+         <widget class="QLineEdit" name="controllerPath">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
             <horstretch>0</horstretch>
@@ -87,7 +87,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QComboBox" name="comboBox">
+         <widget class="QComboBox" name="conrollerSpeed">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
             <horstretch>0</horstretch>
@@ -177,7 +177,7 @@
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="pushButton">
+         <widget class="QPushButton" name="connectButton">
           <property name="sizePolicy">
            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
             <horstretch>0</horstretch>
@@ -208,7 +208,7 @@
        <enum>Qt::TabFocus</enum>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="data_tab">
        <attribute name="title">
@@ -341,7 +341,7 @@
             <item>
              <layout class="QVBoxLayout" name="verticalLayout_9">
               <item>
-               <widget class="QTableWidget" name="tableWidget">
+               <widget class="QTableWidget" name="points_table">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Minimum" vsizetype="MinimumExpanding">
                   <horstretch>0</horstretch>
@@ -442,75 +442,55 @@
         <item row="0" column="0">
          <layout class="QHBoxLayout" name="horizontalLayout_8">
           <item>
-           <widget class="QTableWidget" name="table">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
-              <horstretch>5</horstretch>
-              <verstretch>5</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="sizeIncrement">
-             <size>
-              <width>5</width>
-              <height>5</height>
-             </size>
-            </property>
-            <property name="baseSize">
-             <size>
-              <width>5</width>
-              <height>5</height>
-             </size>
-            </property>
-            <attribute name="horizontalHeaderHighlightSections">
-             <bool>false</bool>
-            </attribute>
-            <row>
-             <property name="text">
-              <string>Param 1 </string>
-             </property>
-            </row>
-            <row>
-             <property name="text">
-              <string>Param 2</string>
-             </property>
-            </row>
-            <row>
-             <property name="text">
-              <string>Param 3</string>
-             </property>
-            </row>
-            <column>
-             <property name="text">
-              <string>info</string>
-             </property>
-            </column>
-            <column>
-             <property name="text">
-              <string>value</string>
-             </property>
-            </column>
-            <column>
-             <property name="text">
-              <string>description</string>
-             </property>
-            </column>
-            <item row="0" column="2">
-             <property name="text">
-              <string/>
-             </property>
-            </item>
-            <item row="1" column="0">
-             <property name="text">
-              <string/>
-             </property>
-            </item>
-           </widget>
-          </item>
-          <item>
            <layout class="QVBoxLayout" name="verticalLayout_11">
             <property name="leftMargin">
              <number>0</number>
             </property>
+            <item>
+             <widget class="QTableWidget" name="param_table">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="Preferred" vsizetype="MinimumExpanding">
+                <horstretch>5</horstretch>
+                <verstretch>5</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="sizeIncrement">
+               <size>
+                <width>5</width>
+                <height>5</height>
+               </size>
+              </property>
+              <property name="baseSize">
+               <size>
+                <width>5</width>
+                <height>5</height>
+               </size>
+              </property>
+              <attribute name="horizontalHeaderHighlightSections">
+               <bool>false</bool>
+              </attribute>
+              <column>
+               <property name="text">
+                <string>index</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>param_name</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>value</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>description</string>
+               </property>
+              </column>
+             </widget>
+            </item>
             <item>
              <spacer name="verticalSpacer">
               <property name="orientation">
