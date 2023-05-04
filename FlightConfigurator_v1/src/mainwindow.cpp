@@ -14,6 +14,9 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->connectButton, &QPushButton::released, this, &MainWindow::connect_to_pixhawk);
     connect(ui->tabWidget, SIGNAL(currentChanged(int)), SLOT(update_widgets_geometry_slot()));//FIFME
     connect(ui->param_table, &QTableWidget::cellChanged, this, &MainWindow::process_updated_param);
+    connect(ui->upload_params_button, &QPushButton::released, this, &MainWindow::upload_params);
+    connect(ui->load_to_file_params_button, &QPushButton::released, this, &MainWindow::load_to_file_params);
+    connect(ui->load_from_file_params_button, &QPushButton::released, this, &MainWindow::load_from_file_params);
 }
 
 void MainWindow::connect_to_pixhawk(){
@@ -71,7 +74,6 @@ MainWindow::~MainWindow()
 
 void MainWindow::show(){
     QMainWindow::show();
-
     resize(window_size);
     setWindowTitle(window_title);
 }
@@ -84,7 +86,6 @@ void MainWindow::update_widgets_geometry_slot(){
 
 void MainWindow::resizeEvent(QResizeEvent *event){
     QMainWindow::resizeEvent(event);
-
     update_widgets_geometry_slot();
 }
 
@@ -137,4 +138,18 @@ void MainWindow::process_updated_param(int row, int column){
         }
     }
 
+}
+
+void MainWindow::upload_params(){
+
+}
+
+void MainWindow::load_to_file_params(){
+    const std::map<uint16_t, ParamInfo>& params = pixhawk_manager->get_parametr_list();
+    //загрузка в файл
+}
+
+void MainWindow::load_from_file_params(){
+    //for (param in loaded_from_file_params)
+    //pixhawk_manager->update_param_in_param_list()
 }

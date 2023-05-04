@@ -505,21 +505,21 @@
              </spacer>
             </item>
             <item>
-             <widget class="QPushButton" name="pushButton_7">
+             <widget class="QPushButton" name="upload_params_button">
               <property name="text">
                <string>upload</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="pushButton_8">
+             <widget class="QPushButton" name="load_to_file_params_button">
               <property name="text">
                <string>load to file</string>
               </property>
              </widget>
             </item>
             <item>
-             <widget class="QPushButton" name="pushButton_6">
+             <widget class="QPushButton" name="load_from_file_params_button">
               <property name="text">
                <string>load from file</string>
               </property>

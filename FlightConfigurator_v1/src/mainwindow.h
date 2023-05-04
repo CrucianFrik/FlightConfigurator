@@ -52,5 +52,9 @@ private slots:
     void process_updated_param(int row, int column);
     void connect_to_pixhawk();
     void data_window_update();
+
+    void upload_params();
+    void load_to_file_params();
+    void load_from_file_params();
 };
 #endif // MAINWINDOW_H
