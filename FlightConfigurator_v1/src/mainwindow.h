@@ -35,7 +35,8 @@ private:
     PixhawkManager* pixhawk_manager; //sheredptr + singltone
     const QSize window_size = QDesktopWidget().size();
     const QString window_title = "FlightConfigurator";
-    QTimer* timer;
+    QTimer* info_updation_timer;
+    QTimer* params_download_checking_timer;
 
     void set_gui_elements();
     void set_data_updation();
@@ -54,7 +55,9 @@ private slots:
     void data_window_update();
 
     void upload_params();
+    void download_params();
     void load_to_file_params();
     void load_from_file_params();
+    void reset_params();
 };
 #endif // MAINWINDOW_H

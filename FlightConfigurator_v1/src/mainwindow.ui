@@ -505,6 +505,13 @@
              </spacer>
             </item>
             <item>
+             <widget class="QPushButton" name="reset_params_button">
+              <property name="text">
+               <string>reset parametrs</string>
+              </property>
+             </widget>
+            </item>
+            <item>
              <widget class="QPushButton" name="upload_params_button">
               <property name="text">
                <string>upload</string>

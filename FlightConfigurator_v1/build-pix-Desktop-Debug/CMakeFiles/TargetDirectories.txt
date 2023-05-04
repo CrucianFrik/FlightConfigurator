@@ -1,3 +1,0 @@
-/home/crucian/Desktop/patterns/FC_/FlightConfigurator/FlightConfigurator_v1/build-pix-Desktop-Debug/CMakeFiles/rebuild_cache.dir
-/home/crucian/Desktop/patterns/FC_/FlightConfigurator/FlightConfigurator_v1/build-pix-Desktop-Debug/CMakeFiles/edit_cache.dir
-/home/crucian/Desktop/patterns/FC_/FlightConfigurator/FlightConfigurator_v1/build-pix-Desktop-Debug/CMakeFiles/pix_lib.dir

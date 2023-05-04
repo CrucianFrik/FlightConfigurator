@@ -1,4 +1,0 @@
-/home/crucian/Desktop/patterns/FC_/FlightConfigurator/FlightConfigurator_v1/build-src-Desktop-Debug/CMakeFiles/rebuild_cache.dir
-/home/crucian/Desktop/patterns/FC_/FlightConfigurator/FlightConfigurator_v1/build-src-Desktop-Debug/CMakeFiles/edit_cache.dir
-/home/crucian/Desktop/patterns/FC_/FlightConfigurator/FlightConfigurator_v1/build-src-Desktop-Debug/CMakeFiles/FlightConfigurator_v1_build.dir
-/home/crucian/Desktop/patterns/FC_/FlightConfigurator/FlightConfigurator_v1/build-src-Desktop-Debug/CMakeFiles/FlightConfigurator_v1_build_autogen.dir

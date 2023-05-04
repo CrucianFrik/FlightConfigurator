@@ -8,9 +8,9 @@ struct ParamInfo{
 };
 
 enum ConnectionStatus{
+    none,
     successful,
-    failed,
-    none
+    failed
 };
 
 #endif // HENDLER_STRUCTS_H
