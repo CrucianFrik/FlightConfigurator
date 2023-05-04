@@ -13,8 +13,8 @@
 
 
 const QList< QPair<QString, QString> > MAP_LAYER_PATHS = {
-     {"../../maps/vector/kx-world-land-areas-110-million-SHP/world-land-areas-110-million.shp", "land"},
-     {"../../maps/vector/kx-world-bathymetry-110-million-SHP/world-bathymetry-110-million.shp", "bath"}
+     {"../../../maps/vector/kx-world-land-areas-110-million-SHP/world-land-areas-110-million.shp", "land"},
+     {"../../../maps/vector/kx-world-bathymetry-110-million-SHP/world-bathymetry-110-million.shp", "bath"}
 //         {"../../maps/vector/test/gis_osm_buildings_a_free_1.shp", "1"},
 //         {"../../maps/vector/test/gis_osm_landuse_a_free_1.shp", "2"},
 //         {"../../maps/vector/test/gis_osm_places_a_free_1.shp", "3"},

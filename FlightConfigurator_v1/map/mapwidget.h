@@ -11,7 +11,7 @@
 #include <qgsmaptoolpan.h>
 #include <qgsvectorlayer.h>
 
-#include <mapbuttons.h>
+#include "mapbuttons.h"
 
 
 

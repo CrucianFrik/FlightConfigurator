@@ -19,7 +19,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->data_tab->layout()->addWidget(map_controller->get_data_map());
     ui->plan_tab->layout()->addWidget(map_controller->get_plan_map());
     map_controller->get_plan_map()->set_table(ui->tableWidget);
-
+    ui->label_8->setPixmap(QPixmap(QString::fromUtf8(":/icons/logo.jpg")));
     connect(ui->tabWidget, SIGNAL(currentChanged(int)), SLOT(update_widgets_geometry_slot()));
 }
 

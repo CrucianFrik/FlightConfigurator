@@ -36,11 +36,20 @@
        <layout class="QHBoxLayout" name="horizontalLayout_2">
         <item>
          <widget class="QLabel" name="label_8">
+          <property name="enabled">
+           <bool>true</bool>
+          </property>
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
+           <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+            <horstretch>64</horstretch>
+            <verstretch>64</verstretch>
            </sizepolicy>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>34</width>
+            <height>34</height>
+           </size>
           </property>
           <property name="frameShape">
            <enum>QFrame::Box</enum>
@@ -49,7 +58,10 @@
            <string/>
           </property>
           <property name="pixmap">
-           <pixmap>../../../../Downloads/Telegram Desktop/ed4b42ab-1913-480a-8d4d-2e4b68d569a8 (2).jpg</pixmap>
+           <pixmap resource="resources.qrc">:/icons/logo.jpg</pixmap>
+          </property>
+          <property name="scaledContents">
+           <bool>true</bool>
           </property>
          </widget>
         </item>
@@ -208,7 +220,7 @@
        <enum>Qt::TabFocus</enum>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="data_tab">
        <attribute name="title">
@@ -564,6 +576,8 @@
    <header>qgssymbolbutton.h</header>
   </customwidget>
  </customwidgets>
- <resources/>
+ <resources>
+  <include location="resources.qrc"/>
+ </resources>
  <connections/>
 </ui>

@@ -11,7 +11,7 @@
 
 
 
-const QString DELETE_ICON_PATH = "../../icons/delete_icon.png";
+const QString DELETE_ICON_PATH = ":/icons/delete_icon.png";
 
 
 
@@ -72,7 +72,7 @@ private:
     const double win_height_to_size_koef = 1.0 / 100;
 
     QColor color = QColor(255, 0, 0);
-    QList<QgsPointXY> arrow_figure = {{1,-2},{0,1},{-1,-2}};
+    QList<QgsPointXY> arrow_figure = {{1,-1.5},{0,1.5},{-1,-1.5}};
 
 };
 
