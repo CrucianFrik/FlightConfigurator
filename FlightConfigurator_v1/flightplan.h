@@ -9,52 +9,15 @@
 #include <qgsrubberband.h>
 
 #include "mapwidget.h"
+#include "plan_attrs.h"
 
 
-
-const QString DELETE_ICON_PATH = "../../icons/delete_icon.png";
 
 enum {
     COLUMN_LAT,
     COLUMN_LON,
     COLUMN_ALT,
     COLUMN_DEL
-};
-
-
-
-class PlanPoint : protected QgsVertexMarker {
-
-public:
-    PlanPoint(QgsMapCanvas* canvas, QgsPointXY pos);
-
-    void set_pos(QgsPointXY new_pos);
-    QgsPointXY get_pos();
-
-    void set_alt(double alt);
-    double get_alt();
-
-    void set_visible(bool is_visible);
-
-    void update_color();
-
-private:
-    double alt;
-    QColor cur_fill_color;
-
-    bool m_visible = true;
-
-    const QColor low_color = QColor::fromHsv(120, 255, 255);
-    const QColor high_color = QColor::fromHsv(0, 255, 255);
-    const double min_alt = 10.;
-    const double max_alt = 300.;
-
-    const double default_alt = 10.;
-    const QColor outline_color = QColor(0,0,0);
-    const int outline_width = 2;
-    const int icon_size = 15;
-    const IconType icon_type = ICON_CIRCLE;
-
 };
 
 
@@ -85,6 +48,8 @@ public:
 
     void set_table(QTableWidget* t);
 
+    void update_arrows_size(double extent_height, double extent_width);
+
     ~FlightPlan();
 
 private slots:
@@ -92,18 +57,26 @@ private slots:
     void del_button_pressed();
 
 private:
-    void push_point_to_polygon(QgsPointXY pos, int last_index = -1);
     void delete_point_from_polygon(int point_index);
     void move_polygon_point(int point_index, QgsPointXY new_pos);
+
+    void add_arrow();
+    void move_adj_arrows(int point_index);
+    void delete_arrow(int point_index);
+
 
     QgsMapCanvas* cur_canvas;
 
     QList<PlanPoint*> plan_points;
+    QList<PlanArrow*> plan_arrows;
 
     QgsRubberBand* possible_line;
     PlanPoint* possible_point;
 
     QTableWidget* table;
+
+    double last_extent_height;
+    double last_extent_width;
 
     const QBrush error_cell_color = QBrush(QColor(255, 0, 0));
     const QBrush default_cell_color = QBrush(QColor(255, 255, 255));

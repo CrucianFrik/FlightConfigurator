@@ -73,6 +73,7 @@ set(SOURCES
 	planmapwidget.cpp
 	dronemarker.cpp
 	flightplan.cpp
+	plan_attrs.cpp
     )
 
 
@@ -85,6 +86,7 @@ set(HEADERS
 	planmapwidget.h
 	dronemarker.h
 	flightplan.h
+	plan_attrs.h
     )
 
 

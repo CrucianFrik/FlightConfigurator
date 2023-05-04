@@ -1,63 +1,6 @@
 #include "flightplan.h"
 
 
-PlanPoint::PlanPoint(QgsMapCanvas *canvas, QgsPointXY pos)
-    : QgsVertexMarker(canvas)
-{
-    alt = default_alt;
-    cur_fill_color = low_color;
-
-    setCenter(pos);
-    setIconSize(icon_size);
-    setPenWidth(outline_width);
-    setIconType(icon_type);
-    setColor(outline_color);
-
-    update_color();
-}
-
-QgsPointXY PlanPoint::get_pos(){
-    return center();
-}
-
-void PlanPoint::set_pos(QgsPointXY new_pos){
-    setCenter(new_pos);
-}
-
-double PlanPoint::get_alt(){
-    return alt;
-}
-
-void PlanPoint::set_alt(double new_alt){
-    alt = new_alt;
-
-    update_color();
-}
-
-void PlanPoint::set_visible(bool is_visible){
-    if (is_visible){
-        setColor(outline_color);
-        update_color();
-    } else {
-        setFillColor(QColor("transparent"));
-        setColor(QColor("transparent"));
-    }
-    m_visible = is_visible;
-}
-
-void PlanPoint::update_color(){
-    double delta_hue = double(high_color.hue() - low_color.hue()) / (max_alt - min_alt);
-    double new_hue = double(low_color.hue()) + delta_hue * (alt - min_alt);
-
-    new_hue = std::min(new_hue, 255.);
-    new_hue = std::max(0., new_hue);
-
-    cur_fill_color.setHsv(std::round(new_hue), low_color.saturation(), low_color.value());
-    setFillColor(cur_fill_color);
-}
-
-
-
 FlightPlan::FlightPlan(QgsMapCanvas *canvas)
     : QgsRubberBand(canvas),
       possible_line{new QgsRubberBand(canvas)},
@@ -76,43 +19,54 @@ FlightPlan::FlightPlan(QgsMapCanvas *canvas)
     possible_point->set_visible(false);
 }
 
+
 int FlightPlan::points_count(){
     return plan_points.size();
 }
 
+
 void FlightPlan::set_point_pos(int point_index, QgsPointXY new_pos){
     plan_points[point_index]->set_pos( new_pos );
     move_polygon_point(point_index, new_pos);
+    move_adj_arrows(point_index);
     update();
 }
+
 
 void FlightPlan::set_point_pos_x(int point_index, double x){
     set_point_pos(point_index, QgsPointXY(x, plan_points[point_index]->get_pos().y()));
 }
 
+
 void FlightPlan::set_point_pos_y(int point_index, double y){
     set_point_pos(point_index, QgsPointXY(plan_points[point_index]->get_pos().x(), y));
 }
+
 
 QgsPointXY FlightPlan::get_point_pos(int point_index){
     return plan_points[point_index]->get_pos();
 }
 
+
 void FlightPlan::set_point_alt(int point_index, double alt){
     plan_points[point_index]->set_alt( alt );
 }
+
 
 double FlightPlan::get_point_alt(int point_index){
     return plan_points[point_index]->get_alt();
 }
 
+
 void FlightPlan::add_point(QgsPointXY pos){
     clear_possible_line();
 
-    push_point_to_polygon(pos);
+    addPoint(pos);
 
     PlanPoint* point = new PlanPoint(cur_canvas, pos);
     plan_points.push_back(point);
+
+    add_arrow();
 
 
     int n=points_count();
@@ -134,7 +88,9 @@ void FlightPlan::add_point(QgsPointXY pos){
     table->update();
 }
 
+
 void FlightPlan::delete_point(int point_index){
+    delete_arrow(point_index);
     delete_point_from_polygon(point_index);
 
     delete plan_points[point_index];
@@ -142,6 +98,7 @@ void FlightPlan::delete_point(int point_index){
 
     update();
 }
+
 
 void FlightPlan::update_possible_line(QgsPointXY pos){
     possible_point->set_visible(true);
@@ -157,16 +114,19 @@ void FlightPlan::update_possible_line(QgsPointXY pos){
     }
 }
 
+
 void FlightPlan::clear_possible_line(){
     possible_line->reset();
     possible_point->set_visible(false);
 }
+
 
 void FlightPlan::set_table(QTableWidget *t){
     table = t;
 
     connect(table, SIGNAL(cellChanged(int,int)), SLOT(update_point(int,int)));
 }
+
 
 void FlightPlan::update_point(int row, int column){
     bool is_ok = false;
@@ -195,6 +155,7 @@ void FlightPlan::update_point(int row, int column){
     table->item(row, column)->setText(rounded_text);
 }
 
+
 void FlightPlan::del_button_pressed(){
     for (int row=0; row < table->rowCount(); row++){
         if (sender() == table->cellWidget(row, COLUMN_DEL)){
@@ -206,38 +167,84 @@ void FlightPlan::del_button_pressed(){
     }
 }
 
+
 FlightPlan::~FlightPlan(){
     for (auto point : plan_points)
         delete point;
+
+    for (auto arrow : plan_arrows)
+        delete arrow;
 
     delete possible_point;
     delete possible_line;
 }
 
-void FlightPlan::push_point_to_polygon(QgsPointXY pos, int last_index){
-    if (points_count()){
-        movePoint(points_count(), pos);
-    } else {
-        addPoint(pos);
-    }
-    addPoint(pos);
-}
 
 void FlightPlan::delete_point_from_polygon(int point_index){
-    if (points_count() == 1){
-        reset();
-    } else if (point_index != points_count()-1) {
+    removePoint(point_index);
+
+    if (points_count() != 1 && point_index == points_count()-1){
+        addPoint(plan_points[points_count()-2]->get_pos());
         removePoint(point_index);
-    } else {
-        movePoint(points_count(), plan_points[points_count()-2]->get_pos());
-        removePoint(points_count()-1);
     }
 }
+
 
 void FlightPlan::move_polygon_point(int point_index, QgsPointXY new_pos){
     movePoint(point_index, new_pos);
 
-    if (point_index == points_count()-1){
-        movePoint(point_index+1, new_pos);
+    if (points_count() != 1 && point_index == points_count()-1){
+        addPoint(new_pos);
+        removePoint(point_index+1);
+    }
+}
+
+
+void FlightPlan::update_arrows_size(double extent_height, double extent_width){
+    for (auto arrow : plan_arrows)
+        arrow->update_size(extent_height, extent_width);
+
+    last_extent_height = extent_height;
+    last_extent_width  = extent_width;
+}
+
+
+void FlightPlan::add_arrow(){
+    if (points_count() < 2) return;
+
+    auto new_arrow = new PlanArrow(cur_canvas, plan_points[points_count() - 2]->get_pos(),
+                                               plan_points[points_count() - 1]->get_pos(),
+                                               last_extent_height, last_extent_width);
+    plan_arrows.push_back( new_arrow );
+}
+
+
+void FlightPlan::move_adj_arrows(int point_index){
+    if (point_index < points_count()-1){
+        plan_arrows[point_index]->update_pos(plan_points[point_index]  ->get_pos(),
+                                             plan_points[point_index+1]->get_pos());
+    }
+    if (point_index > 0){
+        plan_arrows[point_index-1]->update_pos(plan_points[point_index-1]->get_pos(),
+                                             plan_points[point_index]  ->get_pos());
+    }
+}
+
+
+void FlightPlan::delete_arrow(int point_index){
+    if (points_count() == 1) return;
+
+    if (point_index == 0){
+        delete plan_arrows[point_index];
+        plan_arrows.removeAt(point_index);
+    } else if (point_index == points_count()-1){
+        delete plan_arrows[point_index-1];
+        plan_arrows.removeAt(point_index-1);
+    } else {
+        plan_arrows[point_index]->update_pos( plan_points[point_index-1]->get_pos(),
+                                              plan_points[point_index+1]->get_pos() );
+
+        delete plan_arrows[point_index-1];
+        plan_arrows.removeAt(point_index-1);
     }
 }

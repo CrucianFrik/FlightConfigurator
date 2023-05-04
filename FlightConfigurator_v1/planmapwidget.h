@@ -21,6 +21,9 @@ public:
 
     ~PlanMapWidget();
 
+private slots:
+    void update_arrows_size();
+
 private:
     void mousePressEvent(QMouseEvent* e) override;
     void mouseMoveEvent(QMouseEvent* e) override;

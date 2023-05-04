@@ -8,11 +8,18 @@ PlanMapWidget::PlanMapWidget(const QList<QgsMapLayer *> &layers, QWidget *parent
     center_button  ->set_pos_number(center_button_pos);
     zoomin_button  ->set_pos_number(zoomin_button_pos);
     zoomout_button ->set_pos_number(zoomout_button_pos);
+
+    connect(this, SIGNAL(scaleChanged(double)), SLOT(update_arrows_size()));
 }
 
 
 PlanMapWidget::~PlanMapWidget(){
     delete flight_plan;
+}
+
+
+void PlanMapWidget::update_arrows_size(){
+    flight_plan->update_arrows_size( extent().height(), extent().width() );
 }
 
 
