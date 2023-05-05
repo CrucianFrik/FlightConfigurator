@@ -67,6 +67,7 @@ int main(int argc, char *argv[])
     MainWindow window;
 
     window.show();
+    window.test_flight();
 
 //    PixhawkManager pixhawkManager("/dev/serial/by-id/usb-ArduPilot_Pixhawk1_36003A000551393439373637-if00", 115200);
 //    test(pixhawkManager, window);

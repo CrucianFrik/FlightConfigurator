@@ -26,13 +26,7 @@ public:
 
     void show();
 
-    void test(){
-//        double r=10;
-//        for (double fi=0;; fi+=0.01){
-//            delay(100);
-//            map_controller->update_drone_pos({55+r*cos(fi), 37+r*sin(fi)}, fi);
-//        }
-    }
+    void test_flight();
 
     void resizeEvent(QResizeEvent* event) override;
 

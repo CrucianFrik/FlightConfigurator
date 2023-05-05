@@ -22,7 +22,7 @@ private:
     const int line_width = 3;
     const QColor color = QColor(255, 0, 0);
     const Qt::PenStyle line_style = Qt::SolidLine;
-    const int max_points_number = 300;
+    const int max_points_number = 500;
 
 };
 
