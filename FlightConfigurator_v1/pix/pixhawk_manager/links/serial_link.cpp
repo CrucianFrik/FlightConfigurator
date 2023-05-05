@@ -31,9 +31,9 @@ qint32 SerialLink::baudRate() const
     return m_port->baudRate();
 }
 
-void SerialLink::up()
+int SerialLink::up()
 {
-    if (this->isUp()) return;
+    if (this->isUp()) return -2;
 
     if (!m_port->open(QIODevice::ReadWrite))
     {
@@ -41,19 +41,22 @@ void SerialLink::up()
                  qPrintable(m_port->errorString()));
 
         m_port->close();
+        return -1;
     }
     else
     {
         emit upChanged(true);
+        return 0;
     }
 }
 
-void SerialLink::down()
+int SerialLink::down()
 {
-    if (!this->isUp()) return;
+    if (!this->isUp()) return -1;
 
     m_port->close();
     emit upChanged(false);
+    return 0;
 }
 
 void SerialLink::sendData(const QByteArray& data)

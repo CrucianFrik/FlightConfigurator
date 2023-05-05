@@ -37,9 +37,9 @@ int UdpLink::txPort() const
     return m_txPort;
 }
 
-void UdpLink::up()
+int UdpLink::up()
 {
-    if (this->isUp()) return;
+    if (this->isUp()) return -2;
 
     if (!m_socket->bind(m_rxPort))
     {
@@ -47,19 +47,22 @@ void UdpLink::up()
                  qPrintable(m_socket->errorString()));
 
         m_socket->close();
+        return -1;
     }
     else
     {
         emit upChanged(true);
+        return 0;
     }
 }
 
-void UdpLink::down()
+int UdpLink::down()
 {
-    if (!this->isUp()) return;
+    if (!this->isUp()) return -1;
 
     m_socket->close();
     emit upChanged(false);
+    return 0;
 }
 
 void UdpLink::sendData(const QByteArray& data)

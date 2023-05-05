@@ -17,8 +17,8 @@ namespace domain
         virtual bool isUp() const = 0;
 
     public slots:
-        virtual void up() = 0;
-        virtual void down() = 0;
+        virtual int up() = 0;
+        virtual int down() = 0;
 
         virtual void sendData(const QByteArray& data) = 0;
 
