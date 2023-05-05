@@ -40,6 +40,8 @@ void MainWindow::connect_to_pixhawk(){
         ui->connectButton->setPalette(QPalette(Qt::red));
         ////usb-3D_Robotics_PX4_FMU_v2.x_0-if00 // /dev/serial/by-id/usb-ArduPilot_Pixhawk1_36003A000551393439373637-if00
         pixhawk_manager = new PixhawkManager("/dev/serial/by-id/usb-ArduPilot_RoyalPenguin1_40003F000650484843373120-if00", 115200);
+        //pixhawk_manager = new PixhawkManager("/dev/serial/by-id/usb-ArduPilot_Pixhawk1_36003A000551393439373637-if00", 115200);
+        //pixhawk_manager = new PixhawkManager("/dev/serial/by-id/usb-3D_Robotics_PX4_FMU_v2.x_0-if00", 115200);
         if (pixhawk_manager->get_connection_status() == ConnectionStatus::successful){
             pixhawk_manager->request_all_params();
             connect(pixhawk_manager, &PixhawkManager::all_params_received, this, &MainWindow::update_params_table);
@@ -55,7 +57,7 @@ void MainWindow::reset_params(){
 
 void MainWindow::set_data_updation(){
     info_updation_timer = new QTimer();
-    int FREQUENCY = 50; //ms
+    int FREQUENCY = 100; //ms
     info_updation_timer->setInterval(FREQUENCY);
     connect(info_updation_timer, &QTimer::timeout, this, &MainWindow::data_window_update);
     info_updation_timer->start();
@@ -148,8 +150,7 @@ void MainWindow::update_params_table(){
 
 void MainWindow::process_updated_param(int row, int column){
     if (column == param_table_conumns::value && all_parametrs_processed){
-        int index = ui->param_table->item(row, param_table_conumns::ind)->text().toInt();
-
+        int index = ui->param_table->item(row, param_table_conumns::ind)->text().toInt(); // при замене на uint8_t значение лоамется
         QString str = ui->param_table->item(row, param_table_conumns::value)->text(); //FIXME: вынести проверку в PixhawkManager
         bool isdigit;
         str.toInt(&isdigit, 10);
@@ -167,6 +168,7 @@ void MainWindow::process_updated_param(int row, int column){
             ui->param_table->blockSignals(oldState);
 
             float value = ui->param_table->item(row, param_table_conumns::value)->text().toFloat();
+            qDebug() << "changed index" << index;
             pixhawk_manager->remember__new_param_value(index, value);
         }
     }
@@ -177,6 +179,7 @@ void MainWindow::upload_params(){
     bool oldState = ui->param_table->blockSignals(true);
     for (const auto &param_pair : pixhawk_manager->get_updated_items_in_params_list())
     {
+        qDebug() << "to green" << param_pair.first;
         ui->param_table->item(param_pair.first, param_table_conumns::value)->setBackground(QColor{GREENCOLOR});
     }
     ui->param_table->blockSignals(oldState);

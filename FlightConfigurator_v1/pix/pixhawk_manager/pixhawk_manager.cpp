@@ -58,7 +58,7 @@ void PixhawkManager::request_all_params() {
     qDebug() << "params req sent ";
 }
 
-bool PixhawkManager::set_param(uint16_t param_index, float new_value){
+bool PixhawkManager::set_param(int param_index, float new_value){
     if (!all_params_received_flag) { qDebug() << "the full list of parameters has not been received yet, updating is not possible"; return 0;}
     mavlink_message_t message;
     mavlink_param_set_t param_set;
@@ -75,7 +75,8 @@ bool PixhawkManager::set_param(uint16_t param_index, float new_value){
     return 1;
 }
 
-void PixhawkManager::remember__new_param_value(uint8_t index, float new_value){
+void PixhawkManager::remember__new_param_value(int index, float new_value){
+    qDebug() << "changed and remembered (start)" << index;
     if (params_list.find(index) == params_list.end()){
         //FIXME log: "значение параметра не обновлено"
         qDebug() << "error: no such file in params_list";
@@ -84,6 +85,7 @@ void PixhawkManager::remember__new_param_value(uint8_t index, float new_value){
     ParamInfo pi {"", params_list[index].param_type, new_value};
     memcpy(pi.param_id, params_list[index].param_id, sizeof(pi.param_id));
     updated_items_in_params_list[index] = pi;
+    qDebug() << "changed and remembered" << index << pi.param_id << new_value;
 }
 
 int PixhawkManager::upload_new_params(){
@@ -96,6 +98,8 @@ int PixhawkManager::upload_new_params(){
     updated_items_in_params_list = std::map<uint16_t, ParamInfo>{};
     return 0;
 }
+///changed index 303
+///changed and remembered 47 FBWB_CLIMB_RATE 10
 
 void PixhawkManager::add_param_to_params_list(const mavlink_param_value_t &param){
     ParamInfo pi {"", param.param_type, param.param_value};
@@ -107,7 +111,9 @@ void PixhawkManager::add_param_to_params_list(const mavlink_param_value_t &param
 
 void PixhawkManager::param_received(const mavlink_param_value_t &param){
     // FIXME -- STAT_RUNTIME ( 65535 ) : 0
-    if (param.param_index > param.param_count) { qDebug()<<"ы"; return;  }
+    if (param.param_index > param.param_count) {
+        qDebug() << "#" << param.param_id << "(" << param.param_index << ")" << ":" << param.param_value;
+    }
     add_param_to_params_list(param);
     if (param.param_index == param.param_count-1) {
         message_hendler.log();
@@ -115,11 +121,11 @@ void PixhawkManager::param_received(const mavlink_param_value_t &param){
 //        out.close();
         emit all_params_received();
     }
+    qDebug() << params_list[param.param_index].param_id << "(" << param.param_index << ")" << ":" << param.param_value;
 //    if (out.is_open())
 //    {
 //        out << params_list[param.param_index].param_id << std::endl;
 //    }
-    qDebug() << params_list[param.param_index].param_id << "(" << param.param_index << ")" << ":" << param.param_value;
 }
 
 

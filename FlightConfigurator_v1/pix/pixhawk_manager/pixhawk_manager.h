@@ -37,7 +37,7 @@ public:
     PixhawkManager(const QString& path, qint32 speed);
 
     void update_param_in_params_list();
-    void remember__new_param_value(uint8_t index, float new_value);
+    void remember__new_param_value(int index, float new_value);
 
     mavlink_heartbeat_t get_heartbeat();
     mavlink_attitude_t get_attitude();
@@ -50,7 +50,7 @@ public:
     bool is_all_params_received();
 
     void set_msg_frequency(uint8_t msg_id, int8_t frequency);
-    bool set_param(uint16_t param_inndex, float new_value);
+    bool set_param(int param_inndex, float new_value);
     int upload_new_params();
 
     void request_all_params();
