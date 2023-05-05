@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "hendler_structs.h"
 #include <QDebug>
+#include <QFile>
 
 #define REDCOLOR 235, 200, 200
 #define GREYCOLOR 184, 197, 194
@@ -194,7 +195,17 @@ void MainWindow::upload_params(){
 
 void MainWindow::load_to_file_params(){
     const std::map<uint16_t, ParamInfo>& params = pixhawk_manager->get_parametr_list();
-    //загрузка в файл
+    QString filename="FullParametrList.txt"; //сохраняется в build
+    QFile file(filename);
+    if ( file.open(QIODevice::ReadWrite) ){
+        QTextStream stream( &file );
+
+        for (const auto &i : params) {
+            stream << i.second.param_id << "," << i.second.param_value << "\n";
+        }
+    }
+    file.close();
+    ui->load_to_file_params_button->setPalette(QPalette(Qt::green));
 }
 
 void MainWindow::load_from_file_params(){
