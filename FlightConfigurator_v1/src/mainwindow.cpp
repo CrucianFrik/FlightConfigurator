@@ -10,20 +10,26 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
       ui{new Ui::MainWindow}
-      //map_controller{new MapController(this)}
+      map_controller{new MapController(this)}
 {
     ui->setupUi(this);
     set_gui_elements();
     set_data_updation();
+    
+    ui->data_tab->layout()->addWidget(map_controller->get_data_map());
+    ui->plan_tab->layout()->addWidget(map_controller->get_plan_map());
+    map_controller->get_plan_map()->set_table(ui->tableWidget);
+    ui->label_8->setPixmap(QPixmap(QString::fromUtf8(":/icons/logo.jpg")));
+    connect(ui->tabWidget, SIGNAL(currentChanged(int)), SLOT(update_widgets_geometry_slot()));
 
     connect(ui->connectButton, &QPushButton::released, this, &MainWindow::connect_to_pixhawk);
-    connect(ui->tabWidget, SIGNAL(currentChanged(int)), SLOT(update_widgets_geometry_slot()));//FIFME
     connect(ui->param_table, &QTableWidget::cellChanged, this, &MainWindow::process_updated_param);
     connect(ui->upload_params_button, &QPushButton::released, this, &MainWindow::upload_params);
     connect(ui->load_to_file_params_button, &QPushButton::released, this, &MainWindow::load_to_file_params);
     connect(ui->load_from_file_params_button, &QPushButton::released, this, &MainWindow::load_from_file_params);
     connect(ui->reset_params_button, &QPushButton::released, this, &MainWindow::reset_params);
 }
+
 
 
 void MainWindow::download_params(){
@@ -35,11 +41,10 @@ void MainWindow::download_params(){
 }
 
 void MainWindow::connect_to_pixhawk(){
-    //pixhawk_manager = new PixhawkManager(ui->controllerPath->text(), ui->conrollerSpeed->currentText().toInt());
+    pixhawk_manager = new PixhawkManager(ui->controllerPath->text(), ui->conrollerSpeed->currentText().toInt());
     if (pixhawk_manager->get_connection_status() != ConnectionStatus::successful){
         ui->connectButton->setPalette(QPalette(Qt::red));
-        ////usb-3D_Robotics_PX4_FMU_v2.x_0-if00 // /dev/serial/by-id/usb-ArduPilot_Pixhawk1_36003A000551393439373637-if00
-        pixhawk_manager = new PixhawkManager("/dev/serial/by-id/usb-ArduPilot_RoyalPenguin1_40003F000650484843373120-if00", 115200);
+        //pixhawk_manager = new PixhawkManager("/dev/serial/by-id/usb-ArduPilot_RoyalPenguin1_40003F000650484843373120-if00", 115200);
         //pixhawk_manager = new PixhawkManager("/dev/serial/by-id/usb-ArduPilot_Pixhawk1_36003A000551393439373637-if00", 115200);
         //pixhawk_manager = new PixhawkManager("/dev/serial/by-id/usb-3D_Robotics_PX4_FMU_v2.x_0-if00", 115200);
         if (pixhawk_manager->get_connection_status() == ConnectionStatus::successful){

@@ -20,6 +20,8 @@ set(MAP_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/datamapwidget.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/planmapwidget.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/dronemarker.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/flightplan.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/plan_attrs.cpp
     )
 
 set(MAP_HEADERS
@@ -29,6 +31,8 @@ set(MAP_HEADERS
     ${CMAKE_CURRENT_SOURCE_DIR}/datamapwidget.h
     ${CMAKE_CURRENT_SOURCE_DIR}/planmapwidget.h
     ${CMAKE_CURRENT_SOURCE_DIR}/dronemarker.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/flightplan.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/plan_attrs.h
     )
 
 set(MAP_LIBRARIES

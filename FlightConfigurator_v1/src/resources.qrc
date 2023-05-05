@@ -1,0 +1,17 @@
+<RCC>
+    <qresource prefix="/icons">
+        <file alias="centralize_icon2">../../icons/centralize_icon2.png</file>
+        <file alias="centralize_icon.png">../../icons/centralize_icon.png</file>
+        <file alias="delete_icon2.png">../../icons/delete_icon2.png</file>
+        <file alias="delete_icon.png">../../icons/delete_icon.png</file>
+        <file alias="follow_icon.png">../../icons/follow_icon.png</file>
+        <file alias="logo.jpg">../../icons/logo.jpg</file>
+        <file alias="search_icon.png">../../icons/search_icon.png</file>
+        <file alias="unfollow_icon.png">../../icons/unfollow_icon.png</file>
+        <file alias="zoomin_icon.png">../../icons/zoomin_icon.png</file>
+        <file alias="zoomout_icon.png">../../icons/zoomout_icon.png</file>
+    </qresource>
+</RCC>
+
+
+
