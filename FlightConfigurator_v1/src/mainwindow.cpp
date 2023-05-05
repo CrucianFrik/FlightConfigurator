@@ -126,6 +126,7 @@ void MainWindow::resizeEvent(QResizeEvent *event){
     update_widgets_geometry_slot();
 }
 
+
 void MainWindow::update_params_table(){
     ui->connectButton->setPalette(QPalette(Qt::green));
     bool oldState = ui->param_table->blockSignals(true);
@@ -199,4 +200,34 @@ void MainWindow::load_to_file_params(){
 void MainWindow::load_from_file_params(){
     //for (param in loaded_from_file_params)
     //pixhawk_manager->update_param_in_params_list()
+
+
+void MainWindow::test_flight(){
+    double r=15;
+    QgsPointXY p1(-10,-15), p2(-10,15), p3(40,0);
+    double dfi=0.05, dx=dfi*r;
+    int delay_time = 50;
+
+    while (true){
+        for (double fi=M_PI_2; fi<2*M_PI; fi+=dfi){
+            delay(delay_time);
+            map_controller->update_drone_pos({p1.x()+r*cos(fi), p1.y()+r*sin(fi)}, fi);
+        }
+        for (double x=0; x<p3.x()-p1.x()-r; x+=dx){
+            delay(delay_time);
+            map_controller->update_drone_pos({p1.x()+r+x, p1.y()}, -M_PI_2);
+        }
+        for (double fi=-M_PI_2; fi<M_PI_2; fi+=dfi){
+            delay(delay_time);
+            map_controller->update_drone_pos({p3.x()+r*cos(fi), p3.y()+r*sin(fi)}, fi);
+        }
+        for (double x=0; x<p3.x()-p1.x()-r; x+=dx){
+            delay(delay_time);
+            map_controller->update_drone_pos({p3.x()-x, p2.y()}, M_PI_2);
+        }
+        for (double fi=0; fi<3*M_PI_2; fi+=dfi){
+            delay(delay_time);
+            map_controller->update_drone_pos({p2.x()+r*cos(fi), p2.y()+r*sin(fi)}, fi);
+        }
+    }
 }

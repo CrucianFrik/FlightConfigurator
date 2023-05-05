@@ -41,9 +41,11 @@ private:
     void set_gui_elements();
     void set_data_updation();
     bool all_parametrs_processed = 0;
+    
 public:
     MainWindow(QWidget *parent = nullptr);
     void show();
+    void test_flight();
     void resizeEvent(QResizeEvent* event) override;
     ~MainWindow();
 
