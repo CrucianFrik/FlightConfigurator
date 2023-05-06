@@ -45,9 +45,9 @@ void MainWindow::connect_to_pixhawk(){
     //pixhawk_manager = new PixhawkManager(ui->controllerPath->text(), ui->conrollerSpeed->currentText().toInt());
     if (pixhawk_manager->get_connection_status() != ConnectionStatus::successful){
         ui->connectButton->setPalette(QPalette(Qt::red));
-        //pixhawk_manager = new PixhawkManager("/dev/serial/by-id/usb-ArduPilot_RoyalPenguin1_40003F000650484843373120-if00", 115200);
+        pixhawk_manager = new PixhawkManager("/dev/serial/by-id/usb-ArduPilot_RoyalPenguin1_40003F000650484843373120-if00", 115200);
         //pixhawk_manager = new PixhawkManager("/dev/serial/by-id/usb-ArduPilot_Pixhawk1_36003A000551393439373637-if00", 115200);
-        pixhawk_manager = new PixhawkManager("/dev/serial/by-id/usb-3D_Robotics_PX4_FMU_v2.x_0-if00", 115200);
+        //pixhawk_manager = new PixhawkManager("/dev/serial/by-id/usb-3D_Robotics_PX4_FMU_v2.x_0-if00", 115200);
         if (pixhawk_manager->get_connection_status() == ConnectionStatus::successful){
             pixhawk_manager->request_all_params();
             connect(pixhawk_manager, &PixhawkManager::all_params_received, this, &MainWindow::update_params_table);
@@ -177,7 +177,7 @@ void MainWindow::process_updated_param(int row, int column){
 
             float value = ui->param_table->item(row, param_table_conumns::value)->text().toFloat();
             qDebug() << "changed index" << index;
-            pixhawk_manager->remember_new_param_value(index, value);
+            //pixhawk_manager->remember_new_param_value(index, value);
         }
     }
 
@@ -217,7 +217,7 @@ void MainWindow::load_from_file_params(){
     if(filename.isEmpty())
         return;
     QFile file(filename);
-    QString target_expansion = ".params";
+    QString target_expansion = ".param";
     int n = target_expansion.length();
     qDebug() << "FILENAME" << filename << filename.mid(filename.length() - n, n);
     if(filename.mid(filename.length() - n, n) != target_expansion){
@@ -229,6 +229,28 @@ void MainWindow::load_from_file_params(){
                              file.errorString());
         return;
     }
+
+    QTextStream in(&file);
+    int i = 0;
+       while (!in.atEnd())
+       {
+          QString line = in.readLine();
+          qDebug() << line;
+          for (const auto &param_pair : pixhawk_manager->get_parametr_list()){
+              QString s {param_pair.second.param_id};
+              if (s == line.split(",")[0]){
+                  bool oldState = ui->param_table->blockSignals(true);
+                  ui->param_table->item(param_pair.first, param_table_conumns::value)->setBackground(QColor{GREYCOLOR});
+                  ui->param_table->item(param_pair.first, param_table_conumns::value)->setText(line.split(",")[1]);
+                  ui->param_table->blockSignals(oldState);
+                  qDebug() << param_pair.second.param_value << param_pair.first << line.split(",")[1].toInt();
+              }
+          }
+          i++;
+          if(i>100){break;}
+       }
+
+    file.close();
 }
 
 //void MainWindow::test_flight(){
