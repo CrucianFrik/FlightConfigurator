@@ -66,7 +66,7 @@ bool PixhawkManager::set_param(int param_index, float new_value){
     param_set.target_component = 1;
     if (params_list.count(param_index)){
         if (1) { qDebug() << "WRITED PARAMETR" << params_list[param_index].param_id; }
-        memcpy(param_set.param_id, params_list[param_index].param_id, 16);
+        memcpy(param_set.param_id, params_list[param_index].param_id, sizeof(param_set.param_id));
         param_set.param_value = new_value;
         param_set.param_type = params_list[param_index].param_type;
         mavlink_msg_param_set_encode_chan(communicator.systemId(), communicator.componentId(), MAVLINK_COMM_3, &message, &param_set);
@@ -75,7 +75,7 @@ bool PixhawkManager::set_param(int param_index, float new_value){
     return 1;
 }
 
-void PixhawkManager::remember__new_param_value(int index, float new_value){
+void PixhawkManager::remember_new_param_value(int index, float new_value){
     qDebug() << "changed and remembered (start)" << index;
     if (params_list.find(index) == params_list.end()){
         //FIXME log: "значение параметра не обновлено"
@@ -103,7 +103,7 @@ int PixhawkManager::upload_new_params(){
 
 void PixhawkManager::add_param_to_params_list(const mavlink_param_value_t &param){
     ParamInfo pi {"", param.param_type, param.param_value};
-    memcpy(pi.param_id, param.param_id, sizeof(param.param_id));
+    memcpy(pi.param_id, param.param_id, sizeof(pi.param_id));
 
     params_list.insert({param.param_index, pi});
     params_list[param.param_index] = pi;
@@ -127,8 +127,6 @@ void PixhawkManager::param_received(const mavlink_param_value_t &param){
 //        out << params_list[param.param_index].param_id << std::endl;
 //    }
 }
-
-
 
 float PixhawkManager::get_param_val(uint8_t index){
     if (params_list.find(index) != params_list.end()){

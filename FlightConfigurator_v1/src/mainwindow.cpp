@@ -10,16 +10,16 @@
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
-      ui{new Ui::MainWindow},
-      map_controller{new MapController(this)}
+      ui{new Ui::MainWindow}
+      //map_controller{new MapController(this)}
 {
     ui->setupUi(this);
     set_gui_elements();
     set_data_updation();
     
-    ui->data_tab->layout()->addWidget(map_controller->get_data_map());
-    ui->plan_tab->layout()->addWidget(map_controller->get_plan_map());
-    map_controller->get_plan_map()->set_table(ui->param_table);
+    //ui->data_tab->layout()->addWidget(map_controller->get_data_map());
+    //ui->plan_tab->layout()->addWidget(map_controller->get_plan_map());
+    //map_controller->get_plan_map()->set_table(ui->param_table);
     ui->label_8->setPixmap(QPixmap(QString::fromUtf8(":/icons/logo.jpg")));
     connect(ui->tabWidget, SIGNAL(currentChanged(int)), SLOT(update_widgets_geometry_slot()));
 
@@ -42,17 +42,18 @@ void MainWindow::download_params(){
 }
 
 void MainWindow::connect_to_pixhawk(){
-    pixhawk_manager = new PixhawkManager(ui->controllerPath->text(), ui->conrollerSpeed->currentText().toInt());
+    //pixhawk_manager = new PixhawkManager(ui->controllerPath->text(), ui->conrollerSpeed->currentText().toInt());
     if (pixhawk_manager->get_connection_status() != ConnectionStatus::successful){
         ui->connectButton->setPalette(QPalette(Qt::red));
         //pixhawk_manager = new PixhawkManager("/dev/serial/by-id/usb-ArduPilot_RoyalPenguin1_40003F000650484843373120-if00", 115200);
         //pixhawk_manager = new PixhawkManager("/dev/serial/by-id/usb-ArduPilot_Pixhawk1_36003A000551393439373637-if00", 115200);
-        //pixhawk_manager = new PixhawkManager("/dev/serial/by-id/usb-3D_Robotics_PX4_FMU_v2.x_0-if00", 115200);
+        pixhawk_manager = new PixhawkManager("/dev/serial/by-id/usb-3D_Robotics_PX4_FMU_v2.x_0-if00", 115200);
         if (pixhawk_manager->get_connection_status() == ConnectionStatus::successful){
             pixhawk_manager->request_all_params();
             connect(pixhawk_manager, &PixhawkManager::all_params_received, this, &MainWindow::update_params_table);
             ui->connectButton->setPalette(QPalette(Qt::blue));
             params_download_checking_timer->start(2000);
+            QMessageBox::information(this, "Уведомление", "Загрузка данных займёт несколько секунд");
         }
     }
 };
@@ -176,7 +177,7 @@ void MainWindow::process_updated_param(int row, int column){
 
             float value = ui->param_table->item(row, param_table_conumns::value)->text().toFloat();
             qDebug() << "changed index" << index;
-            pixhawk_manager->remember__new_param_value(index, value);
+            pixhawk_manager->remember_new_param_value(index, value);
         }
     }
 
@@ -191,11 +192,12 @@ void MainWindow::upload_params(){
     }
     ui->param_table->blockSignals(oldState);
     pixhawk_manager->upload_new_params();
+    QMessageBox::information(this, "Уведомление", "Параметры, подсвеченные зелёным, успешно загружены на контроллер"); //это неправда, проверки успеха загрузки нет
 }
 
 void MainWindow::load_to_file_params(){
     const std::map<uint16_t, ParamInfo>& params = pixhawk_manager->get_parametr_list();
-    QString filename="FullParametrList.txt"; //сохраняется в build
+    QString filename="../../FullParametrList.txt"; //сохраняется в build
     QFile file(filename);
     if ( file.open(QIODevice::ReadWrite) ){
         QTextStream stream( &file );
@@ -205,13 +207,28 @@ void MainWindow::load_to_file_params(){
         }
     }
     file.close();
-    ui->load_to_file_params_button->setPalette(QPalette(Qt::green));
+    QMessageBox::information(this, "Уведомление", "Параметры загружены в файл FullParametrList.txt"); //это неправда, проверки успеха загрузки нет
 }
 
 void MainWindow::load_from_file_params(){
     //for (param in loaded_from_file_params)
     //pixhawk_manager->update_param_in_params_list()
-
+    QString filename = QFileDialog::getOpenFileName(this, "Открыть");
+    if(filename.isEmpty())
+        return;
+    QFile file(filename);
+    QString target_expansion = ".params";
+    int n = target_expansion.length();
+    qDebug() << "FILENAME" << filename << filename.mid(filename.length() - n, n);
+    if(filename.mid(filename.length() - n, n) != target_expansion){
+        QMessageBox::warning(this, "Предупреждение", "Загрузите файл с расширением "+target_expansion);
+        return;
+    }
+    if(!file.open(QFile::ReadOnly | QFile::Text)){
+        QMessageBox::warning(this, "Предупреждение", "Не удалось открыть файл: " +
+                             file.errorString());
+        return;
+    }
 }
 
 //void MainWindow::test_flight(){
