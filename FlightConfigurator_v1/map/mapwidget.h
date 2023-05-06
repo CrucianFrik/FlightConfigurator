@@ -8,8 +8,8 @@
 #include <QString>
 #include <Qt>
 
-//#include <qgsmaptoolpan.h>
-//#include <qgsvectorlayer.h>
+#include <qgsmaptoolpan.h>
+#include <qgsvectorlayer.h>
 
 #include "mapbuttons.h"
 

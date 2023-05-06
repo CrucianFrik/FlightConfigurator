@@ -11,7 +11,7 @@
 #include "./ui_mainwindow.h"
 #include "hendler_structs.h"
 #include "pixhawk_manager.h"
-//#include "mapcontroller.h"
+#include <mapcontroller.h>
 
 void delay( int millisecondsToWait );
 
@@ -31,7 +31,7 @@ private:
     Q_OBJECT
     Ui::MainWindow *ui;
 
-    //MapController* map_controller;
+    MapController* map_controller;
     PixhawkManager* pixhawk_manager; //sheredptr + singltone
     const QSize window_size = QDesktopWidget().size();
     const QString window_title = "FlightConfigurator";

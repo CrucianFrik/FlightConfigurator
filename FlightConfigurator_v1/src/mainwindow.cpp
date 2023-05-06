@@ -9,7 +9,7 @@
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
-      ui{new Ui::MainWindow}
+      ui{new Ui::MainWindow},
       map_controller{new MapController(this)}
 {
     ui->setupUi(this);
@@ -18,7 +18,7 @@ MainWindow::MainWindow(QWidget *parent)
     
     ui->data_tab->layout()->addWidget(map_controller->get_data_map());
     ui->plan_tab->layout()->addWidget(map_controller->get_plan_map());
-    map_controller->get_plan_map()->set_table(ui->tableWidget);
+    map_controller->get_plan_map()->set_table(ui->param_table);
     ui->label_8->setPixmap(QPixmap(QString::fromUtf8(":/icons/logo.jpg")));
     connect(ui->tabWidget, SIGNAL(currentChanged(int)), SLOT(update_widgets_geometry_slot()));
 
@@ -201,33 +201,34 @@ void MainWindow::load_from_file_params(){
     //for (param in loaded_from_file_params)
     //pixhawk_manager->update_param_in_params_list()
 
-
-void MainWindow::test_flight(){
-    double r=15;
-    QgsPointXY p1(-10,-15), p2(-10,15), p3(40,0);
-    double dfi=0.05, dx=dfi*r;
-    int delay_time = 50;
-
-    while (true){
-        for (double fi=M_PI_2; fi<2*M_PI; fi+=dfi){
-            delay(delay_time);
-            map_controller->update_drone_pos({p1.x()+r*cos(fi), p1.y()+r*sin(fi)}, fi);
-        }
-        for (double x=0; x<p3.x()-p1.x()-r; x+=dx){
-            delay(delay_time);
-            map_controller->update_drone_pos({p1.x()+r+x, p1.y()}, -M_PI_2);
-        }
-        for (double fi=-M_PI_2; fi<M_PI_2; fi+=dfi){
-            delay(delay_time);
-            map_controller->update_drone_pos({p3.x()+r*cos(fi), p3.y()+r*sin(fi)}, fi);
-        }
-        for (double x=0; x<p3.x()-p1.x()-r; x+=dx){
-            delay(delay_time);
-            map_controller->update_drone_pos({p3.x()-x, p2.y()}, M_PI_2);
-        }
-        for (double fi=0; fi<3*M_PI_2; fi+=dfi){
-            delay(delay_time);
-            map_controller->update_drone_pos({p2.x()+r*cos(fi), p2.y()+r*sin(fi)}, fi);
-        }
-    }
 }
+
+//void MainWindow::test_flight(){
+//    double r=15;
+//    QgsPointXY p1(-10,-15), p2(-10,15), p3(40,0);
+//    double dfi=0.05, dx=dfi*r;
+//    int delay_time = 50;
+
+//    while (true){
+//        for (double fi=M_PI_2; fi<2*M_PI; fi+=dfi){
+//            delay(delay_time);
+//            map_controller->update_drone_pos({p1.x()+r*cos(fi), p1.y()+r*sin(fi)}, fi);
+//        }
+//        for (double x=0; x<p3.x()-p1.x()-r; x+=dx){
+//            delay(delay_time);
+//            map_controller->update_drone_pos({p1.x()+r+x, p1.y()}, -M_PI_2);
+//        }
+//        for (double fi=-M_PI_2; fi<M_PI_2; fi+=dfi){
+//            delay(delay_time);
+//            map_controller->update_drone_pos({p3.x()+r*cos(fi), p3.y()+r*sin(fi)}, fi);
+//        }
+//        for (double x=0; x<p3.x()-p1.x()-r; x+=dx){
+//            delay(delay_time);
+//            map_controller->update_drone_pos({p3.x()-x, p2.y()}, M_PI_2);
+//        }
+//        for (double fi=0; fi<3*M_PI_2; fi+=dfi){
+//            delay(delay_time);
+//            map_controller->update_drone_pos({p2.x()+r*cos(fi), p2.y()+r*sin(fi)}, fi);
+//        }
+//    }
+//}
