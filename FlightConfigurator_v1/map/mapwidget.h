@@ -55,7 +55,7 @@ private:
     const QString query_sep = " ";
 
     const double ZOOM_FACTOR_WHEEL = 1.3;
-    const double ZOOM_FACTOR_MOVE  = 1e6;
+    const double ZOOM_FACTOR_MOVE  = 2e3;
     const bool ANTIALIASING  = true;
     const bool PREVIEW_JOBS  = true;
     const bool IS_PAN_ENABLE = true;
