@@ -38,6 +38,7 @@ public:
 
     void update_param_in_params_list();
     void remember_new_param_value(int index, float new_value);
+    void reset_new_param_values();
     //void remember_as_new_params_set(const std::map<uint16_t, ParamInfo>& new_params_set);
 
 

@@ -3,10 +3,12 @@
 #include <QDebug>
 #include <QFile>
 
-#define REDCOLOR 235, 200, 200
+#define REDCOLOR 245, 200, 200
 #define GREYCOLOR 184, 197, 194
 #define GREENCOLOR 200, 235, 200
 #define WHITECOLOR 255, 255, 255
+#define BLUECOLOR 180, 200, 235
+#define LIGHTGREYCOLOR 235, 235, 235
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
@@ -24,7 +26,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->tabWidget, SIGNAL(currentChanged(int)), SLOT(update_widgets_geometry_slot()));
 
     connect(ui->connectButton, &QPushButton::released, this, &MainWindow::connect_to_pixhawk);
-    connect(ui->param_table, &QTableWidget::cellChanged, this, &MainWindow::process_updated_param);
+    connect(ui->param_table, &QTableWidget::cellChanged, this, &MainWindow::process_updated_param_slot);
     connect(ui->upload_params_button, &QPushButton::released, this, &MainWindow::upload_params);
     connect(ui->load_to_file_params_button, &QPushButton::released, this, &MainWindow::load_to_file_params);
     connect(ui->load_from_file_params_button, &QPushButton::released, this, &MainWindow::load_from_file_params);
@@ -59,6 +61,10 @@ void MainWindow::connect_to_pixhawk(){
 };
 
 void MainWindow::reset_params(){
+    if (! pixhawk_manager->is_all_params_received()) {
+        QMessageBox::warning(this, "Ошибка", "Дождитесь загрузки параметров");
+        return;
+    }
     update_params_table();
 }
 
@@ -156,7 +162,9 @@ void MainWindow::update_params_table(){
     ui->param_table->blockSignals(oldState);
 }
 
-void MainWindow::process_updated_param(int row, int column){
+void MainWindow::process_updated_param_slot(int row, int column){ process_updated_param(row, column, 0); }
+
+void MainWindow::process_updated_param(int row, int column, bool set_only_red){
     if (column == param_table_conumns::value && all_parametrs_processed){
         int index = ui->param_table->item(row, param_table_conumns::ind)->text().toInt(); // при замене на uint8_t значение лоамется
         QString str = ui->param_table->item(row, param_table_conumns::value)->text(); //FIXME: вынести проверку в PixhawkManager
@@ -170,20 +178,24 @@ void MainWindow::process_updated_param(int row, int column){
             ui->param_table->item(row, param_table_conumns::value)->setBackground(QColor{REDCOLOR});
             ui->param_table->blockSignals(oldState);
         }
-        else{
+        else if (!set_only_red){
             bool oldState = ui->param_table->blockSignals(true);
             ui->param_table->item(row, column)->setBackground(QColor{GREYCOLOR});
             ui->param_table->blockSignals(oldState);
 
             float value = ui->param_table->item(row, param_table_conumns::value)->text().toFloat();
             qDebug() << "changed index" << index;
-            //pixhawk_manager->remember_new_param_value(index, value);
+            pixhawk_manager->remember_new_param_value(index, value);
         }
     }
 
 }
 
 void MainWindow::upload_params(){
+    if (! pixhawk_manager->is_all_params_received()) {
+        QMessageBox::warning(this, "Ошибка", "Дождитесь загрузки параметров");
+        return;
+    }
     bool oldState = ui->param_table->blockSignals(true);
     for (const auto &param_pair : pixhawk_manager->get_updated_items_in_params_list())
     {
@@ -192,34 +204,42 @@ void MainWindow::upload_params(){
     }
     ui->param_table->blockSignals(oldState);
     pixhawk_manager->upload_new_params();
-    QMessageBox::information(this, "Уведомление", "Параметры, подсвеченные зелёным, успешно загружены на контроллер"); //это неправда, проверки успеха загрузки нет
+    QMessageBox::information(this, "Уведомление", "Загрузка параметров началась. На отключайте контролле в течении 15 секунд."); //это неправда, проверки успеха загрузки нет
 }
 
 void MainWindow::load_to_file_params(){
+    if (! pixhawk_manager->is_all_params_received()) {
+        QMessageBox::warning(this, "Ошибка", "Дождитесь загрузки параметров");
+        return;
+    }
     const std::map<uint16_t, ParamInfo>& params = pixhawk_manager->get_parametr_list();
-    QString filename="../../FullParametrList.txt"; //сохраняется в build
-    QFile file(filename);
+    QString filename = "FullParametrList.txt"; //сохраняется в build
+    QFile file("../../" + filename);
     if ( file.open(QIODevice::ReadWrite) ){
         QTextStream stream( &file );
 
         for (const auto &i : params) {
-            stream << i.second.param_id << "," << i.second.param_value << "\n";
+            QString s{i.second.param_id};
+            stream << s << "," << i.second.param_value << "\n";
         }
     }
     file.close();
-    QMessageBox::information(this, "Уведомление", "Параметры загружены в файл FullParametrList.txt"); //это неправда, проверки успеха загрузки нет
+    QMessageBox::information(this, "Уведомление", "Параметры загружены в файл " + filename); //это неправда, проверки успеха загрузки нет
 }
 
 void MainWindow::load_from_file_params(){
-    //for (param in loaded_from_file_params)
-    //pixhawk_manager->update_param_in_params_list()
-    QString filename = QFileDialog::getOpenFileName(this, "Открыть");
-    if(filename.isEmpty())
+    if (! pixhawk_manager->is_all_params_received()) {
+        QMessageBox::warning(this, "Ошибка", "Дождитесь загрузки параметров");
         return;
+    }
+
+    QString filename = QFileDialog::getOpenFileName(this, "Открыть");
+    if(filename.isEmpty()){ return; }
     QFile file(filename);
     QString target_expansion = ".param";
     int n = target_expansion.length();
     qDebug() << "FILENAME" << filename << filename.mid(filename.length() - n, n);
+
     if(filename.mid(filename.length() - n, n) != target_expansion){
         QMessageBox::warning(this, "Предупреждение", "Загрузите файл с расширением "+target_expansion);
         return;
@@ -230,27 +250,41 @@ void MainWindow::load_from_file_params(){
         return;
     }
 
+    try {
     QTextStream in(&file);
-    int i = 0;
-       while (!in.atEnd())
-       {
-          QString line = in.readLine();
-          qDebug() << line;
-          for (const auto &param_pair : pixhawk_manager->get_parametr_list()){
-              QString s {param_pair.second.param_id};
-              if (s == line.split(",")[0]){
-                  bool oldState = ui->param_table->blockSignals(true);
-                  ui->param_table->item(param_pair.first, param_table_conumns::value)->setBackground(QColor{GREYCOLOR});
-                  ui->param_table->item(param_pair.first, param_table_conumns::value)->setText(line.split(",")[1]);
-                  ui->param_table->blockSignals(oldState);
-                  qDebug() << param_pair.second.param_value << param_pair.first << line.split(",")[1].toInt();
-              }
-          }
-          i++;
-          if(i>100){break;}
-       }
-
+    bool oldState = ui->param_table->blockSignals(true);
+    pixhawk_manager->reset_new_param_values();
+    while (!in.atEnd())
+    {
+        QString line = in.readLine();
+        qDebug() << line;
+        for (const auto &param_pair : pixhawk_manager->get_parametr_list()){
+            QString s {param_pair.second.param_id};
+            if (s == line.split(",")[0]){
+                if (line.split(",")[1].toFloat() == param_pair.second.param_value)
+                    ui->param_table->item(param_pair.first, param_table_conumns::value)->setBackground(QColor{LIGHTGREYCOLOR});
+                else{
+                    ui->param_table->item(param_pair.first, param_table_conumns::value)->setBackground(QColor{BLUECOLOR});
+                    pixhawk_manager->remember_new_param_value(param_pair.first, line.split(",")[1].toFloat());
+                }
+                ui->param_table->item(param_pair.first, param_table_conumns::value)->setText(line.split(",")[1]);
+                process_updated_param(param_pair.first, param_table_conumns::value, 1);
+              qDebug() << param_pair.second.param_value << param_pair.first << line.split(",")[1].toFloat() << param_pair.second.param_value;
+            }
+        }
+    }
+    ui->param_table->blockSignals(oldState);
     file.close();
+    QMessageBox::information(this, "Уведомление", "Параметры загружены.\n"
+                "Ячейка серая - новое значение равно старому (не обновлён),\n голубая - новое значение отлично от старого (обновлён)\n"
+                "красная - новое значение некорректно (не обновлён)\n"
+                "белая - параметра не было в файле (не обновлён)\n");
+    }
+    catch (const char* error_message)
+    {
+        pixhawk_manager->reset_new_param_values();
+        QMessageBox::warning(this, "Ошибка чтения файла", error_message);
+    }
 }
 
 //void MainWindow::test_flight(){

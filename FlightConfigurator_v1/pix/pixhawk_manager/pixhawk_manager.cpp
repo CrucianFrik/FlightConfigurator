@@ -103,16 +103,21 @@ int PixhawkManager::upload_new_params(){
 
 void PixhawkManager::add_param_to_params_list(const mavlink_param_value_t &param){
     ParamInfo pi {"", param.param_type, param.param_value};
-    memcpy(pi.param_id, param.param_id, sizeof(pi.param_id));
+    memcpy(pi.param_id, param.param_id, sizeof(param.param_id));
 
     params_list.insert({param.param_index, pi});
     params_list[param.param_index] = pi;
+}
+
+void PixhawkManager::reset_new_param_values(){
+    updated_items_in_params_list = std::map<uint16_t, ParamInfo>{};
 }
 
 void PixhawkManager::param_received(const mavlink_param_value_t &param){
     // FIXME -- STAT_RUNTIME ( 65535 ) : 0
     if (param.param_index > param.param_count) {
         qDebug() << "#" << param.param_id << "(" << param.param_index << ")" << ":" << param.param_value;
+        return;
     }
     add_param_to_params_list(param);
     if (param.param_index == param.param_count-1) {
