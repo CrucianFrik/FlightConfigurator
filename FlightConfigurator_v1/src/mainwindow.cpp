@@ -4,7 +4,8 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
       ui{new Ui::MainWindow},
-      map_controller{new MapController(this)}
+      map_controller{new MapController(this)},
+      horizon_view{new Aviagorizont_Viev(this)}
 {
     ui->setupUi(this);
     set_gui_elements();
@@ -38,9 +39,13 @@ void MainWindow::connect_to_pixhawk(){
     pixhawk_manager = new PixhawkManager(ui->controllerPath->text(), ui->conrollerSpeed->currentText().toInt());
     if (pixhawk_manager->get_connection_status() != ConnectionStatus::successful){
         ui->connectButton->setPalette(QPalette(Qt::red));
-        //pixhawk_manager = new PixhawkManager("/dev/serial/by-id/usb-ArduPilot_RoyalPenguin1_40003F000650484843373120-if00", 115200);
+        // pixhawk_manager = new PixhawkManager("/dev/ttyACM0", 115200);
+        // pixhawk_manager = new PixhawkManager("/dev/serial/by-id/usb-ArduPilot_RoyalPenguin1_40003F000650484843373120-if00", 115200);
+        // pixhawk_manager = new PixhawkManager("/dev/serial/by-id/usb-ArduPilot_Pixhawk1_36003A000551393439373637-if00", 115200);
+        // pixhawk_manager = new PixhawkManager("/dev/serial/by-id/usb-3D_Robotics_PX4_FMU_v2.x_0-if00", 115200);
         //pixhawk_manager = new PixhawkManager("/dev/serial/by-id/usb-ArduPilot_Pixhawk1_36003A000551393439373637-if00", 115200);
-        //pixhawk_manager = new PixhawkManager("/dev/serial/by-id/usb-3D_Robotics_PX4_FMU_v2.x_0-if00", 115200);
+        
+
         if (pixhawk_manager->get_connection_status() == ConnectionStatus::successful){
             pixhawk_manager->request_all_params();
             connect(pixhawk_manager, &PixhawkManager::all_params_received, this, &MainWindow::update_params_table);
@@ -75,6 +80,9 @@ void MainWindow::data_window_update(){
     ui->data_speed->display(qRadiansToDegrees((a.roll)));
     //---------------------
 
+    // HORIZON_VIEW_UPDATE
+    horizon_view->update(qRadiansToDegrees(a.pitch), qRadiansToDegrees(a.roll));
+
     mavlink_global_position_int_t gpi = pixhawk_manager->get_global_position_int();
     ui->data_altitude->display(gpi.relative_alt/1000); //m
     //ui->data_dist_to_wp->display(0);
@@ -88,6 +96,7 @@ void MainWindow::data_window_update(){
 void MainWindow::set_gui_elements(){
     ui->controllerPath->setPlaceholderText("enter path to PIXHAWK");
     ui->param_table->verticalHeader()->setVisible(false);
+    horizon_view->set_label_name(ui->horizon_lable);
 }
 
 MainWindow::~MainWindow()

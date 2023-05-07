@@ -39,11 +39,13 @@ set(LIBRARIES
 set(SOURCES
 	main.cpp
     mainwindow.cpp
+    horizon.cpp
     )
 
 
 set(HEADERS
     mainwindow.h
+    horizon.h
     )
 
 

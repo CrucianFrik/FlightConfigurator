@@ -12,6 +12,7 @@
 #include "hendler_structs.h"
 #include "pixhawk_manager.h"
 #include "mapcontroller.h"
+#include "horizon.h"
 
 
 #define REDCOLOR 235, 200, 200
@@ -43,6 +44,8 @@ private:
     const QString window_title = "FlightConfigurator";
     QTimer* info_updation_timer;
     QTimer* params_download_checking_timer;
+    Aviagorizont_Viev* horizon_view;
+
 
     void set_gui_elements();
     void set_data_updation();
