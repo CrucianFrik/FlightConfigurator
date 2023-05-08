@@ -31,15 +31,25 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->load_to_file_params_button, &QPushButton::released, this, &MainWindow::load_to_file_params);
     connect(ui->load_from_file_params_button, &QPushButton::released, this, &MainWindow::load_from_file_params);
     connect(ui->reset_params_button, &QPushButton::released, this, &MainWindow::reset_params);
+    ui->reset_params_button->setText("отправить миссию");
 }
 
+void::MainWindow::reset(){
+    ui->param_table->setRowCount(0);
 
+    ui->data_dist_to_wp->display(0);
+    ui->data_speed->display(0);
+    ui->data_altitude->display(0);
+    ui->data_z_speed->display(0);
+    ui->data_lat->display(0);
+    ui->data_lon->display(0);
+}
 
 void MainWindow::download_params(){
     if (!pixhawk_manager->get_parametr_list().size() || pixhawk_manager->get_parametr_list().find(0)==pixhawk_manager->get_parametr_list().end() ) {
-        pixhawk_manager->request_all_params();
-        qDebug() << "reuploading";
-        params_download_checking_timer->start(2000);
+        //pixhawk_manager->request_all_params();//RET
+        //qDebug() << "reuploading";
+        //params_download_checking_timer->start(2000);
     }
 }
 
@@ -51,21 +61,33 @@ void MainWindow::connect_to_pixhawk(){
         //pixhawk_manager = new PixhawkManager("/dev/serial/by-id/usb-ArduPilot_Pixhawk1_36003A000551393439373637-if00", 115200);
         //pixhawk_manager = new PixhawkManager("/dev/serial/by-id/usb-3D_Robotics_PX4_FMU_v2.x_0-if00", 115200);
         if (pixhawk_manager->get_connection_status() == ConnectionStatus::successful){
-            pixhawk_manager->request_all_params();
+           // pixhawk_manager->request_all_params();//RET
             connect(pixhawk_manager, &PixhawkManager::all_params_received, this, &MainWindow::update_params_table);
             ui->connectButton->setPalette(QPalette(Qt::blue));
             params_download_checking_timer->start(2000);
             QMessageBox::information(this, "Уведомление", "Загрузка данных займёт несколько секунд");
+            ui->connectButton->setPalette(QPalette(Qt::green));//TODEL
+            ui->connectButton->setText("DISCONNECT");//TODEL
         }
+    }
+    else if (pixhawk_manager->is_all_params_received()){
+        qDebug() << pixhawk_manager->is_all_params_received();
+        ui->connectButton->setPalette(QPalette(Qt::white));
+        ui->connectButton->setText("CONNECT");
+        pixhawk_manager->disconnect();
+        delete pixhawk_manager;
+        reset();
     }
 };
 
 void MainWindow::reset_params(){
-    if (! pixhawk_manager->is_all_params_received()) {
-        QMessageBox::warning(this, "Ошибка", "Дождитесь загрузки параметров");
-        return;
-    }
-    update_params_table();
+    qDebug() << "жмякнуто";
+    pixhawk_manager->upload_flight_mission();
+//    if (! pixhawk_manager->is_all_params_received()) { //RET
+//        QMessageBox::warning(this, "Ошибка", "Дождитесь загрузки параметров");
+//        return;
+//    }
+//    update_params_table();
 }
 
 void MainWindow::set_data_updation(){
@@ -81,21 +103,23 @@ void MainWindow::set_data_updation(){
 }
 
 void MainWindow::data_window_update(){
-    //todel----------------
-    mavlink_attitude_t a = pixhawk_manager->get_attitude();
-    ui->label_3->setText("roll");
-    ui->label_4->setText("pich");
-    ui->data_dist_to_wp->display(qRadiansToDegrees(a.pitch));
-    ui->data_speed->display(qRadiansToDegrees((a.roll)));
-    //---------------------
+    if (pixhawk_manager->get_connection_status()){
+        //todel----------------
+        mavlink_attitude_t a = pixhawk_manager->get_attitude();
+        ui->label_3->setText("roll");
+        ui->label_4->setText("pich");
+        ui->data_dist_to_wp->display(qRadiansToDegrees(a.pitch));
+        ui->data_speed->display(qRadiansToDegrees((a.roll)));
+        //---------------------
 
-    mavlink_global_position_int_t gpi = pixhawk_manager->get_global_position_int();
-    ui->data_altitude->display(gpi.relative_alt/1000); //m
-    //ui->data_dist_to_wp->display(0);
-    //ui->data_speed->display(pow(pow(gpi.vx, 2) + pow(gpi.vy, 2) + pow(gpi.vz, 2), 0.5));
-    ui->data_z_speed->display(gpi.vz);
-    ui->data_lat->display(gpi.lat);
-    ui->data_lon->display(gpi.lon);
+        mavlink_global_position_int_t gpi = pixhawk_manager->get_global_position_int();
+        ui->data_altitude->display(gpi.relative_alt/1000); //m
+        //ui->data_dist_to_wp->display(0);
+        //ui->data_speed->display(pow(pow(gpi.vx, 2) + pow(gpi.vy, 2) + pow(gpi.vz, 2), 0.5));
+        ui->data_z_speed->display(gpi.vz);
+        ui->data_lat->display(gpi.lat);
+        ui->data_lon->display(gpi.lon);
+    }
 }
 
 //все set... выносятся сюда
@@ -137,6 +161,8 @@ void MainWindow::resizeEvent(QResizeEvent *event){
 
 void MainWindow::update_params_table(){
     ui->connectButton->setPalette(QPalette(Qt::green));
+    ui->connectButton->setText("DISCONNECT");
+
     bool oldState = ui->param_table->blockSignals(true);
     const std::map<uint16_t, ParamInfo>& params = pixhawk_manager->get_parametr_list();
     ui->param_table->setRowCount(params.size());
@@ -169,7 +195,7 @@ void MainWindow::process_updated_param(int row, int column, bool set_only_red){
         int index = ui->param_table->item(row, param_table_conumns::ind)->text().toInt(); // при замене на uint8_t значение лоамется
         QString str = ui->param_table->item(row, param_table_conumns::value)->text(); //FIXME: вынести проверку в PixhawkManager
         bool isdigit;
-        str.toInt(&isdigit, 10);
+        str.toFloat(&isdigit);
 
         if (!isdigit) {
             //попытка ввода некорректного значения параметра
@@ -224,7 +250,7 @@ void MainWindow::load_to_file_params(){
         }
     }
     file.close();
-    QMessageBox::information(this, "Уведомление", "Параметры загружены в файл " + filename); //это неправда, проверки успеха загрузки нет
+    QMessageBox::information(this, "Уведомление", "Актуальные параметры из контроллера загружены в файл " + filename); //это неправда, проверки успеха загрузки нет
 }
 
 void MainWindow::load_from_file_params(){

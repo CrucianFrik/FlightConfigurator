@@ -13,4 +13,10 @@ enum ConnectionStatus{
     failed
 };
 
+struct GPSPoint{
+    float lat;
+    float lon;
+    float alt;
+};
+
 #endif // HENDLER_STRUCTS_H

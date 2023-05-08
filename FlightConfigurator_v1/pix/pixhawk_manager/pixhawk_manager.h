@@ -55,11 +55,15 @@ public:
     void set_msg_frequency(uint8_t msg_id, int8_t frequency);
     bool set_param(int param_inndex, float new_value);
     int upload_new_params();
+    int upload_flight_mission();
 
     void request_all_params();
+    int disconnect();
 
 public slots:
     void param_received(const mavlink_param_value_t& param_value);
+    void set_mission_point(uint16_t n);
+    void process_mission_status(mavlink_mission_ack_t);
 
 signals:
     void all_params_received();

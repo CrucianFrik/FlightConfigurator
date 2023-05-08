@@ -17,6 +17,7 @@ namespace domain
         mavlink_attitude_t attitude;
         mavlink_scaled_imu_t scaled_imu;
         mavlink_param_value_t param_value;
+        mavlink_mission_request_int_t mission_request_int;
 
     public:
         MessageHandler(MavLinkCommunicator* communicator);
@@ -34,6 +35,8 @@ namespace domain
 
     signals:
         void param_received(const mavlink_param_value_t& param_value);
+        void mission_req_received(uint16_t n);
+        void mission_accepted(mavlink_mission_ack_t mission_ack);
     };
 }
 

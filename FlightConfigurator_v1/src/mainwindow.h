@@ -42,6 +42,7 @@ private:
 
     void set_gui_elements();
     void set_data_updation();
+    void reset();
     bool all_parametrs_processed = 0;
     
 public:
