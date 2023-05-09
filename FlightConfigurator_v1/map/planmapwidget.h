@@ -20,6 +20,13 @@ public:
 
     void set_table(QTableWidget* t);
 
+    void get_plan_points(QList<std::array<double, 3>>& arr);
+
+    bool load_plan_to_file(const QString& path);
+    bool load_plan_from_file(const QString& path);
+
+    QString get_plan_file_format();
+
     ~PlanMapWidget();
 
 private slots:

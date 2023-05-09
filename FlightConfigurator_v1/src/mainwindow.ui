@@ -370,6 +370,12 @@
                   <height>0</height>
                  </size>
                 </property>
+                <property name="verticalScrollBarPolicy">
+                 <enum>Qt::ScrollBarAlwaysOn</enum>
+                </property>
+                <property name="horizontalScrollBarPolicy">
+                 <enum>Qt::ScrollBarAlwaysOff</enum>
+                </property>
                 <property name="rowCount">
                  <number>0</number>
                 </property>
@@ -402,13 +408,6 @@
                </widget>
               </item>
               <item>
-               <widget class="QLabel" name="label_9">
-                <property name="text">
-                 <string>*для всех точек команда WAYPOINT</string>
-                </property>
-               </widget>
-              </item>
-              <item>
                <spacer name="verticalSpacer_2">
                 <property name="orientation">
                  <enum>Qt::Vertical</enum>
@@ -420,6 +419,13 @@
                  </size>
                 </property>
                </spacer>
+              </item>
+              <item>
+               <widget class="QLabel" name="label_9">
+                <property name="text">
+                 <string>*для всех точек команда WAYPOINT</string>
+                </property>
+               </widget>
               </item>
               <item>
                <widget class="QPushButton" name="pushButton_3">

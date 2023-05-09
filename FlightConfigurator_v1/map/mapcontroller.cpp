@@ -64,3 +64,23 @@ void MapController::update_drone_pos(QgsPointXY pos, double angle){
 
     data_map->update_drone_pos(pos, angle);
 }
+
+
+void MapController::get_plan_points(QList<std::array<double, 3>>& arr){
+    plan_map->get_plan_points(arr);
+}
+
+
+bool MapController::load_plan_to_file(const QString &path){
+    return plan_map->load_plan_to_file(path);
+}
+
+
+bool MapController::load_plan_from_file(const QString &path){
+    return plan_map->load_plan_from_file(path);
+}
+
+
+QString MapController::get_plan_file_format(){
+    return plan_map->get_plan_file_format();
+}

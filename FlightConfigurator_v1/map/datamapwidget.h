@@ -47,6 +47,8 @@ private:
     const int  zoomout_button_pos = 3;
     const int follow_checkbox_pos = 1;
 
+    const bool wait_rendering_while_follow = false;
+
 };
 
 

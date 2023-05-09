@@ -33,7 +33,12 @@ class MapController{
 public:
     MapController(QWidget* parent=nullptr);
 
-    void load_layers();
+    void get_plan_points(QList<std::array<double, 3>>& arr);
+
+    bool load_plan_to_file(const QString& path);
+    bool load_plan_from_file(const QString& path);
+
+    QString get_plan_file_format();
 
     DataMapWidget* get_data_map();
     PlanMapWidget* get_plan_map();
@@ -44,6 +49,7 @@ public:
     ~MapController();
 
 private:
+    void load_layers();
     void load_vector_world();
     void load_raster_world();
     void load_vector_moscow();

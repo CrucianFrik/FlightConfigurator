@@ -208,8 +208,12 @@ void MainWindow::load_from_file_params(){
 }
 
 void MainWindow::test_flight(){
-    double r=15;
-    QgsPointXY p1(-10,-15), p2(-10,15), p3(40,0);
+    double r = 0.0007, d = 0.0025;
+
+    QgsPointXY p1(38.104376, 55.604367);
+    QgsPointXY p2(p1.x(),   p1.y()+2*r);
+    QgsPointXY p3(p1.x()+d, p1.y()+r);
+
     double dfi=0.05, dx=dfi*r;
     int delay_time = 50;
 
