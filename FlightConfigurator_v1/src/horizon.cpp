@@ -1,17 +1,17 @@
 #include "horizon.h"
 
-Aviagorizont_Viev::Aviagorizont_Viev(QWidget* parent){};
+Aviagorizont_Viev::Aviagorizont_Viev(QWidget* parent){}
 
 Aviagorizont_Viev::~Aviagorizont_Viev()
 {
     delete _draw_label;
-};
+}
 
 void Aviagorizont_Viev::set_label_name(QLabel* label)
 {
     _draw_label = label;
     this->update(10,60);
-};
+}
 
 void Aviagorizont_Viev::update(double pitch, double roll)
 {

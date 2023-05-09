@@ -4,7 +4,8 @@
 MapWidget::MapWidget(const QList<QgsMapLayer*>& layers, QWidget* parent)
     : QgsMapCanvas(parent),
       tool_pan{new QgsMapToolPan(this)},
-      search_bar{new SearchBar(this)}
+      search_bar{new SearchBar(this)},
+      cur_coords{new CurrentCoordinates(this)}
 {
     full_zoom = layers[0]->extent();
 
@@ -37,6 +38,7 @@ void MapWidget::set_settings(){
 MapWidget::~MapWidget(){
     delete tool_pan;
     delete search_bar;
+    delete cur_coords;
     delete center_button;
     delete zoomin_button;
     delete zoomout_button;
@@ -97,6 +99,7 @@ QgsPointXY MapWidget::get_query(bool &is_correct){
 
 void MapWidget::update_buttons_pos(){
     search_bar     ->update_pos(size());
+    cur_coords     ->update_pos(size());
     center_button  ->update_pos(size());
     zoomin_button  ->update_pos(size());
     zoomout_button ->update_pos(size());
@@ -113,8 +116,16 @@ void MapWidget::enable_pan(bool is_enabled){
     }
 }
 
+
 void MapWidget::mousePressEvent(QMouseEvent *e){
     if (e->button() != Qt::RightButton){
         QgsMapCanvas::mousePressEvent(e);
     }
+}
+
+
+void MapWidget::mouseMoveEvent(QMouseEvent *e){
+    QgsMapCanvas::mouseMoveEvent(e);
+
+    cur_coords->update_coords( QgsMapMouseEvent(this,e).mapPoint() );
 }

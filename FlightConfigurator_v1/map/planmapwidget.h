@@ -5,7 +5,6 @@
 
 #include <QMouseEvent>
 
-#include <qgsmapmouseevent.h>
 #include <qgsrubberband.h>
 
 #include "mapwidget.h"
