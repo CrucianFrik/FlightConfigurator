@@ -65,11 +65,13 @@ set(LIBRARIES
 set(SOURCES
 	main.cpp
     mainwindow.cpp
+    logger.cpp
     )
 
 
 set(HEADERS
     mainwindow.h
+    logger.h
     )
 
 
