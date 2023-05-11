@@ -55,6 +55,32 @@ void MessageHandler::process_message(const mavlink_message_t& message)
         emit param_received(param_value);
     }
 
+    if (message.msgid == MAVLINK_MSG_ID_MISSION_REQUEST_INT || message.msgid == MAVLINK_MSG_ID_MISSION_REQUEST){
+        mavlink_msg_mission_request_int_decode(&message, &mission_request_int);
+        if (1){
+            qDebug() << "waiting for mission item seq:" << mission_request_int.seq;
+        }
+        emit mission_req_received(mission_request_int.seq);
+    }
+
+    if (message.msgid == MAVLINK_MSG_ID_MISSION_ITEM_INT){
+        mavlink_mission_item_int_t mission_item_int;
+        mavlink_msg_mission_item_int_decode(&message, &mission_item_int);
+        if (1){
+            qDebug() << "got:" << mission_item_int.seq << "; lat, lon, alt:" << mission_item_int.x << mission_item_int.y << mission_item_int.z;
+        }
+    }
+
+    if (message.msgid == MAVLINK_MSG_ID_MISSION_ACK){
+        mavlink_mission_ack_t mission_ack;
+        mavlink_msg_mission_ack_decode(&message, &mission_ack);
+        if (1){
+            qDebug() << "mission_ack:" << (mission_ack.mission_type ==  MAV_MISSION_ACCEPTED);
+        }
+        emit mission_accepted(mission_ack);
+    }
+
+
     if (message.msgid != MAVLINK_MSG_ID_COMMAND_ACK ||
         message.sysid == 0) {return;}
 

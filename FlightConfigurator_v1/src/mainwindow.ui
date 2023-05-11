@@ -220,7 +220,7 @@
        <enum>Qt::TabFocus</enum>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>2</number>
       </property>
       <widget class="QWidget" name="data_tab">
        <attribute name="title">
@@ -504,6 +504,11 @@
               <column>
                <property name="text">
                 <string>value</string>
+               </property>
+              </column>
+              <column>
+               <property name="text">
+                <string>acceptable values</string>
                </property>
               </column>
               <column>

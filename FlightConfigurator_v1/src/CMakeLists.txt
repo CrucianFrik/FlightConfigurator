@@ -10,7 +10,7 @@ set(CMAKE_AUTOUIC ON)
 
 # QGIS
 set(CMAKE_MODULE_PATH "$ENV{QGISPATH}/cmake" ${CMAKE_MODULE_PATH})
-find_package(QGIS REQUIRED)
+#find_package(QGIS REQUIRED)
 
 find_package(Qt5 COMPONENTS
 				Core
@@ -39,12 +39,14 @@ set(LIBRARIES
 set(SOURCES
 	main.cpp
     mainwindow.cpp
+    logger.cpp
     horizon.cpp
     )
 
 
 set(HEADERS
     mainwindow.h
+    logger.h
     horizon.h
     )
 
@@ -70,6 +72,8 @@ target_include_directories(${PROJECT} PRIVATE
                           )
 
 
-target_include_directories(${PROJECT} PRIVATE ${CMAKE_SOURCE_DIR}/map ${CMAKE_SOURCE_DIR}/pix)  
+#target_include_directories(${PROJECT} PRIVATE ${CMAKE_SOURCE_DIR}/map ${CMAKE_SOURCE_DIR}/pix)
+target_include_directories(${PROJECT} PRIVATE ${CMAKE_SOURCE_DIR}/pix)
 
-target_link_libraries(${PROJECT} PRIVATE map_lib pix_lib ${LIBRARIES})
+#target_link_libraries(${PROJECT} PRIVATE map_lib pix_lib ${LIBRARIES})
+target_link_libraries(${PROJECT} PRIVATE pix_lib ${LIBRARIES})
