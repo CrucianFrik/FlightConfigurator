@@ -5,6 +5,7 @@
 
 #include <QTableWidget>
 #include <cmath>
+#include <array>
 
 #include <qgsrubberband.h>
 
@@ -50,6 +51,24 @@ public:
 
     void update_arrows_size(double extent_height, double extent_width);
 
+    void clear();
+
+    // fills given array with (LAT LON ALT)
+    void get_points(QList<std::array<double, 3>>& arr);
+
+    // returns true if wrote
+    // path - absolute path to file
+    // creates dirs and file if not exists
+    // works only with {get_plan_file_format()} extention
+    bool load_to_file(const QString& path);
+
+    // returns true if read
+    // path - absolute path to file
+    // works only with {get_plan_file_format()} extention
+    bool load_from_file(const QString& path);
+
+    QString get_plan_file_format();
+
     ~FlightPlan();
 
 private slots:
@@ -57,6 +76,8 @@ private slots:
     void del_button_pressed();
 
 private:
+    int count_digits(int number);
+
     void delete_point_from_polygon(int point_index);
     void move_polygon_point(int point_index, QgsPointXY new_pos);
 
@@ -91,6 +112,10 @@ private:
     const QColor color = QColor(255, 0, 0);
     const Qt::PenStyle drawed_style = Qt::SolidLine;
     const Qt::PenStyle possible_style = Qt::DashLine;
+
+    const QString plan_format = "flyplan";
+    const QString file_prompt = "LAT | LON | ALT";
+    const QString comment_symbol = "#";
 
 };
 

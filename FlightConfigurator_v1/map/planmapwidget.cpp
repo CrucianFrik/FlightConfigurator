@@ -61,3 +61,23 @@ void PlanMapWidget::mouseReleaseEvent(QMouseEvent *e){
         is_right_button_pressed = false;
     }
 }
+
+
+void PlanMapWidget::get_plan_points(QList<std::array<double, 3> > &arr){
+    flight_plan->get_points(arr);
+}
+
+
+bool PlanMapWidget::load_plan_to_file(const QString &path){
+    return flight_plan->load_to_file(path);
+}
+
+
+bool PlanMapWidget::load_plan_from_file(const QString &path){
+    return flight_plan->load_from_file(path);
+}
+
+
+QString PlanMapWidget::get_plan_file_format(){
+    return flight_plan->get_plan_file_format();
+}

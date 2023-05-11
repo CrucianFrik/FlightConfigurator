@@ -34,21 +34,23 @@ enum param_table_conumns{
 };
 
 class MainWindow : public QMainWindow{
-private:
-    Q_OBJECT
-    Ui::MainWindow *ui;
+Q_OBJECT
 
-    //MapController* map_controller;
+private:
+    Ui::MainWindow *ui;
     PixhawkManager* pixhawk_manager; //sheredptr + singltone
     const QSize window_size = QDesktopWidget().size();
     const QString window_title = "FlightConfigurator";
     QTimer* info_updation_timer;
     QTimer* params_download_checking_timer;
 
+
     void set_gui_elements();
     void set_data_updation();
     void reset();
     bool all_parametrs_processed = 0;
+
+    void delay(int millisecondsToWait);
     
 public:
     MainWindow(QWidget *parent = nullptr);

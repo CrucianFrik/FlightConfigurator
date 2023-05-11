@@ -40,12 +40,14 @@ set(SOURCES
 	main.cpp
     mainwindow.cpp
     logger.cpp
+    horizon.cpp
     )
 
 
 set(HEADERS
     mainwindow.h
     logger.h
+    horizon.h
     )
 
 

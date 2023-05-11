@@ -3,6 +3,13 @@
 #include <QDebug>
 #include <QFile>
 
+#define REDCOLOR 245, 200, 200
+#define GREYCOLOR 184, 197, 194
+#define GREENCOLOR 200, 235, 200
+#define WHITECOLOR 255, 255, 255
+#define BLUECOLOR 180, 200, 235
+#define LIGHTGREYCOLOR 235, 235, 235
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
       ui{new Ui::MainWindow}
@@ -10,7 +17,6 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     set_gui_elements();
     set_data_updation();
-
     ui->label_8->setPixmap(QPixmap(QString::fromUtf8(":/icons/logo.jpg")));
     connect(ui->tabWidget, SIGNAL(currentChanged(int)), SLOT(update_widgets_geometry_slot()));
 
@@ -101,20 +107,20 @@ void MainWindow::data_window_update(){
 void MainWindow::set_gui_elements(){
     ui->controllerPath->setPlaceholderText("enter path to PIXHAWK");
     ui->param_table->verticalHeader()->setVisible(false);
-
+  
     QHeaderView* header_h = ui->param_table->horizontalHeader();
     QHeaderView* header_v = ui->param_table->verticalHeader();
 //    header_h->setSectionResizeMode(1, QHeaderView::ResizeToContents);
+//    header_v->setSectionResizeMode(QHeaderView::ResizeToContents);
     header_h->setSectionResizeMode(3, QHeaderView::Stretch);
     header_h->setSectionResizeMode(4, QHeaderView::Stretch);
-//    header_v->setSectionResizeMode(QHeaderView::ResizeToContents);
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
-    //delete map_controller;
     delete pixhawk_manager;
+
     for (int i=0; i<ui->param_table->rowCount(); i++){
         for (int j=0; j<ui->param_table->columnCount(); j++){
             delete ui->param_table->item(i, j);
