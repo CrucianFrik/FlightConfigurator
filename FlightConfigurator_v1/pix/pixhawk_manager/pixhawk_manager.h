@@ -3,6 +3,7 @@
 
 #include <map>
 #include <vector>
+#include <array>
 
 // Internal
 #include "udp_link.h"
@@ -16,6 +17,7 @@
 // MAVLink
 #include <mavlink.h>
 #include <QDebug>
+#include <QList>
 
 //#include <iostream>
 //#include <fstream>
@@ -28,6 +30,8 @@ class PixhawkManager: public QObject{
     std::map<uint16_t, ParamInfo> params_list;
     std::map<uint16_t, ParamInfo> updated_items_in_params_list;
     std::map<QString, uint16_t> id_from_index;
+    QList<std::array<double, 3>> mission_seq;
+
     bool all_params_received_flag = 0;
     ConnectionStatus connection_status = ConnectionStatus::none;
     //std::ofstream out;
@@ -53,11 +57,12 @@ public:
     float get_param_val(uint8_t index);
     bool is_all_params_received();
     int get_id_from_index(QString s);
+    void upload_flight_mission(QList<std::array<double, 3>>& arr);
 
     void set_msg_frequency(uint8_t msg_id, int8_t frequency);
     bool set_param(int param_inndex, float new_value);
     int upload_new_params();
-    int upload_flight_mission();
+    int set_mission_items_count(int count);
 
     void request_all_params();
     int disconnect();

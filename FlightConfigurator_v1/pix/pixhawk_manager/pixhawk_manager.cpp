@@ -140,15 +140,20 @@ float PixhawkManager::get_param_val(uint8_t index){
     return 0; //mb FIXME
 }
 
-#define COUNT 3
+#define COUNT 10
 
-int PixhawkManager::upload_flight_mission(){
+void PixhawkManager::upload_flight_mission(QList<std::array<double, 3>>& arr){
+    set_mission_items_count(arr.size());
+    mission_seq = QList<std::array<double, 3>>{{0, 0, 0}} + arr;
+}
+
+int PixhawkManager::set_mission_items_count(int count){
     mavlink_message_t message;
     mavlink_mission_count_t mission_count;
     mission_count.target_system = 1;
     mission_count.target_component = 1;
-    mission_count.count = COUNT;
-    mission_count.mission_type = 0;
+    mission_count.count = count;
+    mission_count.mission_type = MAV_MISSION_TYPE_MISSION;
 
     mavlink_msg_mission_count_encode_chan(communicator.systemId(), communicator.componentId(),
                         MAVLINK_COMM_3, &message, &mission_count);
@@ -167,13 +172,14 @@ void PixhawkManager::set_mission_point(uint16_t n){
     mission_item_int.seq = n;
     mission_item_int.frame = MAV_FRAME_GLOBAL_RELATIVE_ALT;
     mission_item_int.command = MAV_CMD_NAV_WAYPOINT;
-    mission_item_int.x = 55+n*4;
-    mission_item_int.y = 55+n*5;
-    mission_item_int.z = 55;
+    mission_item_int.x = mission_seq[n][0]*pow(10, 7);
+    mission_item_int.y = mission_seq[n][1]*pow(10, 7);
+    mission_item_int.z = mission_seq[n][2];
     mission_item_int.autocontinue = 1;
     mission_item_int.current = 1;
     mission_item_int.param1 = 10;
     mission_item_int.param2 = 10;
+    mission_item_int.mission_type = MAV_MISSION_TYPE_MISSION;
     mavlink_msg_mission_item_int_encode_chan(communicator.systemId(), communicator.componentId(),
                         MAVLINK_COMM_3, &message, &mission_item_int);
     communicator.sendMessageOnAllLinks(message);
@@ -182,7 +188,7 @@ void PixhawkManager::set_mission_point(uint16_t n){
 }
 
 void PixhawkManager::process_mission_status(mavlink_mission_ack_t mission_ack){
-    if (mission_ack.mission_type ==  MAV_MISSION_ACCEPTED){
+    if (mission_ack.type ==  MAV_MISSION_ACCEPTED){
         qDebug() << "ееееееей";
     }
 }

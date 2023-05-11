@@ -67,6 +67,7 @@ void MainWindow::connect_to_pixhawk(){
             QMessageBox::information(this, "Уведомление", "Загрузка данных займёт несколько секунд");
         }
     }
+
     else if (pixhawk_manager->is_all_params_received()){
         qDebug() << pixhawk_manager->is_all_params_received();
         ui->connectButton->setPalette(QPalette(Qt::white));
@@ -78,8 +79,6 @@ void MainWindow::connect_to_pixhawk(){
 };
 
 void MainWindow::reset_params(){
-//    qDebug() << "жмякнуто";
-//    pixhawk_manager->upload_flight_mission();
     update_params_table();
     pixhawk_manager->reset_new_param_values();
 }
