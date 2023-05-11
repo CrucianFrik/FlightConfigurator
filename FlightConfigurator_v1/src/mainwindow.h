@@ -42,7 +42,7 @@ Q_OBJECT
 private:
     Ui::MainWindow *ui;
 
-    //MapController* map_controller;
+    MapController* map_controller;
     PixhawkManager* pixhawk_manager; //sheredptr + singltone
     const QSize window_size = QDesktopWidget().size();
     const QString window_title = "FlightConfigurator";

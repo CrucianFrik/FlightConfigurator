@@ -33,6 +33,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->load_to_file_params_button, &QPushButton::released, this, &MainWindow::load_to_file_params);
     connect(ui->load_from_file_params_button, &QPushButton::released, this, &MainWindow::load_from_file_params);
     connect(ui->reset_params_button, &QPushButton::released, this, &MainWindow::reset_params);
+//    connect(ui->load_plan_to_file_button, &QPushButton::released, map_controller, MapController::load_plan_to_file);
+//    connect(ui->load_plan_from_file_button, &QPushButton::released, map_controller, MapController::load_plan_from_file);
 }
 
 void::MainWindow::reset(){
@@ -122,7 +124,7 @@ void MainWindow::data_window_update(){
 void MainWindow::set_gui_elements(){
     ui->controllerPath->setPlaceholderText("enter path to PIXHAWK");
     ui->param_table->verticalHeader()->setVisible(false);
-  
+
     QHeaderView* header_h = ui->param_table->horizontalHeader();
     QHeaderView* header_v = ui->param_table->verticalHeader();
 //    header_h->setSectionResizeMode(1, QHeaderView::ResizeToContents);
@@ -130,6 +132,7 @@ void MainWindow::set_gui_elements(){
     header_h->setSectionResizeMode(3, QHeaderView::Stretch);
     header_h->setSectionResizeMode(4, QHeaderView::Stretch);
     horizon_view->set_label_name(ui->horizon_lable);
+//    test_flight();
 }
 
 MainWindow::~MainWindow()

@@ -220,7 +220,7 @@
        <enum>Qt::TabFocus</enum>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="data_tab">
        <attribute name="title">
@@ -428,21 +428,21 @@
                </widget>
               </item>
               <item>
-               <widget class="QPushButton" name="pushButton_3">
+               <widget class="QPushButton" name="upload_plan_button">
                 <property name="text">
                  <string>upload</string>
                 </property>
                </widget>
               </item>
               <item>
-               <widget class="QPushButton" name="pushButton_4">
+               <widget class="QPushButton" name="load_plan_to_file_button">
                 <property name="text">
                  <string>load to file</string>
                 </property>
                </widget>
               </item>
               <item>
-               <widget class="QPushButton" name="pushButton_2">
+               <widget class="QPushButton" name="load_plan_from_file_button">
                 <property name="text">
                  <string>load from file</string>
                 </property>
