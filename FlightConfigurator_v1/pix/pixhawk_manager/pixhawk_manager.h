@@ -27,6 +27,7 @@ class PixhawkManager: public QObject{
     domain::SerialLink link;
     std::map<uint16_t, ParamInfo> params_list;
     std::map<uint16_t, ParamInfo> updated_items_in_params_list;
+    std::map<QString, uint16_t> id_from_index;
     bool all_params_received_flag = 0;
     ConnectionStatus connection_status = ConnectionStatus::none;
     //std::ofstream out;
@@ -51,6 +52,7 @@ public:
     const std::map<uint16_t, ParamInfo>& get_updated_items_in_params_list();
     float get_param_val(uint8_t index);
     bool is_all_params_received();
+    int get_id_from_index(QString s);
 
     void set_msg_frequency(uint8_t msg_id, int8_t frequency);
     bool set_param(int param_inndex, float new_value);

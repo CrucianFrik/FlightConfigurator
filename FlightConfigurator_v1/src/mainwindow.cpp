@@ -31,7 +31,6 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->load_to_file_params_button, &QPushButton::released, this, &MainWindow::load_to_file_params);
     connect(ui->load_from_file_params_button, &QPushButton::released, this, &MainWindow::load_from_file_params);
     connect(ui->reset_params_button, &QPushButton::released, this, &MainWindow::reset_params);
-    ui->reset_params_button->setText("отправить миссию");
 }
 
 void::MainWindow::reset(){
@@ -47,9 +46,9 @@ void::MainWindow::reset(){
 
 void MainWindow::download_params(){
     if (!pixhawk_manager->get_parametr_list().size() || pixhawk_manager->get_parametr_list().find(0)==pixhawk_manager->get_parametr_list().end() ) {
-        //pixhawk_manager->request_all_params();//RET
-        //qDebug() << "reuploading";
-        //params_download_checking_timer->start(2000);
+        pixhawk_manager->request_all_params();
+        qDebug() << "reuploading";
+        params_download_checking_timer->start(2000);
     }
 }
 
@@ -61,13 +60,11 @@ void MainWindow::connect_to_pixhawk(){
         //pixhawk_manager = new PixhawkManager("/dev/serial/by-id/usb-ArduPilot_Pixhawk1_36003A000551393439373637-if00", 115200);
         //pixhawk_manager = new PixhawkManager("/dev/serial/by-id/usb-3D_Robotics_PX4_FMU_v2.x_0-if00", 115200);
         if (pixhawk_manager->get_connection_status() == ConnectionStatus::successful){
-           // pixhawk_manager->request_all_params();//RET
+            pixhawk_manager->request_all_params();
             connect(pixhawk_manager, &PixhawkManager::all_params_received, this, &MainWindow::update_params_table);
             ui->connectButton->setPalette(QPalette(Qt::blue));
             params_download_checking_timer->start(2000);
             QMessageBox::information(this, "Уведомление", "Загрузка данных займёт несколько секунд");
-            ui->connectButton->setPalette(QPalette(Qt::green));//TODEL
-            ui->connectButton->setText("DISCONNECT");//TODEL
         }
     }
     else if (pixhawk_manager->is_all_params_received()){
@@ -81,13 +78,23 @@ void MainWindow::connect_to_pixhawk(){
 };
 
 void MainWindow::reset_params(){
-    qDebug() << "жмякнуто";
-    pixhawk_manager->upload_flight_mission();
-//    if (! pixhawk_manager->is_all_params_received()) { //RET
-//        QMessageBox::warning(this, "Ошибка", "Дождитесь загрузки параметров");
-//        return;
-//    }
-//    update_params_table();
+//    qDebug() << "жмякнуто";
+//    pixhawk_manager->upload_flight_mission();
+    bool oldState = ui->param_table->blockSignals(true);
+    const std::map<uint16_t, ParamInfo>& params = pixhawk_manager->get_parametr_list();
+    ui->param_table->setRowCount(params.size());
+    int i = 0;
+    for (const auto &param_pair : params)
+    {
+        ParamInfo param = param_pair.second;
+        ui->param_table->item(i, param_table_conumns::value)->setBackground(QColor{WHITECOLOR});
+        ui->param_table->item(i, param_table_conumns::value)->setText(QString::number(param.param_value));
+        i++; //FIXME
+    }
+    qDebug() << "params_table reseted";
+    all_parametrs_processed = 1;
+    pixhawk_manager->reset_new_param_values();
+    ui->param_table->blockSignals(oldState);
 }
 
 void MainWindow::set_data_updation(){
@@ -126,6 +133,13 @@ void MainWindow::data_window_update(){
 void MainWindow::set_gui_elements(){
     ui->controllerPath->setPlaceholderText("enter path to PIXHAWK");
     ui->param_table->verticalHeader()->setVisible(false);
+
+    QHeaderView* header_h = ui->param_table->horizontalHeader();
+    QHeaderView* header_v = ui->param_table->verticalHeader();
+    header_h->setSectionResizeMode(1, QHeaderView::ResizeToContents);
+    header_h->setSectionResizeMode(3, QHeaderView::Stretch);
+    header_h->setSectionResizeMode(4, QHeaderView::Stretch);
+    header_v->setSectionResizeMode(QHeaderView::ResizeToContents);
 }
 
 MainWindow::~MainWindow()
@@ -183,6 +197,34 @@ void MainWindow::update_params_table(){
         ui->param_table->item(i, param_table_conumns::value)->setBackground(QColor{WHITECOLOR});
         i++; //FIXME
     }
+
+    QString filename = "params_description.csv"; //сохраняется в build
+    QFile file("../../" + filename);
+    if ( file.open(QIODevice::ReadWrite) ){
+        qDebug() << "ReadWrite";
+        QStringList wordList;
+        int i = 0;
+        char splitter = ';';
+        while (!file.atEnd()) {
+            QByteArray line = file.readLine();
+            wordList.append(line.split(splitter).first());
+            qDebug() << line.split(splitter)[0] << line.split(splitter)[1] << line.split(splitter)[2];
+            int row = pixhawk_manager->get_id_from_index(line.split(splitter)[1]);
+            if (row > -1){
+                QTableWidgetItem* acc_value_item = new QTableWidgetItem(QString{line.split(splitter)[3]});
+                acc_value_item->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
+
+                QTableWidgetItem* desc_item = new QTableWidgetItem(QString{line.split(splitter)[2]});
+                desc_item->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
+
+                ui->param_table->setItem(row, param_table_conumns::acc_value, acc_value_item);
+                ui->param_table->setItem(row, param_table_conumns::description, desc_item);
+            }
+            i++;
+        }
+    }
+    file.close();
+
     qDebug() << "params_table updated";
     all_parametrs_processed = 1;
     ui->param_table->blockSignals(oldState);
@@ -202,6 +244,7 @@ void MainWindow::process_updated_param(int row, int column, bool set_only_red){
             bool oldState = ui->param_table->blockSignals(true);
             ui->param_table->item(row, param_table_conumns::value)->setText(QString::number(pixhawk_manager->get_param_val(index))); //FIXME
             ui->param_table->item(row, param_table_conumns::value)->setBackground(QColor{REDCOLOR});
+            pixhawk_manager->remember_new_param_value(index, pixhawk_manager->get_param_val(index));
             ui->param_table->blockSignals(oldState);
         }
         else if (!set_only_red){
@@ -264,7 +307,7 @@ void MainWindow::load_from_file_params(){
     QFile file(filename);
     QString target_expansion = ".param";
     int n = target_expansion.length();
-    qDebug() << "FILENAME" << filename << filename.mid(filename.length() - n, n);
+//    qDebug() << "FILENAME" << filename << filename.mid(filename.length() - n, n);
 
     if(filename.mid(filename.length() - n, n) != target_expansion){
         QMessageBox::warning(this, "Предупреждение", "Загрузите файл с расширением "+target_expansion);
@@ -280,23 +323,24 @@ void MainWindow::load_from_file_params(){
     QTextStream in(&file);
     bool oldState = ui->param_table->blockSignals(true);
     pixhawk_manager->reset_new_param_values();
+    std::map<uint16_t, ParamInfo> params = pixhawk_manager->get_parametr_list();
     while (!in.atEnd())
     {
         QString line = in.readLine();
-        qDebug() << line;
-        for (const auto &param_pair : pixhawk_manager->get_parametr_list()){
-            QString s {param_pair.second.param_id};
-            if (s == line.split(",")[0]){
-                if (line.split(",")[1].toFloat() == param_pair.second.param_value)
-                    ui->param_table->item(param_pair.first, param_table_conumns::value)->setBackground(QColor{LIGHTGREYCOLOR});
-                else{
-                    ui->param_table->item(param_pair.first, param_table_conumns::value)->setBackground(QColor{BLUECOLOR});
-                    pixhawk_manager->remember_new_param_value(param_pair.first, line.split(",")[1].toFloat());
-                }
-                ui->param_table->item(param_pair.first, param_table_conumns::value)->setText(line.split(",")[1]);
-                process_updated_param(param_pair.first, param_table_conumns::value, 1);
-              qDebug() << param_pair.second.param_value << param_pair.first << line.split(",")[1].toFloat() << param_pair.second.param_value;
+       // qDebug() << line;
+        int ind = pixhawk_manager->get_id_from_index(line.split(",")[0]);
+        if (ind != -1){
+            uint16_t index{ind};
+            ParamInfo param = params[index];
+            if (line.split(",")[1].toFloat() == param.param_value)
+                ui->param_table->item(index, param_table_conumns::value)->setBackground(QColor{LIGHTGREYCOLOR});
+            else{
+                ui->param_table->item(index, param_table_conumns::value)->setBackground(QColor{BLUECOLOR});
+                pixhawk_manager->remember_new_param_value(index, line.split(",")[1].toFloat());
             }
+            ui->param_table->item(index, param_table_conumns::value)->setText(line.split(",")[1]);
+            process_updated_param(index, param_table_conumns::value, 1);
+         // qDebug() << param_pair.second.param_value << param_pair.first << line.split(",")[1].toFloat() << param_pair.second.param_value;
         }
     }
     ui->param_table->blockSignals(oldState);

@@ -110,6 +110,9 @@ void PixhawkManager::add_param_to_params_list(const mavlink_param_value_t &param
 
     params_list.insert({param.param_index, pi});
     params_list[param.param_index] = pi;
+
+    QString s{param.param_id};
+    id_from_index[s] = param.param_index;
 }
 
 void PixhawkManager::reset_new_param_values(){
@@ -182,6 +185,13 @@ void PixhawkManager::process_mission_status(mavlink_mission_ack_t mission_ack){
     if (mission_ack.mission_type ==  MAV_MISSION_ACCEPTED){
         qDebug() << "ееееееей";
     }
+}
+
+int PixhawkManager::get_id_from_index(QString s){
+    if (id_from_index.find(s) != id_from_index.end()){
+        return id_from_index[s];
+    }
+    return -1;
 }
 
 const std::map<uint16_t, ParamInfo>& PixhawkManager::get_parametr_list()

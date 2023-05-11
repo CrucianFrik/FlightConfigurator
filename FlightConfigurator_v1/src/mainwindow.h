@@ -25,6 +25,7 @@ enum param_table_conumns{
     ind,
     name,
     value,
+    acc_value,
     description
 };
 
