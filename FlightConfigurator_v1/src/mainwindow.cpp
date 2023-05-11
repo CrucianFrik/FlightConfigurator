@@ -56,12 +56,12 @@ void MainWindow::connect_to_pixhawk(){
     //pixhawk_manager = new PixhawkManager(ui->controllerPath->text(), ui->conrollerSpeed->currentText().toInt());
     if (pixhawk_manager->get_connection_status() != ConnectionStatus::successful){
         ui->connectButton->setPalette(QPalette(Qt::red));
-        pixhawk_manager = new PixhawkManager("/dev/serial/by-id/usb-ArduPilot_RoyalPenguin1_40003F000650484843373120-if00", 115200);
-        //pixhawk_manager = new PixhawkManager("/dev/serial/by-id/usb-ArduPilot_Pixhawk1_36003A000551393439373637-if00", 115200);
+        //pixhawk_manager = new PixhawkManager("/dev/serial/by-id/usb-ArduPilot_RoyalPenguin1_40003F000650484843373120-if00", 115200);
+        pixhawk_manager = new PixhawkManager("/dev/serial/by-id/usb-ArduPilot_Pixhawk1_36003A000551393439373637-if00", 115200);
         //pixhawk_manager = new PixhawkManager("/dev/serial/by-id/usb-3D_Robotics_PX4_FMU_v2.x_0-if00", 115200);
         if (pixhawk_manager->get_connection_status() == ConnectionStatus::successful){
             pixhawk_manager->request_all_params();
-            connect(pixhawk_manager, &PixhawkManager::all_params_received, this, &MainWindow::update_params_table);
+            connect(pixhawk_manager, &PixhawkManager::all_params_received, this, &MainWindow::make_params_table);
             ui->connectButton->setPalette(QPalette(Qt::blue));
             params_download_checking_timer->start(2000);
             QMessageBox::information(this, "Уведомление", "Загрузка данных займёт несколько секунд");
@@ -80,21 +80,8 @@ void MainWindow::connect_to_pixhawk(){
 void MainWindow::reset_params(){
 //    qDebug() << "жмякнуто";
 //    pixhawk_manager->upload_flight_mission();
-    bool oldState = ui->param_table->blockSignals(true);
-    const std::map<uint16_t, ParamInfo>& params = pixhawk_manager->get_parametr_list();
-    ui->param_table->setRowCount(params.size());
-    int i = 0;
-    for (const auto &param_pair : params)
-    {
-        ParamInfo param = param_pair.second;
-        ui->param_table->item(i, param_table_conumns::value)->setBackground(QColor{WHITECOLOR});
-        ui->param_table->item(i, param_table_conumns::value)->setText(QString::number(param.param_value));
-        i++; //FIXME
-    }
-    qDebug() << "params_table reseted";
-    all_parametrs_processed = 1;
+    update_params_table();
     pixhawk_manager->reset_new_param_values();
-    ui->param_table->blockSignals(oldState);
 }
 
 void MainWindow::set_data_updation(){
@@ -136,10 +123,10 @@ void MainWindow::set_gui_elements(){
 
     QHeaderView* header_h = ui->param_table->horizontalHeader();
     QHeaderView* header_v = ui->param_table->verticalHeader();
-    header_h->setSectionResizeMode(1, QHeaderView::ResizeToContents);
+//    header_h->setSectionResizeMode(1, QHeaderView::ResizeToContents);
     header_h->setSectionResizeMode(3, QHeaderView::Stretch);
     header_h->setSectionResizeMode(4, QHeaderView::Stretch);
-    header_v->setSectionResizeMode(QHeaderView::ResizeToContents);
+//    header_v->setSectionResizeMode(QHeaderView::ResizeToContents);
 }
 
 MainWindow::~MainWindow()
@@ -172,8 +159,20 @@ void MainWindow::resizeEvent(QResizeEvent *event){
     update_widgets_geometry_slot();
 }
 
-
 void MainWindow::update_params_table(){
+    bool oldState = ui->param_table->blockSignals(true);
+    const std::map<uint16_t, ParamInfo>& params = pixhawk_manager->get_parametr_list();
+    int i = 0;
+    for (const auto &param_pair : params)
+    {
+        ui->param_table->item(i, param_table_conumns::value)->setText(QString::number(param_pair.second.param_value)); //FIXME
+        ui->param_table->item(i, param_table_conumns::value)->setBackgroundColor(QColor{WHITECOLOR});
+        i++; //FIXME
+    }
+    ui->param_table->blockSignals(oldState);
+}
+
+void MainWindow::make_params_table(){
     ui->connectButton->setPalette(QPalette(Qt::green));
     ui->connectButton->setText("DISCONNECT");
 
@@ -194,7 +193,6 @@ void MainWindow::update_params_table(){
         ui->param_table->setItem(i, param_table_conumns::ind, index_item);
         ui->param_table->setItem(i, param_table_conumns::name, name_item);
         ui->param_table->setItem(i, param_table_conumns::value, new QTableWidgetItem(QString::number(param.param_value))); //FIXME
-        ui->param_table->item(i, param_table_conumns::value)->setBackground(QColor{WHITECOLOR});
         i++; //FIXME
     }
 
@@ -208,13 +206,12 @@ void MainWindow::update_params_table(){
         while (!file.atEnd()) {
             QByteArray line = file.readLine();
             wordList.append(line.split(splitter).first());
-            qDebug() << line.split(splitter)[0] << line.split(splitter)[1] << line.split(splitter)[2];
-            int row = pixhawk_manager->get_id_from_index(line.split(splitter)[1]);
+            int row = pixhawk_manager->get_id_from_index(line.split(splitter)[0]);
             if (row > -1){
-                QTableWidgetItem* acc_value_item = new QTableWidgetItem(QString{line.split(splitter)[3]});
+                QTableWidgetItem* acc_value_item = new QTableWidgetItem(QString{line.split(splitter)[2]});
                 acc_value_item->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
 
-                QTableWidgetItem* desc_item = new QTableWidgetItem(QString{line.split(splitter)[2]});
+                QTableWidgetItem* desc_item = new QTableWidgetItem(QString{line.split(splitter)[1]});
                 desc_item->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
 
                 ui->param_table->setItem(row, param_table_conumns::acc_value, acc_value_item);
@@ -348,7 +345,7 @@ void MainWindow::load_from_file_params(){
     QMessageBox::information(this, "Уведомление", "Параметры загружены.\n"
                 "Ячейка серая - новое значение равно старому (не обновлён),\n голубая - новое значение отлично от старого (обновлён)\n"
                 "красная - новое значение некорректно (не обновлён)\n"
-                "белая - параметра не было в файле (не обновлён)\n");
+                "белая или тёмно серая - параметра не было в файле (не обновлён)\n");
     }
     catch (const char* error_message)
     {

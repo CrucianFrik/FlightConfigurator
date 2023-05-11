@@ -56,6 +56,7 @@ public:
 private slots:
     void update_widgets_geometry_slot();
     void update_params_table();
+    void make_params_table();
     void process_updated_param(int row, int column, bool set_only_red);
     void process_updated_param_slot(int row, int column);
     void connect_to_pixhawk();
