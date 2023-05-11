@@ -9,13 +9,17 @@
 #include <QtMath>
 #include <QMessageBox>
 
-//#include "mavlink.h"
+// internal
 #include "./ui_mainwindow.h"
 #include "hendler_structs.h"
 #include "pixhawk_manager.h"
-//#include <mapcontroller.h>
 
-void delay( int millisecondsToWait );
+#define REDCOLOR 245, 200, 200
+#define GREYCOLOR 184, 197, 194
+#define GREENCOLOR 200, 235, 200
+#define WHITECOLOR 255, 255, 255
+#define BLUECOLOR 180, 200, 235
+#define LIGHTGREYCOLOR 235, 235, 235
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
