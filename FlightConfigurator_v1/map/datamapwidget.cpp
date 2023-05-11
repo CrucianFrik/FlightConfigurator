@@ -68,7 +68,9 @@ void DataMapWidget::update_drone_pos(QgsPointXY pos, double angle){
     drone_marker->set_location(pos, angle);
 
     if (is_focused){
-        waitWhileRendering();
+        if (wait_rendering_while_follow)
+            waitWhileRendering();
+
         move_to_drone_slot();
     }
 }

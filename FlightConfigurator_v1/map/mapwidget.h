@@ -9,6 +9,7 @@
 #include <Qt>
 
 #include <qgsmaptoolpan.h>
+#include <qgsmapmouseevent.h>
 #include <qgsvectorlayer.h>
 
 #include "mapbuttons.h"
@@ -28,13 +29,14 @@ public:
 
     ~MapWidget();
 
-protected slots:
+protected slots:    
     virtual void move_to_search_query_slot();
 
     virtual void centralize_slot();
 
 protected:
     virtual void mousePressEvent(QMouseEvent* e) override;
+    virtual void mouseMoveEvent(QMouseEvent* e) override;
 
     void enable_pan(bool is_enabled);
 
@@ -43,10 +45,11 @@ protected:
 
     QgsMapToolPan* tool_pan;
 
-    SearchBar*        search_bar;
-    CentralizeButton* center_button;
-    ZoomInButton*     zoomin_button;
-    ZoomOutButton*    zoomout_button;
+    SearchBar*          search_bar;
+    CurrentCoordinates* cur_coords;
+    CentralizeButton*   center_button;
+    ZoomInButton*       zoomin_button;
+    ZoomOutButton*      zoomout_button;
 
 private:
     void set_settings();
@@ -55,7 +58,7 @@ private:
     const QString query_sep = " ";
 
     const double ZOOM_FACTOR_WHEEL = 1.3;
-    const double ZOOM_FACTOR_MOVE  = 1e6;
+    const double ZOOM_FACTOR_MOVE  = 2e3;
     const bool ANTIALIASING  = true;
     const bool PREVIEW_JOBS  = true;
     const bool IS_PAN_ENABLE = true;

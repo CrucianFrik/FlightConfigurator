@@ -72,9 +72,9 @@ void FlightPlan::add_point(QgsPointXY pos){
     int n=points_count();
     table->setRowCount(n);
 
-    QTableWidgetItem* pos_x = new QTableWidgetItem(QString::number(point->get_pos().y(), 'g', pos_precision));
-    QTableWidgetItem* pos_y = new QTableWidgetItem(QString::number(point->get_pos().x(), 'g', pos_precision));
-    QTableWidgetItem* alt   = new QTableWidgetItem(QString::number(point->get_alt(), 'g', alt_precision));
+    QTableWidgetItem* pos_x = new QTableWidgetItem(QString::number(point->get_pos().y(), 'g', pos_precision + count_digits(point->get_pos().y())));
+    QTableWidgetItem* pos_y = new QTableWidgetItem(QString::number(point->get_pos().x(), 'g', pos_precision + count_digits(point->get_pos().x())));
+    QTableWidgetItem* alt   = new QTableWidgetItem(QString::number(point->get_alt(), 'g', alt_precision + count_digits(point->get_alt())));
 
     table->setItem(n-1, COLUMN_LAT, pos_x);
     table->setItem(n-1, COLUMN_LON, pos_y);
@@ -151,7 +151,7 @@ void FlightPlan::update_point(int row, int column){
     }
 
     QString rounded_text = QString::number(changed, 'g',
-            ( column == COLUMN_ALT ? alt_precision : pos_precision ));
+            ( column == COLUMN_ALT ? alt_precision : pos_precision ) + count_digits(changed));
     table->item(row, column)->setText(rounded_text);
 }
 
@@ -247,4 +247,107 @@ void FlightPlan::delete_arrow(int point_index){
         delete plan_arrows[point_index-1];
         plan_arrows.removeAt(point_index-1);
     }
+}
+
+
+void FlightPlan::get_points(QList<std::array<double, 3> >& arr){
+    arr.reserve( points_count() );
+    for (auto& point : plan_points){
+        arr.push_back({point->get_pos().y(), point->get_pos().x(), point->get_alt()});
+    }
+}
+
+
+bool FlightPlan::load_to_file(const QString &path){
+    if (QFileInfo(path).suffix() != plan_format)
+        return false;
+
+    QString filepath = QFileInfo(path).absolutePath();
+    QDir dir;
+    if (!dir.exists(filepath))
+        dir.mkpath(filepath);
+
+
+    QFile file(path);
+
+    if (file.open(QIODevice::WriteOnly)){
+        QTextStream file_stream(&file);
+
+        file_stream << comment_symbol << ' ' << file_prompt << '\n';
+
+        for (auto& point : plan_points){
+            file_stream << QString::number(point->get_pos().y(), 'g', 9) << ' ';
+            file_stream << QString::number(point->get_pos().x(), 'g', 9) << ' ';
+            file_stream << QString::number(point->get_alt(), 'g', 9) << '\n';
+        }
+
+        file.close();
+    } else return false;
+
+    return true;
+}
+
+
+bool FlightPlan::load_from_file(const QString &path){
+    if (QFileInfo(path).suffix() != plan_format)
+        return false;
+
+    QFile file(path);
+
+    if (file.open(QIODevice::ReadOnly)){
+        QTextStream file_stream(&file);
+
+        clear();
+
+        while (!file_stream.atEnd()){
+            QString line = file_stream.readLine();
+
+            if (line.startsWith(comment_symbol))
+                continue;
+
+            QTextStream line_stream(&line);
+
+            double px=0, py=0, alt=0;
+            line_stream >> py >> px >> alt;
+
+            add_point(QgsPointXY(px,py));
+            plan_points.back()->set_alt(alt);
+        }
+
+        file.close();
+    } else return false;
+
+    return true;
+}
+
+
+int FlightPlan::count_digits(int number){
+    int res=0;
+    number = abs(number);
+    while (number > 0){
+        number /= 10;
+        ++res;
+    }
+    return res;
+}
+
+
+void FlightPlan::clear(){
+    reset();
+
+    for (auto point : plan_points)
+        delete point;
+
+    for (auto arrow : plan_arrows)
+        delete arrow;
+
+    plan_arrows.clear();
+    plan_points.clear();
+
+    table->setRowCount(0);
+}
+
+
+QString FlightPlan::get_plan_file_format(){
+    return plan_format;
 }

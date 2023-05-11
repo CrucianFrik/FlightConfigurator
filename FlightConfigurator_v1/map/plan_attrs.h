@@ -41,7 +41,7 @@ private:
     const double min_alt = 10.;
     const double max_alt = 300.;
 
-    const double default_alt = 10.;
+    const double default_alt = 50.;
     const QColor outline_color = QColor(0,0,0);
     const int outline_width = 2;
     const int icon_size = 15;

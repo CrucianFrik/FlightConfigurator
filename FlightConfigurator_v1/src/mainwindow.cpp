@@ -10,18 +10,20 @@
 #define BLUECOLOR 180, 200, 235
 #define LIGHTGREYCOLOR 235, 235, 235
 
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
-      ui{new Ui::MainWindow}
-      //map_controller{new MapController(this)}
+      ui{new Ui::MainWindow},
+      map_controller{new MapController(this)},
+      horizon_view{new Aviagorizont_Viev(this)}
 {
     ui->setupUi(this);
     set_gui_elements();
     set_data_updation();
     
-    //ui->data_tab->layout()->addWidget(map_controller->get_data_map());
-    //ui->plan_tab->layout()->addWidget(map_controller->get_plan_map());
-    //map_controller->get_plan_map()->set_table(ui->param_table);
+    ui->data_tab->layout()->addWidget(map_controller->get_data_map());
+    ui->plan_tab->layout()->addWidget(map_controller->get_plan_map());
+    map_controller->get_plan_map()->set_table(ui->points_table);
     ui->label_8->setPixmap(QPixmap(QString::fromUtf8(":/icons/logo.jpg")));
     connect(ui->tabWidget, SIGNAL(currentChanged(int)), SLOT(update_widgets_geometry_slot()));
 
@@ -78,8 +80,6 @@ void MainWindow::connect_to_pixhawk(){
 };
 
 void MainWindow::reset_params(){
-//    qDebug() << "жмякнуто";
-//    pixhawk_manager->upload_flight_mission();
     update_params_table();
     pixhawk_manager->reset_new_param_values();
 }
@@ -105,7 +105,9 @@ void MainWindow::data_window_update(){
         ui->data_dist_to_wp->display(qRadiansToDegrees(a.pitch));
         ui->data_speed->display(qRadiansToDegrees((a.roll)));
         //---------------------
-
+        // HORIZON_VIEW_UPDATE
+        horizon_view->update(qRadiansToDegrees(a.pitch), qRadiansToDegrees(a.roll));
+      
         mavlink_global_position_int_t gpi = pixhawk_manager->get_global_position_int();
         ui->data_altitude->display(gpi.relative_alt/1000); //m
         //ui->data_dist_to_wp->display(0);
@@ -120,20 +122,22 @@ void MainWindow::data_window_update(){
 void MainWindow::set_gui_elements(){
     ui->controllerPath->setPlaceholderText("enter path to PIXHAWK");
     ui->param_table->verticalHeader()->setVisible(false);
-
+  
     QHeaderView* header_h = ui->param_table->horizontalHeader();
     QHeaderView* header_v = ui->param_table->verticalHeader();
 //    header_h->setSectionResizeMode(1, QHeaderView::ResizeToContents);
+//    header_v->setSectionResizeMode(QHeaderView::ResizeToContents);
     header_h->setSectionResizeMode(3, QHeaderView::Stretch);
     header_h->setSectionResizeMode(4, QHeaderView::Stretch);
-//    header_v->setSectionResizeMode(QHeaderView::ResizeToContents);
+    horizon_view->set_label_name(ui->horizon_lable);
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
-    //delete map_controller;
+    delete map_controller;
     delete pixhawk_manager;
+
     for (int i=0; i<ui->param_table->rowCount(); i++){
         for (int j=0; j<ui->param_table->columnCount(); j++){
             delete ui->param_table->item(i, j);
@@ -150,7 +154,7 @@ void MainWindow::show(){
 
 
 void MainWindow::update_widgets_geometry_slot(){
-    //map_controller->update_maps_geometry();
+    map_controller->update_maps_geometry();
 }
 
 
@@ -354,32 +358,43 @@ void MainWindow::load_from_file_params(){
     }
 }
 
-//void MainWindow::test_flight(){
-//    double r=15;
-//    QgsPointXY p1(-10,-15), p2(-10,15), p3(40,0);
-//    double dfi=0.05, dx=dfi*r;
-//    int delay_time = 50;
+void MainWindow::test_flight(){
+    double r = 0.0007, d = 0.0025;
 
-//    while (true){
-//        for (double fi=M_PI_2; fi<2*M_PI; fi+=dfi){
-//            delay(delay_time);
-//            map_controller->update_drone_pos({p1.x()+r*cos(fi), p1.y()+r*sin(fi)}, fi);
-//        }
-//        for (double x=0; x<p3.x()-p1.x()-r; x+=dx){
-//            delay(delay_time);
-//            map_controller->update_drone_pos({p1.x()+r+x, p1.y()}, -M_PI_2);
-//        }
-//        for (double fi=-M_PI_2; fi<M_PI_2; fi+=dfi){
-//            delay(delay_time);
-//            map_controller->update_drone_pos({p3.x()+r*cos(fi), p3.y()+r*sin(fi)}, fi);
-//        }
-//        for (double x=0; x<p3.x()-p1.x()-r; x+=dx){
-//            delay(delay_time);
-//            map_controller->update_drone_pos({p3.x()-x, p2.y()}, M_PI_2);
-//        }
-//        for (double fi=0; fi<3*M_PI_2; fi+=dfi){
-//            delay(delay_time);
-//            map_controller->update_drone_pos({p2.x()+r*cos(fi), p2.y()+r*sin(fi)}, fi);
-//        }
-//    }
-//}
+    QgsPointXY p1(38.104376, 55.604367);
+    QgsPointXY p2(p1.x(),   p1.y()+2*r);
+    QgsPointXY p3(p1.x()+d, p1.y()+r);
+
+    double dfi=0.05, dx=dfi*r;
+    int delay_time = 50;
+
+    while (true){
+        for (double fi=M_PI_2; fi<2*M_PI; fi+=dfi){
+            delay(delay_time);
+            map_controller->update_drone_pos({p1.x()+r*cos(fi), p1.y()+r*sin(fi)}, fi);
+        }
+        for (double x=0; x<p3.x()-p1.x()-r; x+=dx){
+            delay(delay_time);
+            map_controller->update_drone_pos({p1.x()+r+x, p1.y()}, -M_PI_2);
+        }
+        for (double fi=-M_PI_2; fi<M_PI_2; fi+=dfi){
+            delay(delay_time);
+            map_controller->update_drone_pos({p3.x()+r*cos(fi), p3.y()+r*sin(fi)}, fi);
+        }
+        for (double x=0; x<p3.x()-p1.x()-r; x+=dx){
+            delay(delay_time);
+            map_controller->update_drone_pos({p3.x()-x, p2.y()}, M_PI_2);
+        }
+        for (double fi=0; fi<3*M_PI_2; fi+=dfi){
+            delay(delay_time);
+            map_controller->update_drone_pos({p2.x()+r*cos(fi), p2.y()+r*sin(fi)}, fi);
+        }
+    }
+}
+
+void MainWindow::delay(int millisecondsToWait){
+    QTime dieTime = QTime::currentTime().addMSecs( millisecondsToWait );
+    while( QTime::currentTime() < dieTime ) {
+        QCoreApplication::processEvents( QEventLoop::AllEvents, 100 );
+    }
+}

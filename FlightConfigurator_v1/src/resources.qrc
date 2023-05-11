@@ -11,6 +11,13 @@
         <file alias="zoomin_icon.png">../../icons/zoomin_icon.png</file>
         <file alias="zoomout_icon.png">../../icons/zoomout_icon.png</file>
     </qresource>
+
+    <qresource prefix="/horizon">
+        <file alias="black_back_ground.png">../../images/background.png</file>
+        <file alias="horizon_line.png">../../images/horizon_line.png</file>
+        <file alias="plane_mock.png">../../images/plane.png</file>
+        <file alias="markups.png">../../images/markups.png</file>
+    </qresource>
 </RCC>
 
 

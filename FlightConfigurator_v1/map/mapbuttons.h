@@ -8,6 +8,7 @@
 #include <QWidget>
 #include <QDir>
 #include <QDebug>
+#include <QLabel>
 
 #include <qgsmapcanvas.h>
 #include <qgsvertexmarker.h>
@@ -40,7 +41,7 @@ public:
 
 private:
     const QSize BAR_SIZE = {200, 30};
-    const QPoint BAR_POS = {7, 5};
+    const QPoint BAR_POS = {5, 5};
     const QString BAR_PROMPT = "Enter coordinates";
 
     QPushButton* search_button;
@@ -74,6 +75,7 @@ private:
 
 class ZoomInButton : public MapButton {
 Q_OBJECT
+
 public:
     ZoomInButton(QWidget* parent)
         : MapButton(parent, ZOOMIN_ICON_PATH) {}
@@ -83,6 +85,7 @@ public:
 
 class ZoomOutButton : public MapButton {
 Q_OBJECT
+
 public:
     ZoomOutButton(QWidget* parent)
         : MapButton(parent, ZOOMOUT_ICON_PATH) {}
@@ -92,6 +95,7 @@ public:
 
 class CentralizeButton : public MapButton {
 Q_OBJECT
+
 public:
     CentralizeButton(QWidget* parent)
         : MapButton(parent, CENTRALIZE_ICON_PATH) {}
@@ -123,9 +127,30 @@ private:
 
 class FollowCheckbox : public MapCheckbox {
 Q_OBJECT
+
 public:
     FollowCheckbox(QWidget* parent)
         : MapCheckbox(parent, FOLLOW_ICON_PATH, UNFOLLOW_ICON_PATH) {}
+};
+
+
+
+class CurrentCoordinates : protected QLineEdit {
+Q_OBJECT
+
+public:
+    CurrentCoordinates(QWidget* parent=nullptr);
+
+    void update_coords(QgsPointXY cur_pos);
+    void update_pos(QSize win_size);
+
+private:
+    int count_digits(int number);
+
+    const QSize m_size = {180, 30};
+    const QPoint m_pos = {5, 5};
+    const int precision = 6;
+
 };
 
 

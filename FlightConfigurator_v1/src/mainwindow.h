@@ -13,9 +13,16 @@
 #include "./ui_mainwindow.h"
 #include "hendler_structs.h"
 #include "pixhawk_manager.h"
-//#include <mapcontroller.h>
 
-void delay( int millisecondsToWait );
+#include "mapcontroller.h"
+#include "horizon.h"
+
+
+#define REDCOLOR 235, 200, 200
+#define GREYCOLOR 184, 197, 194
+#define GREENCOLOR 200, 235, 200
+#define WHITECOLOR 255, 255, 255
+
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -30,8 +37,9 @@ enum param_table_conumns{
 };
 
 class MainWindow : public QMainWindow{
+Q_OBJECT
+
 private:
-    Q_OBJECT
     Ui::MainWindow *ui;
 
     //MapController* map_controller;
@@ -40,11 +48,15 @@ private:
     const QString window_title = "FlightConfigurator";
     QTimer* info_updation_timer;
     QTimer* params_download_checking_timer;
+    Aviagorizont_Viev* horizon_view;
+
 
     void set_gui_elements();
     void set_data_updation();
     void reset();
     bool all_parametrs_processed = 0;
+
+    void delay(int millisecondsToWait);
     
 public:
     MainWindow(QWidget *parent = nullptr);

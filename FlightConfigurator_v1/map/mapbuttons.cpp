@@ -73,3 +73,40 @@ MapCheckbox::~MapCheckbox(){
     delete m_enable_icon;
     delete m_disable_icon;
 }
+
+
+
+CurrentCoordinates::CurrentCoordinates(QWidget* parent)
+    : QLineEdit(parent)
+{
+    setReadOnly(true);
+    resize(m_size);
+    setText("1.234121 57.123123");
+}
+
+void CurrentCoordinates::update_pos(QSize win_size){
+    move( m_pos.x(), win_size.height() - m_size.height() - m_pos.y());
+}
+
+void CurrentCoordinates::update_coords(QgsPointXY cur_pos){
+    QString cur_str;
+
+    int x_cnt_dig = count_digits(cur_pos.x());
+    int y_cnt_dig = count_digits(cur_pos.y());
+
+    cur_str += QString::number(cur_pos.y(), 'g', precision+y_cnt_dig);
+    cur_str += " ";
+    cur_str += QString::number(cur_pos.x(), 'g', precision+x_cnt_dig);
+
+    setText(cur_str);
+}
+
+int CurrentCoordinates::count_digits(int number){
+    int res=0;
+    number = abs(number);
+    while (number > 0){
+        number /= 10;
+        ++res;
+    }
+    return res;
+}
