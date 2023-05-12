@@ -9,6 +9,7 @@
 #include <QtMath>
 #include <QMessageBox>
 
+
 #include "./ui_mainwindow.h"
 #include "hendler_structs.h"
 #include "pixhawk_manager.h"
@@ -21,6 +22,7 @@
 #define WHITECOLOR 255, 255, 255
 #define BLUECOLOR 180, 200, 235
 #define LIGHTGREYCOLOR 235, 235, 235
+
 
 #define PARAM_DESC_PATH "../../config/params_description.csv"
 #define FULL_PARAM_PATH "../../config/FullParametrList.txt"
@@ -43,7 +45,6 @@ Q_OBJECT
 
 private:
     Ui::MainWindow *ui;
-
     MapController* map_controller;
     PixhawkManager* pixhawk_manager;
     const QSize window_size = QDesktopWidget().size();
@@ -51,7 +52,6 @@ private:
     QTimer* info_updation_timer;
     QTimer* params_download_checking_timer;
     Aviagorizont_Viev* horizon_view;
-
 
     void set_gui_elements();
     void set_data_updation();

@@ -16,11 +16,11 @@ public:
     void log(const QString& msg);
 
 private:
-    Logger() {};
+    Logger() {}
     static Logger* pinstance_;
     static std::mutex mutex_;
 
-    ~Logger() {};
+    ~Logger() {}
 };
 
 #endif // LOGGER_H
