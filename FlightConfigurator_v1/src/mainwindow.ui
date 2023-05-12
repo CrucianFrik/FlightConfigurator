@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>885</width>
-    <height>754</height>
+    <height>763</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -359,15 +359,15 @@
               <item>
                <widget class="QTableWidget" name="points_table">
                 <property name="sizePolicy">
-                 <sizepolicy hsizetype="Minimum" vsizetype="MinimumExpanding">
+                 <sizepolicy hsizetype="Ignored" vsizetype="Ignored">
                   <horstretch>0</horstretch>
                   <verstretch>0</verstretch>
                  </sizepolicy>
                 </property>
                 <property name="minimumSize">
                  <size>
-                  <width>500</width>
-                  <height>500</height>
+                  <width>350</width>
+                  <height>600</height>
                  </size>
                 </property>
                 <property name="verticalScrollBarPolicy">

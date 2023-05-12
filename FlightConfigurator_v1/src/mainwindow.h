@@ -60,6 +60,9 @@ private:
 
     void delay(int millisecondsToWait);
     
+    const QList<double> points_table_col_proportions = {0.3, 0.3, 0.15, 0.1};
+    void resize_points_table();
+
 public:
     MainWindow(QWidget *parent = nullptr);
     void show();

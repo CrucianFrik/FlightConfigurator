@@ -143,6 +143,7 @@ MainWindow::~MainWindow()
 void MainWindow::show(){
     QMainWindow::show();
     resize(window_size);
+    resize_points_table();
     setWindowTitle(window_title);
 }
 
@@ -420,4 +421,10 @@ void MainWindow::upload_plan(){
     map_controller->get_plan_points(arr);
     pixhawk_manager->upload_flight_mission(arr);
     QMessageBox::information(this, "Уведомление", "План успешно загружен"); //проверки нет
+}
+
+void MainWindow::resize_points_table(){
+    for (int i=0; i<ui->points_table->columnCount(); i++){
+        ui->points_table->setColumnWidth(i, (double) ui->points_table->width() * points_table_col_proportions[i]);
+    }
 }

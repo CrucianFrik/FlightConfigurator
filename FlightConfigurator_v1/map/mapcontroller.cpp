@@ -10,9 +10,9 @@ MapController::MapController(QWidget *parent){
 
 
 void MapController::load_layers(){
-//    load_vector_world();
+    load_vector_world();
 //    load_raster_world();
-    load_vector_moscow();
+//    load_vector_moscow();
 }
 
 
