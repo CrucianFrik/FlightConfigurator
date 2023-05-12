@@ -13,6 +13,8 @@
 #include "./ui_mainwindow.h"
 #include "hendler_structs.h"
 #include "pixhawk_manager.h"
+#include "mapcontroller.h"
+#include "horizon.h"
 
 #define REDCOLOR 245, 200, 200
 #define GREYCOLOR 184, 197, 194
@@ -38,12 +40,13 @@ Q_OBJECT
 
 private:
     Ui::MainWindow *ui;
+    MapController* map_controller;
     PixhawkManager* pixhawk_manager; //sheredptr + singltone
     const QSize window_size = QDesktopWidget().size();
     const QString window_title = "FlightConfigurator";
     QTimer* info_updation_timer;
     QTimer* params_download_checking_timer;
-
+    Aviagorizont_Viev* horizon_view;
 
     void set_gui_elements();
     void set_data_updation();
