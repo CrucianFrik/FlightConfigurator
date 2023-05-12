@@ -10,7 +10,6 @@
 #define BLUECOLOR 180, 200, 235
 #define LIGHTGREYCOLOR 235, 235, 235
 
-
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
       ui{new Ui::MainWindow},
@@ -20,7 +19,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     set_gui_elements();
     set_data_updation();
-    
+  
     ui->data_tab->layout()->addWidget(map_controller->get_data_map());
     ui->plan_tab->layout()->addWidget(map_controller->get_plan_map());
     map_controller->get_plan_map()->set_table(ui->points_table);
@@ -39,13 +38,6 @@ MainWindow::MainWindow(QWidget *parent)
 
 void::MainWindow::reset(){
     ui->param_table->setRowCount(0);
-
-    ui->data_dist_to_wp->display(0);
-    ui->data_speed->display(0);
-    ui->data_altitude->display(0);
-    ui->data_z_speed->display(0);
-    ui->data_lat->display(0);
-    ui->data_lon->display(0);
 }
 
 void MainWindow::download_params(){
@@ -71,6 +63,7 @@ void MainWindow::connect_to_pixhawk(){
             QMessageBox::information(this, "Уведомление", "Загрузка данных займёт несколько секунд");
         }
     }
+
     else if (pixhawk_manager->is_all_params_received()){
         qDebug() << pixhawk_manager->is_all_params_received();
         ui->connectButton->setPalette(QPalette(Qt::white));
@@ -107,7 +100,7 @@ void MainWindow::data_window_update(){
         ui->data_dist_to_wp->display(qRadiansToDegrees(a.pitch));
         ui->data_speed->display(qRadiansToDegrees((a.roll)));
         //---------------------
-        // HORIZON_VIEW_UPDATE
+
         horizon_view->update(qRadiansToDegrees(a.pitch), qRadiansToDegrees(a.roll));
       
         mavlink_global_position_int_t gpi = pixhawk_manager->get_global_position_int();
@@ -140,6 +133,7 @@ MainWindow::~MainWindow()
     delete ui;
     delete map_controller;
     delete pixhawk_manager;
+    delete horizon_view;
 
     for (int i=0; i<ui->param_table->rowCount(); i++){
         for (int j=0; j<ui->param_table->columnCount(); j++){
@@ -213,7 +207,7 @@ void MainWindow::make_params_table(){
         while (!file.atEnd()) {
             QByteArray line = file.readLine();
             wordList.append(line.split(splitter).first());
-            int row = pixhawk_manager->get_id_from_index(line.split(splitter)[0]);
+            int row = pixhawk_manager->get_param_id_from_index(line.split(splitter)[0]);
             if (row > -1){
                 QTableWidgetItem* acc_value_item = new QTableWidgetItem(QString{line.split(splitter)[2]});
                 acc_value_item->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
@@ -332,7 +326,7 @@ void MainWindow::load_from_file_params(){
     {
         QString line = in.readLine();
        // qDebug() << line;
-        int ind = pixhawk_manager->get_id_from_index(line.split(",")[0]);
+        int ind = pixhawk_manager->get_param_id_from_index(line.split(",")[0]);
         if (ind != -1){
             uint16_t index{ind};
             ParamInfo param = params[index];

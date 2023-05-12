@@ -41,22 +41,22 @@ int SerialLink::up()
                  qPrintable(m_port->errorString()));
 
         m_port->close();
-        return -1;
+        return 0;
     }
     else
     {
         emit upChanged(true);
-        return 0;
+        return 1;
     }
 }
 
 int SerialLink::down()
 {
-    if (!this->isUp()) return -1;
+    if (!this->isUp()) return 0;
 
     m_port->close();
     emit upChanged(false);
-    return 0;
+    return 1;
 }
 
 void SerialLink::sendData(const QByteArray& data)

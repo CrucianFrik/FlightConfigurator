@@ -9,20 +9,19 @@
 #include <QtMath>
 #include <QMessageBox>
 
-//#include "mavlink.h"
+// internal
 #include "./ui_mainwindow.h"
 #include "hendler_structs.h"
 #include "pixhawk_manager.h"
-
 #include "mapcontroller.h"
 #include "horizon.h"
 
-
-#define REDCOLOR 235, 200, 200
+#define REDCOLOR 245, 200, 200
 #define GREYCOLOR 184, 197, 194
 #define GREENCOLOR 200, 235, 200
 #define WHITECOLOR 255, 255, 255
-
+#define BLUECOLOR 180, 200, 235
+#define LIGHTGREYCOLOR 235, 235, 235
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -41,7 +40,6 @@ Q_OBJECT
 
 private:
     Ui::MainWindow *ui;
-
     MapController* map_controller;
     PixhawkManager* pixhawk_manager; //sheredptr + singltone
     const QSize window_size = QDesktopWidget().size();
@@ -49,7 +47,6 @@ private:
     QTimer* info_updation_timer;
     QTimer* params_download_checking_timer;
     Aviagorizont_Viev* horizon_view;
-
 
     void set_gui_elements();
     void set_data_updation();
