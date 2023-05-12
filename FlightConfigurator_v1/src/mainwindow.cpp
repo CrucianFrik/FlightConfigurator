@@ -3,14 +3,6 @@
 #include <QDebug>
 #include <QFile>
 
-#define REDCOLOR 245, 200, 200
-#define GREYCOLOR 184, 197, 194
-#define GREENCOLOR 200, 235, 200
-#define WHITECOLOR 255, 255, 255
-#define BLUECOLOR 180, 200, 235
-#define LIGHTGREYCOLOR 235, 235, 235
-
-
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
       ui{new Ui::MainWindow},
@@ -33,8 +25,9 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->load_to_file_params_button, &QPushButton::released, this, &MainWindow::load_to_file_params);
     connect(ui->load_from_file_params_button, &QPushButton::released, this, &MainWindow::load_from_file_params);
     connect(ui->reset_params_button, &QPushButton::released, this, &MainWindow::reset_params);
-//    connect(ui->load_plan_to_file_button, &QPushButton::released, map_controller, MapController::load_plan_to_file);
-//    connect(ui->load_plan_from_file_button, &QPushButton::released, map_controller, MapController::load_plan_from_file);
+    connect(ui->load_plan_to_file_button, &QPushButton::released, this, &MainWindow::load_plan_to_file);
+    connect(ui->load_plan_from_file_button, &QPushButton::released, this, &MainWindow::load_plan_from_file);
+    connect(ui->upload_plan_button, &QPushButton::released, this, &MainWindow::upload_plan);
 }
 
 void::MainWindow::reset(){
@@ -61,8 +54,9 @@ void MainWindow::connect_to_pixhawk(){
     if (pixhawk_manager->get_connection_status() != ConnectionStatus::successful){
         ui->connectButton->setPalette(QPalette(Qt::red));
         //pixhawk_manager = new PixhawkManager("/dev/serial/by-id/usb-ArduPilot_RoyalPenguin1_40003F000650484843373120-if00", 115200);
-        pixhawk_manager = new PixhawkManager("/dev/serial/by-id/usb-ArduPilot_Pixhawk1_36003A000551393439373637-if00", 115200);
-        //pixhawk_manager = new PixhawkManager("/dev/serial/by-id/usb-3D_Robotics_PX4_FMU_v2.x_0-if00", 115200);
+         //pixhawk_manager = new PixhawkManager("/dev/serial/by-id/usb-ArduPilot_Pixhawk1_36003A000551393439373637-if00", 115200);
+        // pixhawk_manager = new PixhawkManager("/dev/serial/by-id/usb-3D_Robotics_PX4_FMU_v2.x_0-if00", 115200);
+        pixhawk_manager = new PixhawkManager("/dev/ttyACM0", 115200);
         if (pixhawk_manager->get_connection_status() == ConnectionStatus::successful){
             pixhawk_manager->request_all_params();
             connect(pixhawk_manager, &PixhawkManager::all_params_received, this, &MainWindow::make_params_table);
@@ -203,8 +197,8 @@ void MainWindow::make_params_table(){
         i++; //FIXME
     }
 
-    QString filename = "params_description.csv"; //сохраняется в build
-    QFile file("../../" + filename);
+    QString filename = PARAM_DESC_PATH; 
+    QFile file(filename);
     if ( file.open(QIODevice::ReadWrite) ){
         qDebug() << "ReadWrite";
         QStringList wordList;
@@ -213,7 +207,7 @@ void MainWindow::make_params_table(){
         while (!file.atEnd()) {
             QByteArray line = file.readLine();
             wordList.append(line.split(splitter).first());
-            int row = pixhawk_manager->get_id_from_index(line.split(splitter)[0]);
+            int row = pixhawk_manager->get_param_id_from_index(line.split(splitter)[0]);
             if (row > -1){
                 QTableWidgetItem* acc_value_item = new QTableWidgetItem(QString{line.split(splitter)[2]});
                 acc_value_item->setFlags(Qt::ItemIsSelectable|Qt::ItemIsEnabled);
@@ -286,8 +280,8 @@ void MainWindow::load_to_file_params(){
         return;
     }
     const std::map<uint16_t, ParamInfo>& params = pixhawk_manager->get_parametr_list();
-    QString filename = "FullParametrList.txt"; //сохраняется в build
-    QFile file("../../" + filename);
+    QString filename = FULL_PARAM_PATH;
+    QFile file(filename);
     if ( file.open(QIODevice::ReadWrite) ){
         QTextStream stream( &file );
 
@@ -332,7 +326,7 @@ void MainWindow::load_from_file_params(){
     {
         QString line = in.readLine();
        // qDebug() << line;
-        int ind = pixhawk_manager->get_id_from_index(line.split(",")[0]);
+        int ind = pixhawk_manager->get_param_id_from_index(line.split(",")[0]);
         if (ind != -1){
             uint16_t index{ind};
             ParamInfo param = params[index];
@@ -400,4 +394,27 @@ void MainWindow::delay(int millisecondsToWait){
     while( QTime::currentTime() < dieTime ) {
         QCoreApplication::processEvents( QEventLoop::AllEvents, 100 );
     }
+}
+
+/////////////////////////////////////////////////////////////////MISSION/////////////////////////////////////////////////////////////
+void MainWindow::load_plan_to_file(){
+    map_controller->load_plan_to_file("Mission.flyplan"); //FIXME
+}
+
+void MainWindow::load_plan_from_file(){
+    QString filename = QFileDialog::getOpenFileName(this, "Открыть");
+    if(filename.isEmpty()){ return; }
+    QString target_expansion = ".flyplan";
+    int n = target_expansion.length();
+    if(filename.mid(filename.length() - n, n) != target_expansion){
+  QMessageBox::warning(this, "Предупреждение", "Загрузите файл с расширением "+target_expansion);
+  return;
+    }
+    map_controller->load_plan_from_file(filename);
+}
+
+void MainWindow::upload_plan(){
+    QList<std::array<double, 3>> arr;
+    map_controller->get_plan_points(arr);
+    pixhawk_manager->upload_flight_mission(arr);
 }

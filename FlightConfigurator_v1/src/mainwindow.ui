@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>885</width>
-    <height>572</height>
+    <height>754</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -366,8 +366,8 @@
                 </property>
                 <property name="minimumSize">
                  <size>
-                  <width>0</width>
-                  <height>0</height>
+                  <width>500</width>
+                  <height>500</height>
                  </size>
                 </property>
                 <property name="verticalScrollBarPolicy">
@@ -379,8 +379,14 @@
                 <property name="rowCount">
                  <number>0</number>
                 </property>
+                <attribute name="horizontalHeaderCascadingSectionResizes">
+                 <bool>true</bool>
+                </attribute>
                 <attribute name="horizontalHeaderDefaultSectionSize">
-                 <number>60</number>
+                 <number>120</number>
+                </attribute>
+                <attribute name="verticalHeaderCascadingSectionResizes">
+                 <bool>true</bool>
                 </attribute>
                 <attribute name="verticalHeaderDefaultSectionSize">
                  <number>30</number>

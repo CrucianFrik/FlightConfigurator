@@ -18,6 +18,7 @@
         <file alias="plane_mock.png">../../images/plane.png</file>
         <file alias="markups.png">../../images/markups.png</file>
     </qresource>
+
 </RCC>
 
 

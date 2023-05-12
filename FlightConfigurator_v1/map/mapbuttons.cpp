@@ -81,7 +81,6 @@ CurrentCoordinates::CurrentCoordinates(QWidget* parent)
 {
     setReadOnly(true);
     resize(m_size);
-    setText("1.234121 57.123123");
 }
 
 void CurrentCoordinates::update_pos(QSize win_size){

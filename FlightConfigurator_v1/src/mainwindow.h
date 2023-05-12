@@ -9,20 +9,22 @@
 #include <QtMath>
 #include <QMessageBox>
 
-//#include "mavlink.h"
 #include "./ui_mainwindow.h"
 #include "hendler_structs.h"
 #include "pixhawk_manager.h"
-
 #include "mapcontroller.h"
 #include "horizon.h"
 
-
-#define REDCOLOR 235, 200, 200
+#define REDCOLOR 245, 200, 200
 #define GREYCOLOR 184, 197, 194
 #define GREENCOLOR 200, 235, 200
 #define WHITECOLOR 255, 255, 255
+#define BLUECOLOR 180, 200, 235
+#define LIGHTGREYCOLOR 235, 235, 235
 
+#define PARAM_DESC_PATH "../../config/params_description.csv"
+#define FULL_PARAM_PATH "../../config/FullParametrList.txt"
+#define PLAN_CONF_PATH "../../config/FullParametrList.txt"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -43,7 +45,7 @@ private:
     Ui::MainWindow *ui;
 
     MapController* map_controller;
-    PixhawkManager* pixhawk_manager; //sheredptr + singltone
+    PixhawkManager* pixhawk_manager;
     const QSize window_size = QDesktopWidget().size();
     const QString window_title = "FlightConfigurator";
     QTimer* info_updation_timer;
@@ -78,6 +80,9 @@ private slots:
     void download_params();
     void load_to_file_params();
     void load_from_file_params();
+    void load_plan_from_file();
+    void load_plan_to_file();
+    void upload_plan();
     void reset_params();
 };
 #endif // MAINWINDOW_H
