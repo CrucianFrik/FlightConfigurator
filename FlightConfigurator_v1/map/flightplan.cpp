@@ -289,8 +289,10 @@ bool FlightPlan::load_to_file(const QString &path){
 
 
 bool FlightPlan::load_from_file(const QString &path){
-    if (QFileInfo(path).suffix() != plan_format)
+    if (QFileInfo(path).suffix() != plan_format){
+
         return false;
+    }
 
     QFile file(path);
 

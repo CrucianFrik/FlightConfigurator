@@ -26,7 +26,7 @@
 
 #define PARAM_DESC_PATH "../../config/params_description.csv"
 #define FULL_PARAM_PATH "../../config/FullParametrList.txt"
-#define PLAN_CONF_PATH "../../config/FullParametrList.txt"
+#define MISSION_FILE "../../config/Mission.flyplan"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }

@@ -33,6 +33,7 @@ MainWindow::MainWindow(QWidget *parent)
 
 void::MainWindow::reset(){
     ui->param_table->setRowCount(0);
+    map_controller->plan_reset();
 }
 
 void MainWindow::download_params(){
@@ -394,7 +395,12 @@ void MainWindow::delay(int millisecondsToWait){
 
 /////////////////////////////////////////////////////////////////MISSION/////////////////////////////////////////////////////////////
 void MainWindow::load_plan_to_file(){
-    map_controller->load_plan_to_file("Mission.flyplan"); //FIXME
+    if (map_controller->load_plan_to_file(MISSION_FILE)){
+        QMessageBox::information(this, "Уведомление", "план успешно загружен в config/Mission.flyplan");
+    } //FIXME
+    else{
+        QMessageBox::warning(this, "Ошибка", "Не удалось загрузить план в файл");
+    }
 }
 
 void MainWindow::load_plan_from_file(){
@@ -403,8 +409,8 @@ void MainWindow::load_plan_from_file(){
     QString target_expansion = ".flyplan";
     int n = target_expansion.length();
     if(filename.mid(filename.length() - n, n) != target_expansion){
-  QMessageBox::warning(this, "Предупреждение", "Загрузите файл с расширением "+target_expansion);
-  return;
+        QMessageBox::warning(this, "Предупреждение", "Загрузите файл с расширением "+target_expansion);
+        return;
     }
     map_controller->load_plan_from_file(filename);
 }
@@ -413,4 +419,5 @@ void MainWindow::upload_plan(){
     QList<std::array<double, 3>> arr;
     map_controller->get_plan_points(arr);
     pixhawk_manager->upload_flight_mission(arr);
+    QMessageBox::information(this, "Уведомление", "План успешно загружен"); //проверки нет
 }

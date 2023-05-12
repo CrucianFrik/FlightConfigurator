@@ -10,9 +10,9 @@ MapController::MapController(QWidget *parent){
 
 
 void MapController::load_layers(){
-    load_vector_world();
+//    load_vector_world();
 //    load_raster_world();
-//    load_vector_moscow();
+    load_vector_moscow();
 }
 
 
@@ -83,4 +83,9 @@ bool MapController::load_plan_from_file(const QString &path){
 
 QString MapController::get_plan_file_format(){
     return plan_map->get_plan_file_format();
+}
+
+
+void MapController::plan_reset(){
+    plan_map->plan_reset();
 }

@@ -81,3 +81,8 @@ bool PlanMapWidget::load_plan_from_file(const QString &path){
 QString PlanMapWidget::get_plan_file_format(){
     return flight_plan->get_plan_file_format();
 }
+
+
+void PlanMapWidget::plan_reset(){
+    flight_plan->clear();
+}

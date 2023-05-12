@@ -46,6 +46,8 @@ public:
     void update_maps_geometry();
     void update_drone_pos(QgsPointXY pos, double angle);
 
+    void plan_reset();
+
     ~MapController();
 
 private:

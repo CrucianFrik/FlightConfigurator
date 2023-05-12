@@ -27,6 +27,8 @@ public:
 
     QString get_plan_file_format();
 
+    void plan_reset();
+
     ~PlanMapWidget();
 
 private slots:
