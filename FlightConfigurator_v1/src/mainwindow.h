@@ -15,6 +15,7 @@
 #include "pixhawk_manager.h"
 #include "mapcontroller.h"
 #include "horizon.h"
+#include "logger.h"
 
 #define REDCOLOR 245, 200, 200
 #define GREYCOLOR 184, 197, 194
@@ -51,6 +52,7 @@ private:
     const QString window_title = "FlightConfigurator";
     QTimer* info_updation_timer;
     QTimer* params_download_checking_timer;
+    Logger* logger;
     Aviagorizont_Viev* horizon_view;
 
     void set_gui_elements();

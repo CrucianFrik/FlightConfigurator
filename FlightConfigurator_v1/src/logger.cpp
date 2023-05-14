@@ -11,15 +11,24 @@ Logger *Logger::GetInstance()
     {
         pinstance_ = new Logger();
     }
+
+    QString filename="../../config/Logs.txt";
+    QFile file(filename);
+    if ( file.open(QIODevice::WriteOnly) ){
+        QTextStream stream( &file );
+        stream << "logs" << endl;
+    }
+    file.close();
+
     return pinstance_;
 }
 
 void Logger::log(const QString& msg){
-    QString filename="Logs";
+    QString filename="../../config/Logs.txt";
     QFile file(filename);
-    if ( file.open(QIODevice::ReadWrite) ){
+    if ( file.open(QIODevice::Append) ){
         QTextStream stream( &file );
-        stream << msg << "\n";
+        stream << msg << endl;
     }
     file.close();
 }

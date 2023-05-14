@@ -2,6 +2,7 @@
 #include "hendler_structs.h"
 #include <QDebug>
 #include <QFile>
+#include <QToolTip>
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -10,6 +11,7 @@ MainWindow::MainWindow(QWidget *parent)
       map_controller{new MapController(this)},
       horizon_view{new Aviagorizont_Viev(this)}
 {
+    logger = Logger::GetInstance();
     ui->setupUi(this);
     set_gui_elements();
     set_data_updation();
@@ -39,6 +41,7 @@ void::MainWindow::reset(){
 void MainWindow::download_params(){
     if (!pixhawk_manager->get_parametr_list().size() || pixhawk_manager->get_parametr_list().find(0)==pixhawk_manager->get_parametr_list().end() ) {
         pixhawk_manager->request_all_params();
+        logger->log("params: reuploading");
         qDebug() << "reuploading";
         params_download_checking_timer->start(2000);
     }
@@ -58,6 +61,7 @@ void MainWindow::connect_to_pixhawk(){
             ui->connectButton->setPalette(QPalette(Qt::blue));
             params_download_checking_timer->start(2000);
             QMessageBox::information(this, "Уведомление", "Загрузка данных займёт несколько секунд");
+            logger->log("connection: successful");
         }
     }
 
@@ -68,6 +72,7 @@ void MainWindow::connect_to_pixhawk(){
         pixhawk_manager->disconnect();
         delete pixhawk_manager;
         reset();
+        logger->log("connection: disconnected");
     }
 };
 
@@ -215,12 +220,14 @@ void MainWindow::make_params_table(){
 
                 ui->param_table->setItem(row, param_table_conumns::acc_value, acc_value_item);
                 ui->param_table->setItem(row, param_table_conumns::description, desc_item);
+                ui->param_table->item(row, param_table_conumns::description)->setToolTip(QString{line.split(splitter)[1]});
             }
             i++;
         }
     }
     file.close();
 
+    logger->log("params: uploaded");
     qDebug() << "params_table updated";
     all_parametrs_processed = 1;
     ui->param_table->blockSignals(oldState);
@@ -264,12 +271,12 @@ void MainWindow::upload_params(){
     bool oldState = ui->param_table->blockSignals(true);
     for (const auto &param_pair : pixhawk_manager->get_updated_items_in_params_list())
     {
-        qDebug() << "to green" << param_pair.first;
         ui->param_table->item(param_pair.first, param_table_conumns::value)->setBackground(QColor{GREENCOLOR});
     }
     ui->param_table->blockSignals(oldState);
     pixhawk_manager->upload_new_params();
-    QMessageBox::information(this, "Уведомление", "Загрузка параметров началась. На отключайте контролле в течении 15 секунд."); //это неправда, проверки успеха загрузки нет
+    QMessageBox::information(this, "Уведомление", "Параметры успешно загружены"); //это неправда, проверки успеха загрузки нет
+    logger->log("params: downloaded to controller");
 }
 
 void MainWindow::load_to_file_params(){
@@ -290,6 +297,7 @@ void MainWindow::load_to_file_params(){
     }
     file.close();
     QMessageBox::information(this, "Уведомление", "Актуальные параметры из контроллера загружены в файл " + filename); //это неправда, проверки успеха загрузки нет
+    logger->log("params: loaded to file");
 }
 
 void MainWindow::load_from_file_params(){
@@ -303,7 +311,6 @@ void MainWindow::load_from_file_params(){
     QFile file(filename);
     QString target_expansion = ".param";
     int n = target_expansion.length();
-//    qDebug() << "FILENAME" << filename << filename.mid(filename.length() - n, n);
 
     if(filename.mid(filename.length() - n, n) != target_expansion){
         QMessageBox::warning(this, "Предупреждение", "Загрузите файл с расширением "+target_expansion);
@@ -323,7 +330,6 @@ void MainWindow::load_from_file_params(){
     while (!in.atEnd())
     {
         QString line = in.readLine();
-       // qDebug() << line;
         int ind = pixhawk_manager->get_param_id_from_index(line.split(",")[0]);
         if (ind != -1){
             uint16_t index{ind};
@@ -336,7 +342,6 @@ void MainWindow::load_from_file_params(){
             }
             ui->param_table->item(index, param_table_conumns::value)->setText(line.split(",")[1]);
             process_updated_param(index, param_table_conumns::value, 1);
-         // qDebug() << param_pair.second.param_value << param_pair.first << line.split(",")[1].toFloat() << param_pair.second.param_value;
         }
     }
     ui->param_table->blockSignals(oldState);
@@ -345,6 +350,7 @@ void MainWindow::load_from_file_params(){
                 "Ячейка серая - новое значение равно старому (не обновлён),\n голубая - новое значение отлично от старого (обновлён)\n"
                 "красная - новое значение некорректно (не обновлён)\n"
                 "белая или тёмно серая - параметра не было в файле (не обновлён)\n");
+    logger->log("params: loaded from file");
     }
     catch (const char* error_message)
     {
@@ -398,6 +404,7 @@ void MainWindow::delay(int millisecondsToWait){
 void MainWindow::load_plan_to_file(){
     if (map_controller->load_plan_to_file(MISSION_FILE)){
         QMessageBox::information(this, "Уведомление", "план успешно загружен в config/Mission.flyplan");
+        logger->log("mission: loaded to file");
     } //FIXME
     else{
         QMessageBox::warning(this, "Ошибка", "Не удалось загрузить план в файл");
@@ -421,6 +428,8 @@ void MainWindow::upload_plan(){
     map_controller->get_plan_points(arr);
     pixhawk_manager->upload_flight_mission(arr);
     QMessageBox::information(this, "Уведомление", "План успешно загружен"); //проверки нет
+    logger->log("mission: downloaded to controller");
+
 }
 
 void MainWindow::resize_points_table(){

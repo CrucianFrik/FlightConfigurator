@@ -5,6 +5,7 @@
 #include <QFile>
 #include <QTextStream>
 #include <mutex>
+#include <iostream>
 
 
 class Logger{
