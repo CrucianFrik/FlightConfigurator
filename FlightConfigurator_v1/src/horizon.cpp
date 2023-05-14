@@ -36,7 +36,7 @@ void Aviagorizont_Viev::update()
 
 
     QPainter p2(&rotate);
-    p2.drawPixmap(0, (_pitch)*(400/180)-200, eath);
+    p2.drawPixmap(0, (_pitch)*(400./180.)-200., eath);
     p2.drawPixmap(0, 0, markups);
     // p2.drawText( QPoint(200, 200), QString("%1").arg(_pitch));
     p2.end();
