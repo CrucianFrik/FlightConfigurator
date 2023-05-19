@@ -1,7 +1,1 @@
 logs
-connection: successful
-params: uploaded
-connection: disconnected
-connection: successful
-params: uploaded
-connection: disconnected

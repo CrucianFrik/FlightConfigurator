@@ -54,6 +54,9 @@ protected:
 private:
     void set_settings();
 
+
+    QgsVertexMarker* falt_point;
+
     QgsPointXY get_query(bool& is_correct);
     const QString query_sep = " ";
 

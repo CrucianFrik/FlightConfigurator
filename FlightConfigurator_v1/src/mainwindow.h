@@ -26,7 +26,7 @@
 
 
 #define PARAM_DESC_PATH "../../config/params_description.csv"
-#define FULL_PARAM_PATH "../../config/FullParametrList.txt"
+#define FULL_PARAM_PATH "../../config/FullParametrList.param"
 #define MISSION_FILE "../../config/Mission.flyplan"
 
 QT_BEGIN_NAMESPACE

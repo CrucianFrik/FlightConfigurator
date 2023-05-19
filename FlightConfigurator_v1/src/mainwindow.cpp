@@ -106,7 +106,7 @@ void MainWindow::data_window_update(){
         map_controller->update_drone_pos(QgsPointXY{gpi.lon/1e7, gpi.lat/1e7}, -attitude.yaw);
         //todel----------------
         mavlink_attitude_t a = pixhawk_manager->get_attitude();
-        ui->label_3->setText("roll");
+        //ui->label_3->setText("roll");
         ui->label_4->setText("pich");
         ui->data_dist_to_wp->display(qRadiansToDegrees(a.pitch));
         ui->data_speed->display(qRadiansToDegrees((a.roll)));
@@ -116,7 +116,7 @@ void MainWindow::data_window_update(){
 
         ui->data_altitude->display(gpi.relative_alt/1000); //m
         //ui->data_dist_to_wp->display(0);
-        //ui->data_speed->display(pow(pow(gpi.vx, 2) + pow(gpi.vy, 2) + pow(gpi.vz, 2), 0.5));
+        ui->data_speed->display(pow(pow(gpi.vx, 2) + pow(gpi.vy, 2) + pow(gpi.vz, 2), 0.5));
         ui->data_z_speed->display(gpi.vz);
         ui->data_lat->display(gpi.lat/1e7);
         ui->data_lon->display(gpi.lon/1e7);
@@ -228,6 +228,7 @@ void MainWindow::make_params_table(){
 
                 ui->param_table->setItem(row, param_table_conumns::acc_value, acc_value_item);
                 ui->param_table->setItem(row, param_table_conumns::description, desc_item);
+                ui->param_table->item(row, param_table_conumns::acc_value)->setToolTip(QString{line.split(splitter)[2]});
                 ui->param_table->item(row, param_table_conumns::description)->setToolTip(QString{line.split(splitter)[1]});
             }
             i++;
@@ -304,7 +305,7 @@ void MainWindow::load_to_file_params(){
         }
     }
     file.close();
-    QMessageBox::information(this, "Уведомление", "Актуальные параметры из контроллера загружены в файл " + filename); //это неправда, проверки успеха загрузки нет
+    QMessageBox::information(this, "Уведомление", "Актуальные параметры из контроллера загружены в файл FullParametrList.param"); //это неправда, проверки успеха загрузки нет
     logger->log("params: loaded to file");
 }
 

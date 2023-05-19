@@ -5,7 +5,8 @@ MapWidget::MapWidget(const QList<QgsMapLayer*>& layers, QWidget* parent)
     : QgsMapCanvas(parent),
       tool_pan{new QgsMapToolPan(this)},
       search_bar{new SearchBar(this)},
-      cur_coords{new CurrentCoordinates(this)}
+      cur_coords{new CurrentCoordinates(this)},
+      falt_point{new QgsVertexMarker(this)}
 {
     full_zoom = layers[0]->extent();
 
@@ -17,6 +18,11 @@ MapWidget::MapWidget(const QList<QgsMapLayer*>& layers, QWidget* parent)
     center_button   = new CentralizeButton(this);
     zoomin_button   = new ZoomInButton(this);
     zoomout_button  = new ZoomOutButton(this);
+
+    falt_point->setCenter(QgsPointXY(38.106406, 55.604302));
+    falt_point->setIconSize(10);
+    falt_point->setIconType(QgsVertexMarker::ICON_CIRCLE);
+    falt_point->setFillColor(QColor("red"));
 
     connect(search_bar,      SIGNAL(returnPressed()), SLOT(move_to_search_query_slot()));
     connect(center_button,   SIGNAL(clicked()),       SLOT(centralize_slot())          );
@@ -42,6 +48,7 @@ MapWidget::~MapWidget(){
     delete center_button;
     delete zoomin_button;
     delete zoomout_button;
+    delete falt_point;
 }
 
 
