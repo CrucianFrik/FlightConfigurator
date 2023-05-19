@@ -1,5 +1,7 @@
 logs
 connection: successful
 params: uploaded
-params: downloaded to controller
+connection: disconnected
+connection: successful
+params: uploaded
 connection: disconnected

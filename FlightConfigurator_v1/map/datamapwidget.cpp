@@ -27,6 +27,15 @@ DataMapWidget::~DataMapWidget(){
 
 
 void DataMapWidget::change_focus_slot(){
+    if (!drone_marker->is_visible()){
+        if (is_focused){
+            follow_checkbox->switch_icon();
+            enable_pan(is_focused);
+            is_focused = !is_focused;
+        }
+        return;
+    }
+
     follow_checkbox->switch_icon();
     if (!is_focused){
         move_to_drone_with_zoom_slot();
@@ -94,4 +103,9 @@ void DataMapWidget::centralize_slot(){
     set_unfocused();
 
     MapWidget::centralize_slot();
+}
+
+
+void DataMapWidget::set_drone_visible(bool is_visible){
+    drone_marker->set_visible(is_visible);
 }

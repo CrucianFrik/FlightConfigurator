@@ -15,6 +15,8 @@ public:
     DataMapWidget(const QList<QgsMapLayer*>& layers, QWidget* parent=nullptr);
 
     void update_drone_pos(QgsPointXY pos, double angle);
+    void set_drone_visible(bool is_visible);
+
     void update_buttons_pos() override;
 
     ~DataMapWidget();

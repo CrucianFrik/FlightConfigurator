@@ -18,6 +18,8 @@ public:
 
     void push_point(QgsPointXY point);
 
+    void clear();
+
 private:
     const int line_width = 3;
     const QColor color = QColor(255, 0, 0);
@@ -41,6 +43,9 @@ public:
 
     void set_size(double new_size);
 
+    bool is_visible();
+    void set_visible(bool is_visible);
+
     ~DroneMarker();
 
 private:
@@ -50,6 +55,8 @@ private:
     double size=0.1;
     double angle;
     const double win_height_to_size_koef = 1.0 / 60;
+
+    bool m_is_visible = false;
 
     DroneTrack* track;
 

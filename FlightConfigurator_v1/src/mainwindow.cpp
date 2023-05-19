@@ -56,6 +56,8 @@ void MainWindow::connect_to_pixhawk(){
         // pixhawk_manager = new PixhawkManager("/dev/serial/by-id/usb-3D_Robotics_PX4_FMU_v2.x_0-if00", 115200);
         pixhawk_manager = new PixhawkManager("/dev/ttyACM0", 115200);
         if (pixhawk_manager->get_connection_status() == ConnectionStatus::successful){
+            map_controller->set_drone_visible(true);
+
             pixhawk_manager->request_all_params();
             connect(pixhawk_manager, &PixhawkManager::all_params_received, this, &MainWindow::make_params_table);
             ui->connectButton->setPalette(QPalette(Qt::blue));
@@ -66,6 +68,8 @@ void MainWindow::connect_to_pixhawk(){
     }
 
     else if (pixhawk_manager->is_all_params_received()){
+        map_controller->set_drone_visible(false);
+
         qDebug() << pixhawk_manager->is_all_params_received();
         ui->connectButton->setPalette(QPalette(Qt::white));
         ui->connectButton->setText("CONNECT");
@@ -95,6 +99,11 @@ void MainWindow::set_data_updation(){
 
 void MainWindow::data_window_update(){
     if (pixhawk_manager->get_connection_status()){
+
+
+        mavlink_global_position_int_t gpi = pixhawk_manager->get_global_position_int();
+        mavlink_attitude_t attitude = pixhawk_manager->get_attitude();
+        map_controller->update_drone_pos(QgsPointXY{gpi.lon/1e7, gpi.lat/1e7}, -attitude.yaw);
         //todel----------------
         mavlink_attitude_t a = pixhawk_manager->get_attitude();
         ui->label_3->setText("roll");
@@ -104,14 +113,13 @@ void MainWindow::data_window_update(){
         //---------------------
 
         horizon_view->update(qRadiansToDegrees(a.pitch), qRadiansToDegrees(a.roll));
-      
-        mavlink_global_position_int_t gpi = pixhawk_manager->get_global_position_int();
+
         ui->data_altitude->display(gpi.relative_alt/1000); //m
         //ui->data_dist_to_wp->display(0);
         //ui->data_speed->display(pow(pow(gpi.vx, 2) + pow(gpi.vy, 2) + pow(gpi.vz, 2), 0.5));
         ui->data_z_speed->display(gpi.vz);
-        ui->data_lat->display(gpi.lat);
-        ui->data_lon->display(gpi.lon);
+        ui->data_lat->display(gpi.lat/1e7);
+        ui->data_lon->display(gpi.lon/1e7);
     }
 }
 

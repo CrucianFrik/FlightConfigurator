@@ -45,6 +45,7 @@ public:
 
     void update_maps_geometry();
     void update_drone_pos(QgsPointXY pos, double angle);
+    void set_drone_visible(bool is_visible);
 
     void plan_reset();
 

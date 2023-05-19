@@ -89,3 +89,8 @@ QString MapController::get_plan_file_format(){
 void MapController::plan_reset(){
     plan_map->plan_reset();
 }
+
+
+void MapController::set_drone_visible(bool is_visible){
+    data_map->set_drone_visible(is_visible);
+}

@@ -17,14 +17,16 @@ void DroneTrack::push_point(QgsPointXY point){
     }
 }
 
+void DroneTrack::clear(){
+    reset();
+}
 
 
 DroneMarker::DroneMarker(QgsMapCanvas *canvas)
     : QgsRubberBand(canvas),
       track{new DroneTrack(canvas)}
 {
-    setColor(color);
-    setFillColor(color);
+    set_visible(m_is_visible);
 
     for (int i=plane_figure.size()-2; i>0; i--){
         plane_figure.push_back( {-plane_figure[i].x(), plane_figure[i].y()} );
@@ -38,6 +40,8 @@ QgsPointXY DroneMarker::get_pos(){
 }
 
 void DroneMarker::set_location(QgsPointXY new_pos, double new_angle){
+    if (!m_is_visible)
+        return;
     pos = new_pos;
     angle = new_angle;
 
@@ -64,6 +68,22 @@ void DroneMarker::set_size(double new_size){
 
 DroneMarker::~DroneMarker(){
     delete track;
+}
+
+void DroneMarker::set_visible(bool is_visible){
+    m_is_visible = is_visible;
+    if (is_visible){
+        setColor    (color);
+        setFillColor(color);
+    } else {
+        setColor    (QColor(Qt::transparent));
+        setFillColor(QColor(Qt::transparent));
+        track->clear();
+    }
+}
+
+bool DroneMarker::is_visible(){
+    return m_is_visible;
 }
 
 void DroneMarker::update_size(double extent_height, double extent_width){
